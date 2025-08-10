@@ -186,6 +186,9 @@ class _MainPageState extends ConsumerState<MainPage> {
                   case 'ssh_settings':
                     context.push('/settings/ssh');
                     break;
+                  case 'server_settings':
+                    context.push('/settings/server');
+                    break;
                   case 'logout':
                     ref.read(authProvider.notifier).logout();
                     break;
@@ -222,6 +225,23 @@ class _MainPageState extends ConsumerState<MainPage> {
                           const SizedBox(width: 12),
                           Text(
                             '下载设置',
+                            style: TextStyle(color: onSurface.withOpacity(0.9)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: 'server_settings',
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.http_rounded,
+                            color: onSurface.withOpacity(0.8),
+                            size: 20,
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            '服务器账号设置',
                             style: TextStyle(color: onSurface.withOpacity(0.9)),
                           ),
                         ],
