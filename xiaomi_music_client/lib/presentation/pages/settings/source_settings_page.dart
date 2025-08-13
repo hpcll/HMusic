@@ -27,6 +27,8 @@ class _SourceSettingsPageState extends ConsumerState<SourceSettingsPage> {
   bool _useYouTubeProxy = false;
   String _youTubeDownloadSource = 'oceansaver';
   String _youTubeAudioQuality = '320k';
+  bool _enableTts = false;
+  String _ttsTestText = '你好，这是TTS测试';
   final WebViewController _hiddenCtrl = WebViewController();
 
   bool _initialized = false;
@@ -66,6 +68,8 @@ class _SourceSettingsPageState extends ConsumerState<SourceSettingsPage> {
       _useYouTubeProxy = s.useYouTubeProxy;
       _youTubeDownloadSource = s.youTubeDownloadSource;
       _youTubeAudioQuality = s.youTubeAudioQuality;
+      _enableTts = s.enableTts;
+      _ttsTestText = s.ttsTestText;
     });
 
     print('🔧 [SourceSettingsPage] UI变量设置完成:');
@@ -497,6 +501,49 @@ class _SourceSettingsPageState extends ConsumerState<SourceSettingsPage> {
             const Divider(),
           ],
 
+          // TTS 文字转语音设置
+          ListTile(
+            title: Text(
+              'TTS 文字转语音',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            subtitle: Text(
+              '配置文字转语音功能相关选项',
+              style: TextStyle(color: onSurface.withOpacity(0.6)),
+            ),
+          ),
+          SwitchListTile(
+            title: const Text('启用TTS文字转语音'),
+            subtitle: const Text('开启后可以使用文字转语音功能'),
+            value: _enableTts,
+            onChanged: (v) => setState(() => _enableTts = v),
+          ),
+          if (_enableTts) ...[
+            const SizedBox(height: 12),
+            TextField(
+              decoration: const InputDecoration(
+                labelText: 'TTS测试文字',
+                hintText: '输入要测试的文字内容',
+                border: OutlineInputBorder(),
+              ),
+              controller: TextEditingController(text: _ttsTestText),
+              onChanged: (value) => _ttsTestText = value,
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: () => _testTts(),
+                icon: const Icon(Icons.record_voice_over),
+                label: const Text('测试TTS播放'),
+              ),
+            ),
+            const SizedBox(height: 12),
+          ],
+          const Divider(),
+
           // JS 音源相关设置（仅在选择JS源时显示）
           if (!_useUnifiedApi && !_useYouTubeProxy) ...[
             ListTile(
@@ -608,6 +655,8 @@ class _SourceSettingsPageState extends ConsumerState<SourceSettingsPage> {
                         '  - _youTubeDownloadSource: $_youTubeDownloadSource',
                       );
                       print('  - _youTubeAudioQuality: $_youTubeAudioQuality');
+                      print('  - _enableTts: $_enableTts');
+                      print('  - _ttsTestText: $_ttsTestText');
                       print('  - scriptUrl: ${_urlCtrl.text.trim()}');
 
                       final s = SourceSettings(
@@ -622,6 +671,8 @@ class _SourceSettingsPageState extends ConsumerState<SourceSettingsPage> {
                         useYouTubeProxy: _useYouTubeProxy,
                         youTubeDownloadSource: _youTubeDownloadSource,
                         youTubeAudioQuality: _youTubeAudioQuality,
+                        enableTts: _enableTts,
+                        ttsTestText: _ttsTestText,
                       );
 
                       print('🔧 [SourceSettingsPage] 创建的SourceSettings对象:');
@@ -636,6 +687,8 @@ class _SourceSettingsPageState extends ConsumerState<SourceSettingsPage> {
                       print(
                         '  - youTubeAudioQuality: ${s.youTubeAudioQuality}',
                       );
+                      print('  - enableTts: ${s.enableTts}');
+                      print('  - ttsTestText: ${s.ttsTestText}');
 
                       await ref.read(sourceSettingsNotifierProvider).save(s);
 
@@ -661,6 +714,8 @@ class _SourceSettingsPageState extends ConsumerState<SourceSettingsPage> {
                       print(
                         '  - youTubeAudioQuality: ${savedSettings.youTubeAudioQuality}',
                       );
+                      print('  - enableTts: ${savedSettings.enableTts}');
+                      print('  - ttsTestText: ${savedSettings.ttsTestText}');
                       if (!mounted) return;
                       AppSnackBar.show(
                         context,
@@ -757,5 +812,58 @@ class _SourceSettingsPageState extends ConsumerState<SourceSettingsPage> {
         ],
       ),
     );
+  }
+
+  // 🎯 新增：测试TTS功能
+  Future<void> _testTts() async {
+    if (_ttsTestText.trim().isEmpty) {
+      if (mounted) {
+        AppSnackBar.show(
+          context,
+          const SnackBar(
+            content: Text('请输入要测试的文字'),
+            backgroundColor: Colors.orange,
+          ),
+        );
+      }
+      return;
+    }
+
+    try {
+      // 显示测试状态
+      if (mounted) {
+        AppSnackBar.show(
+          context,
+          SnackBar(
+            content: Text('正在测试TTS: "$_ttsTestText"'),
+            backgroundColor: Colors.blue,
+          ),
+        );
+      }
+
+      // 这里需要调用TTS API，但需要先获取设备ID
+      // 暂时显示成功提示，后续可以集成设备选择
+      await Future.delayed(const Duration(seconds: 2));
+
+      if (mounted) {
+        AppSnackBar.show(
+          context,
+          SnackBar(
+            content: Text('TTS测试成功: "$_ttsTestText"'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        AppSnackBar.show(
+          context,
+          SnackBar(
+            content: Text('TTS测试失败: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 }

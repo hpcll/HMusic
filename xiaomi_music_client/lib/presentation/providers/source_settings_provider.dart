@@ -15,6 +15,8 @@ class SourceSettings {
   final bool useYouTubeProxy; // 是否使用YouTube代理搜索 (需要翻墙)
   final String youTubeDownloadSource; // YouTube下载源选择
   final String youTubeAudioQuality; // YouTube音频质量选择
+  final bool enableTts; // 是否启用TTS文字转语音功能
+  final String ttsTestText; // TTS测试文字
 
   const SourceSettings({
     this.enabled = true,
@@ -31,6 +33,8 @@ class SourceSettings {
     this.useYouTubeProxy = false, // 默认关闭YouTube代理（需要翻墙）
     this.youTubeDownloadSource = 'oceansaver', // 默认使用OceanSaver下载源
     this.youTubeAudioQuality = '320k', // 默认使用320k高音质
+    this.enableTts = false, // 默认关闭TTS功能
+    this.ttsTestText = '你好，这是TTS测试', // 默认TTS测试文字
   });
 
   SourceSettings copyWith({
@@ -46,6 +50,8 @@ class SourceSettings {
     bool? useYouTubeProxy,
     String? youTubeDownloadSource,
     String? youTubeAudioQuality,
+    bool? enableTts,
+    String? ttsTestText,
   }) {
     return SourceSettings(
       enabled: enabled ?? this.enabled,
@@ -61,6 +67,8 @@ class SourceSettings {
       youTubeDownloadSource:
           youTubeDownloadSource ?? this.youTubeDownloadSource,
       youTubeAudioQuality: youTubeAudioQuality ?? this.youTubeAudioQuality,
+      enableTts: enableTts ?? this.enableTts,
+      ttsTestText: ttsTestText ?? this.ttsTestText,
     );
   }
 }
@@ -78,6 +86,8 @@ class SourceSettingsNotifier extends StateNotifier<SourceSettings> {
   static const _kUseYouTubeProxy = 'source_use_youtube_proxy';
   static const _kYouTubeDownloadSource = 'source_youtube_download_source';
   static const _kYouTubeAudioQuality = 'source_youtube_audio_quality';
+  static const _kEnableTts = 'source_enable_tts';
+  static const _kTtsTestText = 'source_tts_test_text';
 
   bool _isLoaded = false;
   bool get isLoaded => _isLoaded;
@@ -101,6 +111,8 @@ class SourceSettingsNotifier extends StateNotifier<SourceSettings> {
       final useYouTubeProxy = prefs.getBool(_kUseYouTubeProxy);
       final youTubeDownloadSource = prefs.getString(_kYouTubeDownloadSource);
       final youTubeAudioQuality = prefs.getString(_kYouTubeAudioQuality);
+      final enableTts = prefs.getBool(_kEnableTts);
+      final ttsTestText = prefs.getString(_kTtsTestText);
 
       print('🔧 [SourceSettings] 加载设置:');
       print('  - enabled: $enabled');
@@ -110,6 +122,8 @@ class SourceSettingsNotifier extends StateNotifier<SourceSettings> {
       print('  - useYouTubeProxy: $useYouTubeProxy');
       print('  - youTubeDownloadSource: $youTubeDownloadSource');
       print('  - youTubeAudioQuality: $youTubeAudioQuality');
+      print('  - enableTts: $enableTts');
+      print('  - ttsTestText: $ttsTestText');
       print('  - 原始URL长度: ${scriptUrl?.length ?? 0}');
       print('  - 原始URL: $scriptUrl');
       print('  - unifiedApiBase: $unifiedApiBase');
@@ -136,6 +150,8 @@ class SourceSettingsNotifier extends StateNotifier<SourceSettings> {
         youTubeDownloadSource:
             youTubeDownloadSource ?? state.youTubeDownloadSource,
         youTubeAudioQuality: youTubeAudioQuality ?? state.youTubeAudioQuality,
+        enableTts: enableTts ?? state.enableTts,
+        ttsTestText: ttsTestText ?? state.ttsTestText,
       );
     } catch (e) {
       print('❌ [SourceSettings] 加载设置失败: $e');
@@ -151,8 +167,10 @@ class SourceSettingsNotifier extends StateNotifier<SourceSettings> {
     print('  - jsOnlyNoFallback: ${s.jsOnlyNoFallback}');
     print('  - useUnifiedApi: ${s.useUnifiedApi}');
     print('  - useYouTubeProxy: ${s.useYouTubeProxy}');
-    print('  - youTubeDownloadSource: ${s.youTubeDownloadSource}');
-    print('  - youTubeAudioQuality: ${s.youTubeAudioQuality}');
+          print('  - youTubeDownloadSource: ${s.youTubeDownloadSource}');
+      print('  - youTubeAudioQuality: ${s.youTubeAudioQuality}');
+      print('  - enableTts: ${s.enableTts}');
+      print('  - ttsTestText: ${s.ttsTestText}');
     print('  - scriptUrl长度: ${s.scriptUrl.length}');
     print('  - unifiedApiBase: ${s.unifiedApiBase}');
 
@@ -173,6 +191,8 @@ class SourceSettingsNotifier extends StateNotifier<SourceSettings> {
     await prefs.setBool(_kUseYouTubeProxy, s.useYouTubeProxy);
     await prefs.setString(_kYouTubeDownloadSource, s.youTubeDownloadSource);
     await prefs.setString(_kYouTubeAudioQuality, s.youTubeAudioQuality);
+    await prefs.setBool(_kEnableTts, s.enableTts);
+    await prefs.setString(_kTtsTestText, s.ttsTestText);
 
     // 立即验证保存是否成功
     final savedEnabled = prefs.getBool(_kEnabled);
@@ -182,6 +202,8 @@ class SourceSettingsNotifier extends StateNotifier<SourceSettings> {
     final savedUseYouTube = prefs.getBool(_kUseYouTubeProxy);
     final savedYouTubeSource = prefs.getString(_kYouTubeDownloadSource);
     final savedYouTubeQuality = prefs.getString(_kYouTubeAudioQuality);
+    final savedEnableTts = prefs.getBool(_kEnableTts);
+    final savedTtsTestText = prefs.getString(_kTtsTestText);
     final savedUrl = prefs.getString(_kScriptUrl);
     final savedApiBase = prefs.getString(_kUnifiedApiBase);
 
@@ -193,6 +215,8 @@ class SourceSettingsNotifier extends StateNotifier<SourceSettings> {
     print('  - useYouTubeProxy: $savedUseYouTube');
     print('  - youTubeDownloadSource: $savedYouTubeSource');
     print('  - youTubeAudioQuality: $savedYouTubeQuality');
+    print('  - enableTts: $savedEnableTts');
+    print('  - ttsTestText: $savedTtsTestText');
     print('  - scriptUrl: $savedUrl');
     print('  - unifiedApiBase: $savedApiBase');
 
