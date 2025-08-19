@@ -415,7 +415,10 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
 
   Widget _buildFloatingDeleteButton(MusicLibraryState libraryState) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 80), // 向上移动，避免被底部tab栏遮挡
+      margin: const EdgeInsets.only(
+        bottom: 120, // 向上移动更多，避免遮挡最后一个选择框
+        right: 32,   // 向左移动，与选择框中心对齐
+      ),
       child: FloatingActionButton(
         onPressed: () => _showBatchDeleteDialog(libraryState),
         backgroundColor: Colors.red,
