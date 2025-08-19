@@ -50,6 +50,14 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
     setState(() {});
   }
 
+  void _clearSearch() {
+    _searchController.clear();
+    ref.read(musicLibraryProvider.notifier).filterMusic('');
+    // 刷新音乐库，显示全部歌曲
+    ref.read(musicLibraryProvider.notifier).refreshLibrary();
+    setState(() {});
+  }
+
   void _playMusic(String musicName) async {
     final selectedDid = ref.read(deviceProvider).selectedDeviceId;
     if (selectedDid == null) {
@@ -172,91 +180,48 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
   Widget _buildHeader(Color onSurface) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        children: [
-          // 搜索框
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: onSurface.withOpacity(0.1), width: 1),
-              ),
-              child: TextField(
-                controller: _searchController,
-                onChanged: _onSearchChanged,
-                style: TextStyle(
-                  color: onSurface,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-                decoration: InputDecoration(
-                  hintText: '搜索本地音乐...',
-                  hintStyle: TextStyle(
-                    color: onSurface.withOpacity(0.5),
-                    fontSize: 16,
-                  ),
-                  prefixIcon: Icon(
-                    Icons.search_rounded,
-                    color: onSurface.withOpacity(0.6),
-                    size: 22,
-                  ),
-                  suffixIcon:
-                      _searchController.text.isNotEmpty
-                          ? IconButton(
-                            icon: Icon(
-                              Icons.clear_rounded,
-                              color: onSurface.withOpacity(0.6),
-                              size: 20,
-                            ),
-                            onPressed: () {
-                              _searchController.clear();
-                              ref
-                                  .read(musicLibraryProvider.notifier)
-                                  .filterMusic('');
-                              setState(() {});
-                            },
-                          )
-                          : null,
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                ),
-              ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: onSurface.withOpacity(0.1), width: 1),
+        ),
+        child: TextField(
+          controller: _searchController,
+          onChanged: _onSearchChanged,
+          style: TextStyle(
+            color: onSurface,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+          decoration: InputDecoration(
+            hintText: '搜索本地音乐...',
+            hintStyle: TextStyle(
+              color: onSurface.withOpacity(0.5),
+              fontSize: 16,
+            ),
+            prefixIcon: Icon(
+              Icons.search_rounded,
+              color: onSurface.withOpacity(0.6),
+              size: 22,
+            ),
+            suffixIcon: _searchController.text.isNotEmpty
+                ? IconButton(
+                    icon: Icon(
+                      Icons.clear_rounded,
+                      color: onSurface.withOpacity(0.6),
+                      size: 20,
+                    ),
+                    onPressed: _clearSearch,
+                  )
+                : null,
+            border: InputBorder.none,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
             ),
           ),
-
-          const SizedBox(width: 12),
-
-          // 刷新按钮
-          Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: onSurface.withOpacity(0.1), width: 1),
-            ),
-            child: IconButton(
-              icon: RotationTransition(
-                turns: _refreshController,
-                child: Icon(
-                  Icons.refresh_rounded,
-                  color: onSurface.withOpacity(0.7),
-                  size: 22,
-                ),
-              ),
-              onPressed: () {
-                _refreshController.repeat();
-                ref.read(musicLibraryProvider.notifier).refreshLibrary().then((
-                  _,
-                ) {
-                  _refreshController.reset();
-                });
-              },
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
