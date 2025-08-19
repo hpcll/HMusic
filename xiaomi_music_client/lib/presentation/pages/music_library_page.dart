@@ -141,6 +141,7 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
                             libraryState.selectedMusicNames.isNotEmpty
           ? _buildFloatingDeleteButton(libraryState)
           : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: RefreshIndicator(
         key: const ValueKey('music_library_refresh'),
         onRefresh: () async {
@@ -413,19 +414,27 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
   }
 
   Widget _buildFloatingDeleteButton(MusicLibraryState libraryState) {
-    return FloatingActionButton.extended(
-      onPressed: () => _showBatchDeleteDialog(libraryState),
-      backgroundColor: Colors.red,
-      foregroundColor: Colors.white,
-      icon: const Icon(Icons.delete),
-      label: Text(
-        '删除 (${libraryState.selectedMusicNames.length})',
-        style: const TextStyle(
-          fontWeight: FontWeight.w600,
+    return Container(
+      margin: const EdgeInsets.only(bottom: 80), // 向上移动，避免被底部tab栏遮挡
+      child: FloatingActionButton(
+        onPressed: () => _showBatchDeleteDialog(libraryState),
+        backgroundColor: Colors.red,
+        foregroundColor: Colors.white,
+        elevation: 6,
+        heroTag: "delete_fab",
+        child: Badge(
+          label: Text(
+            '${libraryState.selectedMusicNames.length}',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          backgroundColor: Colors.red.shade800,
+          child: const Icon(Icons.delete, size: 24),
         ),
       ),
-      elevation: 8,
-      heroTag: "delete_fab",
     );
   }
 
