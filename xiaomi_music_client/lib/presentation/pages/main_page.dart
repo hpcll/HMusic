@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'dart:ui';
+import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:go_router/go_router.dart';
@@ -25,6 +25,7 @@ class MainPage extends ConsumerStatefulWidget {
 class _MainPageState extends ConsumerState<MainPage> {
   int _selectedIndex = 0;
   final _searchController = TextEditingController();
+  Timer? _searchDebounce;
 
   List<Widget> get _pages => [
     const ControlPanelPage(
@@ -37,15 +38,47 @@ class _MainPageState extends ConsumerState<MainPage> {
   ];
 
   void _onItemTapped(int index) {
+    final wasIndex = _selectedIndex;
     setState(() {
       _selectedIndex = index;
     });
+    // 当切到“列表”标签（index 2）时触发一次加载
+    if (index == 2 && wasIndex != 2) {
+      final auth = ref.read(authProvider);
+      if (auth is AuthAuthenticated) {
+        ref.read(playlistProvider.notifier).refreshPlaylists();
+      }
+    }
   }
 
-  // 搜索页已移除
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_handleSearchTextChanged);
+  }
+
+  void _handleSearchTextChanged() {
+    // Keep UI (clear button visibility) in sync
+    if (mounted) setState(() {});
+
+    // Ignore input while IME is composing (e.g., Pinyin on macOS)
+    if (_searchController.value.composing.isValid) {
+      return;
+    }
+
+    _searchDebounce?.cancel();
+    _searchDebounce = Timer(const Duration(milliseconds: 400), () {
+      if (!mounted) return;
+      if (_searchController.value.composing.isValid) return;
+      final text = _searchController.text;
+      ref.read(musicSearchProvider.notifier).searchOnline(text);
+    });
+  }
 
   @override
   void dispose() {
+    _searchDebounce?.cancel();
+    _searchController.removeListener(_handleSearchTextChanged);
     _searchController.dispose();
     super.dispose();
   }
@@ -334,13 +367,6 @@ class _MainPageState extends ConsumerState<MainPage> {
       child: TextField(
         key: const ValueKey('online_search_field'),
         controller: _searchController,
-        onChanged: (value) {
-          Future.delayed(const Duration(milliseconds: 350), () {
-            if (_searchController.text == value) {
-              ref.read(musicSearchProvider.notifier).searchOnline(value);
-            }
-          });
-        },
         style: TextStyle(color: onSurface),
         decoration: InputDecoration(
           hintText: '在线搜索歌曲...',

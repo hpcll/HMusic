@@ -5,6 +5,7 @@ import '../providers/device_provider.dart';
 import 'playlist_detail_page.dart';
 import '../widgets/app_snackbar.dart';
 import '../widgets/app_layout.dart';
+import '../providers/auth_provider.dart';
 
 class PlaylistPage extends ConsumerStatefulWidget {
   const PlaylistPage({super.key});
@@ -14,6 +15,18 @@ class PlaylistPage extends ConsumerStatefulWidget {
 }
 
 class _PlaylistPageState extends ConsumerState<PlaylistPage> {
+  @override
+  void initState() {
+    super.initState();
+    // 首次进入页面时尝试加载（已登录才会成功）
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final auth = ref.read(authProvider);
+      if (auth is AuthAuthenticated) {
+        ref.read(playlistProvider.notifier).refreshPlaylists();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final playlistState = ref.watch(playlistProvider);
@@ -76,6 +89,13 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage> {
           Text(
             '在这里创建和管理你的音乐收藏',
             style: TextStyle(fontSize: 16, color: onSurface.withOpacity(0.6)),
+          ),
+          const SizedBox(height: 16),
+          FilledButton.icon(
+            onPressed:
+                () => ref.read(playlistProvider.notifier).refreshPlaylists(),
+            icon: const Icon(Icons.refresh_rounded),
+            label: const Text('加载播放列表'),
           ),
         ],
       ),

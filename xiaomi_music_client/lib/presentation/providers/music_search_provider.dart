@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:io' show Platform;
 import '../../data/models/music.dart';
 import '../../data/models/online_music_result.dart';
 import '../../data/services/unified_api_service.dart';
@@ -126,8 +127,11 @@ class MusicSearchNotifier extends StateNotifier<MusicSearchState> {
       List<OnlineMusicResult> parsed = [];
       String sourceUsed = 'unified';
 
+      // macOS 也允许 JS 搜索；若 WebView 抛未实现异常会自动回退到 LocalJS/统一API
+      final bool preferJs = settings.primarySource == 'js_external';
+
       // 根据primarySource设置选择音源
-      if (settings.primarySource == 'js_external') {
+      if (preferJs) {
         print('[XMC] 🎵 [MusicSearch] 使用JS外置音源');
         parsed = await _searchUsingJsSource(query, settings, ref, page: 1);
         sourceUsed = 'js_builtin';

@@ -8,6 +8,7 @@ import 'presentation/pages/settings/ssh_settings_page.dart';
 import 'presentation/pages/settings/server_settings_page.dart';
 import 'presentation/pages/settings/source_settings_page.dart';
 import 'presentation/pages/settings/tts_settings_page.dart';
+import 'presentation/pages/now_playing_page.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   // 使用一个简单的根路由，内部由 AuthWrapper 判定跳转
@@ -45,6 +46,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/settings/tts',
         name: 'tts_settings',
         builder: (context, state) => const TtsSettingsPage(),
+      ),
+      GoRoute(
+        path: '/now-playing',
+        name: 'now_playing',
+        builder: (context, state) => const NowPlayingPage(),
       ),
     ],
     debugLogDiagnostics: false,

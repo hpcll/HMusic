@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math' as math;
 import 'package:webview_flutter/webview_flutter.dart';
+import 'dart:io' show Platform;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -303,7 +304,12 @@ class WebViewJsSourceService {
 
     print('⚙️ [WebViewJsSource] 配置WebView...');
     await controller.setJavaScriptMode(JavaScriptMode.unrestricted);
-    await controller.setBackgroundColor(const Color(0x00000000));
+    // macOS 上 setBackgroundColor/opaque 未实现，调用会抛 UnimplementedError
+    try {
+      if (!Platform.isMacOS) {
+        await controller.setBackgroundColor(const Color(0x00000000));
+      }
+    } catch (_) {}
 
     // 配置导航代理，允许所有请求
     await controller.setNavigationDelegate(
@@ -622,7 +628,12 @@ class WebViewJsSourceService {
           print('❌ [NetworkBridge] 请求失败: $e');
           // 如果是 LX 接口，尝试在 WebView 内直接使用 fetch 作为回退（规避原生网络栈问题）
           try {
-            final lower = (msg.message.contains('http') ? jsonDecode(msg.message)['url']?.toString() : '')?.toLowerCase() ?? '';
+            final lower =
+                (msg.message.contains('http')
+                        ? jsonDecode(msg.message)['url']?.toString()
+                        : '')
+                    ?.toLowerCase() ??
+                '';
             if (lower.contains('lxmusicapi.onrender.com')) {
               final data = jsonDecode(msg.message);
               final requestId = data['id'] as String;

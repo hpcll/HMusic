@@ -37,12 +37,17 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
       vsync: this,
     );
 
-    // 延迟初始化以避免阻塞UI
+    // 延迟初始化以避免阻塞UI，只在用户已登录时自动加载设备
     Future.delayed(const Duration(milliseconds: 500), () {
       if (mounted) {
         try {
-          ref.read(deviceProvider.notifier).loadDevices();
-          ref.read(playbackProvider.notifier).ensureInitialized();
+          final authState = ref.read(authProvider);
+          if (authState is AuthAuthenticated) {
+            ref.read(deviceProvider.notifier).loadDevices();
+            ref.read(playbackProvider.notifier).ensureInitialized();
+          } else {
+            debugPrint('ControlPanel: 用户未登录，跳过自动加载设备');
+          }
         } catch (e) {
           debugPrint('初始化错误: $e');
         }
@@ -127,6 +132,14 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
         ),
       ),
       actions: [
+        IconButton(
+          onPressed: () => Navigator.of(context).pushNamed('/now-playing'),
+          icon: Icon(
+            Icons.queue_music_rounded,
+            color: onSurface.withOpacity(0.8),
+          ),
+          tooltip: '正在播放',
+        ),
         IconButton(
           onPressed: () async {
             try {

@@ -68,7 +68,17 @@ class UnifiedApiService {
           return [];
         }
 
-        final List<dynamic> songs = jsonBody['data'] ?? [];
+        // 兼容 data 字段为 List / Map / String 的不同返回
+        dynamic dataField = jsonBody['data'];
+        List<dynamic> songs;
+        if (dataField is List) {
+          songs = dataField;
+        } else if (dataField is Map && dataField['list'] is List) {
+          songs = (dataField['list'] as List).cast<dynamic>();
+        } else {
+          // 其它情况（如字符串或空），按无结果处理，避免类型错误
+          songs = const [];
+        }
         print('🔍 [UnifiedAPI] 原始数据包含 ${songs.length} 个结果');
 
         final results =
@@ -157,7 +167,16 @@ class UnifiedApiService {
           return null;
         }
 
-        final List<dynamic> songs = jsonBody['data'] ?? [];
+        // 兼容 data 字段为 List / Map / String 的不同返回
+        dynamic dataField = jsonBody['data'];
+        List<dynamic> songs;
+        if (dataField is List) {
+          songs = dataField;
+        } else if (dataField is Map && dataField['list'] is List) {
+          songs = (dataField['list'] as List).cast<dynamic>();
+        } else {
+          songs = const [];
+        }
         print('🎵 [UnifiedAPI] 解析到 ${songs.length} 首歌曲');
 
         if (songs.isNotEmpty) {

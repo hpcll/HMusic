@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
@@ -51,7 +52,8 @@ class MusicLibraryNotifier extends StateNotifier<MusicLibraryState> {
   final Ref ref;
 
   MusicLibraryNotifier(this.ref) : super(const MusicLibraryState()) {
-    _loadMusicLibrary();
+    // 禁用自动加载音乐库，避免在未登录时进行网络请求
+    debugPrint('MusicLibraryProvider: 自动加载已禁用，等待用户手动触发');
   }
 
   Future<void> _loadMusicLibrary() async {

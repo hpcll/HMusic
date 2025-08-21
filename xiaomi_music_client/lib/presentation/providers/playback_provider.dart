@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/models/playing_music.dart';
 import 'dio_provider.dart';
@@ -81,9 +82,10 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
   Timer? _statusRefreshTimer;
 
   PlaybackNotifier(this.ref)
-    : super(const PlaybackState(isLoading: true, hasLoaded: false)) {
-    // 延迟初始化，避免在构造时立即执行异步操作
-    Future.microtask(() => _initialize());
+    : super(const PlaybackState(isLoading: false, hasLoaded: false)) {
+    // 禁用自动初始化，避免在未登录时进行网络请求
+    // 需要用户手动触发初始化
+    debugPrint('PlaybackProvider: 自动初始化已禁用，等待用户手动触发');
   }
 
   @override

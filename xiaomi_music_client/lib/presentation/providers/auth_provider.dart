@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/constants/app_constants.dart';
@@ -38,23 +39,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> _loadSavedCredentials() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final serverUrl = prefs.getString(AppConstants.prefsServerUrl);
-      final username = prefs.getString(AppConstants.prefsUsername);
-      final password = prefs.getString(AppConstants.prefsPassword);
-
-      if (serverUrl != null && username != null && password != null) {
-        await login(
-          serverUrl: serverUrl,
-          username: username,
-          password: password,
-          saveCredentials: false,
-        );
-      }
-    } catch (e) {
-      // 如果自动登录失败，保持初始状态
-    }
+    // 暂时禁用自动登录，让用户手动登录
+    // 这样可以避免启动时的网络连接错误
+    debugPrint('自动登录已禁用，请用户手动登录');
   }
 
   Future<void> login({

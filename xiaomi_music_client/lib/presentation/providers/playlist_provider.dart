@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/models/playlist.dart';
 import 'auth_provider.dart';
@@ -46,15 +47,13 @@ class PlaylistNotifier extends StateNotifier<PlaylistState> {
   final Ref ref;
 
   PlaylistNotifier(this.ref) : super(const PlaylistState()) {
-    // 如果已登录则加载一次
-    if (ref.read(apiServiceProvider) != null) {
-      _loadPlaylists();
-    }
+    // 禁用自动加载播放列表，避免在未登录时进行网络请求
+    debugPrint('PlaylistProvider: 自动加载已禁用，等待用户手动触发');
 
-    // 监听认证状态变化，认证成功后自动加载播放列表
+    // 监听认证状态变化，但不再自动加载
     ref.listen<AuthState>(authProvider, (previous, next) {
       if (next is AuthAuthenticated) {
-        _loadPlaylists();
+        debugPrint('PlaylistProvider: 用户已认证，但不会自动加载播放列表');
       }
       if (next is AuthInitial) {
         state = const PlaylistState();
