@@ -39,9 +39,24 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> _loadSavedCredentials() async {
-    // 暂时禁用自动登录，让用户手动登录
-    // 这样可以避免启动时的网络连接错误
-    debugPrint('自动登录已禁用，请用户手动登录');
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final serverUrl = prefs.getString(AppConstants.prefsServerUrl);
+      final username = prefs.getString(AppConstants.prefsUsername);
+      final password = prefs.getString(AppConstants.prefsPassword);
+
+      if (serverUrl != null && username != null && password != null) {
+        debugPrint('尝试自动登录: $username@$serverUrl');
+        await login(
+          serverUrl: serverUrl,
+          username: username,
+          password: password,
+          saveCredentials: false, // 不重复保存
+        );
+      }
+    } catch (e) {
+      debugPrint('自动登录失败: $e');
+    }
   }
 
   Future<void> login({

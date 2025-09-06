@@ -36,9 +36,17 @@ class DeviceNotifier extends StateNotifier<DeviceState> {
   final Ref ref;
 
   DeviceNotifier(this.ref) : super(const DeviceState()) {
-    // 监听认证状态变化：登出时清空设备状态
+    // 监听认证状态变化
     ref.listen<AuthState>(authProvider, (prev, next) {
+      if (next is AuthAuthenticated && prev is! AuthAuthenticated) {
+        // 用户登录后自动加载设备列表
+        debugPrint('DeviceProvider: 用户已认证，自动加载设备列表');
+        Future.delayed(const Duration(milliseconds: 1000), () {
+          loadDevices();
+        });
+      }
       if (next is AuthInitial) {
+        // 登出时清空设备状态
         state = const DeviceState();
       }
     });

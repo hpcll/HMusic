@@ -52,8 +52,19 @@ class MusicLibraryNotifier extends StateNotifier<MusicLibraryState> {
   final Ref ref;
 
   MusicLibraryNotifier(this.ref) : super(const MusicLibraryState()) {
-    // 禁用自动加载音乐库，避免在未登录时进行网络请求
-    debugPrint('MusicLibraryProvider: 自动加载已禁用，等待用户手动触发');
+    // 监听认证状态变化，在用户登录后自动加载音乐库
+    ref.listen<AuthState>(authProvider, (previous, next) {
+      if (next is AuthAuthenticated && previous is! AuthAuthenticated) {
+        debugPrint('MusicLibraryProvider: 用户已认证，自动加载音乐库');
+        // 延迟一点时间确保认证完全完成
+        Future.delayed(const Duration(milliseconds: 800), () {
+          refreshLibrary();
+        });
+      }
+      if (next is AuthInitial) {
+        state = const MusicLibraryState();
+      }
+    });
   }
 
   Future<void> _loadMusicLibrary() async {
