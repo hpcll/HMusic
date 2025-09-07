@@ -6,6 +6,7 @@ import 'package:dartssh2/dartssh2.dart';
 import '../../data/models/music.dart';
 import '../../data/adapters/music_list_adapter.dart';
 import '../../data/services/music_api_service.dart';
+import 'auth_provider.dart';
 import 'dio_provider.dart';
 
 class MusicLibraryState {
