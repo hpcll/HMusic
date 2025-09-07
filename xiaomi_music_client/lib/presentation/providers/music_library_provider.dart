@@ -70,15 +70,24 @@ class MusicLibraryNotifier extends StateNotifier<MusicLibraryState> {
 
   Future<void> _loadMusicLibrary() async {
     final apiService = ref.read(apiServiceProvider);
-    if (apiService == null) return;
+    if (apiService == null) {
+      debugPrint('MusicLibrary: API服务未初始化');
+      return;
+    }
 
     try {
+      debugPrint('MusicLibrary: 开始加载音乐库');
       state = state.copyWith(isLoading: true);
 
       final response = await apiService.getMusicList();
+      debugPrint('MusicLibrary: API响应: $response');
+      
       final musicList = MusicListAdapter.parse(response);
-
-      print('解析后的音乐列表数量: ${musicList.length}');
+      debugPrint('MusicLibrary: 解析后的音乐列表数量: ${musicList.length}');
+      
+      if (musicList.isNotEmpty) {
+        debugPrint('MusicLibrary: 前5首歌曲: ${musicList.take(5).map((m) => m.name).toList()}');
+      }
 
       state = state.copyWith(
         musicList: musicList,
@@ -86,8 +95,10 @@ class MusicLibraryNotifier extends StateNotifier<MusicLibraryState> {
         isLoading: false,
         error: null,
       );
+      
+      debugPrint('MusicLibrary: 数据加载完成，状态已更新');
     } catch (e) {
-      print('获取音乐列表失败: $e');
+      debugPrint('MusicLibrary: 获取音乐列表失败: $e');
       state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
