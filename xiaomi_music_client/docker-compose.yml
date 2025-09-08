@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  xiaomusic:
+    image: hanxi/xiaomusic:main
+    container_name: xiaomusic
+    restart: unless-stopped
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./config:/app/config
+      - ./music:/app/music
+      - ./logs:/app/logs
+      - ./playlists:/app/playlists
+      - ./lyrics:/app/lyrics
+    environment:
+      - TZ=Asia/Shanghai
+      - PYTHONUNBUFFERED=1
+    command: ["xiaomusic", "--config", "/app/config/config.json"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/getversion"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - xiaomusic-network
+
+  # 可选：Nginx反向代理
+  nginx:
+    image: nginx:alpine
+    container_name: xiaomusic-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - xiaomusic
+    networks:
+      - xiaomusic-network
+    profiles:
+      - with-nginx
+
+networks:
+  xiaomusic-network:
+    driver: bridge
+

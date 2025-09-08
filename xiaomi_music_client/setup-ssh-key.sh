@@ -77,3 +77,13 @@ fi
 
 echo
 echo "🎯 下一步: 可运行 ./quick_deploy_xiaomusic.sh 部署，或使用上面的 scp 命令上传音乐文件。"
+echo
+echo "📋 部署xiaomusic到OpenWrt Docker："
+echo "  ./quick_deploy_xiaomusic.sh -h $OPENWRT_IP -u $OPENWRT_USER -P $OPENWRT_PORT"
+echo
+echo "🔧 如需自定义配置，可使用以下参数："
+echo "  -a ACCOUNT  小米账号"
+echo "  -w PASSWORD 小米密码"
+echo "  -c COOKIE   小米Cookie"
+echo "  -v VERSION  xiaomusic版本 (默认: latest)"
+echo "  -p PORT     服务端口 (默认: 8090)"

@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  xiaomusic:
+    image: hanxi/xiaomusic:main
+    container_name: xiaomusic
+    restart: unless-stopped
+    network_mode: "host"  # 使用宿主机网络
+    volumes:
+      - ./config:/app/config
+      - ./music:/app/music
+      - ./logs:/app/logs
+      - ./playlists:/app/playlists
+      - ./lyrics:/app/lyrics
+    environment:
+      - TZ=Asia/Shanghai
+      - PYTHONUNBUFFERED=1
+    command: ["xiaomusic", "--config", "/app/config/config.json"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/getversion"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
