@@ -46,11 +46,13 @@ class JSProxyExecutorService {
           globalThis._pendingRequests[requestId] = callback;
           
           // 发送请求给Flutter
-          globalThis._flutterRequestProxy(JSON.stringify({
+          const requestData = {
             id: requestId,
             url: url,
             options: options || {}
-          }));
+          };
+          console.log('[LXEnv] 调用Flutter网络请求代理，请求数据:', requestData);
+          globalThis._flutterRequestProxy(requestData);
         },
         
         // 事件监听
@@ -106,27 +108,109 @@ class JSProxyExecutorService {
 
     _runtime!.evaluate(lxEnvironment);
 
+    // 注入 console.* polyfill，避免脚本使用 console.group 等时报错
+    _runtime!.evaluate('''
+      (function() {
+        try {
+          if (typeof globalThis.console === 'undefined') globalThis.console = {};
+          if (typeof console.log !== 'function') console.log = function() {};
+          if (typeof console.warn !== 'function') console.warn = function() {};
+          if (typeof console.error !== 'function') console.error = function() {};
+          if (typeof console.group !== 'function') console.group = function() { try { console.log.apply(console, arguments); } catch (e) {} };
+          if (typeof console.groupCollapsed !== 'function') console.groupCollapsed = console.group;
+          if (typeof console.groupEnd !== 'function') console.groupEnd = function() {};
+        } catch (e) {}
+      })();
+    ''');
+
+    // 使用sendMessage机制注册Flutter函数供JS调用
+    _runtime!.evaluate('''
+      globalThis._flutterRequestProxy = function(args) {
+        console.log('[LXEnv] 调用Flutter网络请求代理');
+        console.log('[LXEnv] 发送的参数:', args);
+        console.log('[LXEnv] 参数类型:', typeof args);
+        try {
+          // 确保参数是字符串或可以序列化的对象
+          const argsToSend = typeof args === 'string' ? args : JSON.stringify(args);
+          console.log('[LXEnv] 序列化后的参数:', argsToSend);
+          sendMessage('_flutterRequestProxy', argsToSend);
+        } catch (e) {
+          console.error('[LXEnv] 发送消息失败:', e);
+        }
+      };
+      
+      globalThis._flutterEventSender = function(args) {
+        console.log('[LXEnv] 调用Flutter事件发送器');
+        console.log('[LXEnv] 事件参数:', args);
+        console.log('[LXEnv] 事件参数类型:', typeof args);
+        try {
+          // 确保参数是字符串
+          const argsToSend = typeof args === 'string' ? args : JSON.stringify(args);
+          console.log('[LXEnv] 事件序列化后的参数:', argsToSend);
+          sendMessage('_flutterEventSender', argsToSend);
+        } catch (e) {
+          console.error('[LXEnv] 发送事件失败:', e);
+        }
+      };
+    ''');
+
     // 注册Flutter网络请求代理
     _runtime!.onMessage('_flutterRequestProxy', (args) async {
-      await _handleNetworkRequest(args);
+      print('[JSProxy] 📥 收到网络请求代理消息: $args');
+      print('[JSProxy] 📥 参数类型: ${args.runtimeType}');
+
+      // 现在args应该是字符串，需要解析为Map
+      try {
+        Map<String, dynamic> requestData;
+        if (args is String) {
+          requestData = jsonDecode(args);
+        } else if (args is Map) {
+          requestData = Map<String, dynamic>.from(args);
+        } else {
+          throw Exception('Unexpected args type: ${args.runtimeType}');
+        }
+
+        print('[JSProxy] 📥 解析后的请求数据: $requestData');
+        await _handleNetworkRequest(requestData);
+      } catch (e) {
+        print('[JSProxy] ❌ 处理网络请求代理参数失败: $e, args: $args');
+        print('[JSProxy] ❌ 错误堆栈: ${StackTrace.current}');
+      }
     });
 
     // 注册Flutter事件发送器
     _runtime!.onMessage('_flutterEventSender', (args) {
-      _handleEventSend(args);
+      print('[JSProxy] 📥 收到事件发送器消息: $args');
+      print('[JSProxy] 📥 事件参数类型: ${args.runtimeType}');
+
+      try {
+        Map<String, dynamic> eventData;
+        if (args is String) {
+          eventData = jsonDecode(args);
+        } else if (args is Map) {
+          eventData = Map<String, dynamic>.from(args);
+        } else {
+          throw Exception('Unexpected event args type: ${args.runtimeType}');
+        }
+
+        print('[JSProxy] 📥 解析后的事件数据: $eventData');
+        _handleEventSend(eventData);
+      } catch (e) {
+        print('[JSProxy] ❌ 处理事件发送器参数失败: $e, args: $args');
+        print('[JSProxy] ❌ 错误堆栈: ${StackTrace.current}');
+      }
     });
   }
 
   /// 处理JS发起的网络请求
-  Future<void> _handleNetworkRequest(dynamic args) async {
-    Map<String, dynamic>? requestData;
+  Future<void> _handleNetworkRequest(Map<String, dynamic> requestData) async {
     try {
-      requestData = jsonDecode(args);
-      final requestId = requestData?['id'];
-      final url = requestData?['url'];
-      final options = requestData?['options'] ?? {};
+      final requestId = requestData['id'];
+      final url = requestData['url'];
+      final options = requestData['options'] ?? {};
 
       print('[JSProxy] 🌐 处理网络请求: $url');
+      print('[JSProxy] 🔍 请求参数详情: $requestData');
 
       // 发起实际的网络请求
       final response = await _dio.request(
@@ -140,22 +224,65 @@ class JSProxyExecutorService {
         data: options['data'],
       );
 
-      // 构造响应数据
+      // 构造响应数据 - 确保body是JS脚本期望的格式
+      dynamic bodyData = response.data;
+
+      // 如果响应数据是字符串，尝试解析为JSON
+      if (bodyData is String) {
+        try {
+          bodyData = jsonDecode(bodyData);
+        } catch (e) {
+          // 如果解析失败，保持原始字符串
+          print('[JSProxy] 响应数据不是有效JSON，保持原始格式: $e');
+        }
+      }
+
+      // 兼容：部分脚本期望 body.url，但服务端返回的是 body.data
+      try {
+        if (bodyData is Map) {
+          final Map<String, dynamic> tmp = Map<String, dynamic>.from(bodyData);
+          if (!tmp.containsKey('url') && tmp['data'] is String) {
+            tmp['url'] = tmp['data'];
+          }
+          bodyData = tmp;
+        }
+      } catch (_) {}
+
       final responseData = {
         'statusCode': response.statusCode,
-        'body': response.data,
+        'body': bodyData,
         'headers': response.headers.map,
       };
 
       // 调用JS回调
       final callbackScript = '''
-        if (globalThis._pendingRequests['$requestId']) {
-          const callback = globalThis._pendingRequests['$requestId'];
-          delete globalThis._pendingRequests['$requestId'];
-          
-          const response = ${jsonEncode(responseData)};
-          callback(null, response);
-        }
+        (function() {
+          try {
+            if (globalThis._pendingRequests['$requestId']) {
+              const callback = globalThis._pendingRequests['$requestId'];
+              delete globalThis._pendingRequests['$requestId'];
+              
+              const response = ${jsonEncode(responseData)};
+              
+              console.log('[JSProxy] 调用网络请求回调，请求ID: $requestId');
+              console.log('[JSProxy] 响应状态:', response.statusCode);
+              console.log('[JSProxy] 响应数据类型:', typeof response.body);
+              
+              // 确保回调正确执行
+              callback(null, response);
+              console.log('[JSProxy] 回调执行完成');
+              
+              return true;
+            } else {
+              console.log('[JSProxy] 未找到请求ID对应的回调: $requestId');
+              console.log('[JSProxy] 当前待处理请求:', Object.keys(globalThis._pendingRequests || {}));
+              return false;
+            }
+          } catch (e) {
+            console.error('[JSProxy] 回调执行错误:', e);
+            return false;
+          }
+        })()
       ''';
 
       _runtime!.evaluate(callbackScript);
@@ -164,13 +291,25 @@ class JSProxyExecutorService {
       print('[JSProxy] ❌ 网络请求失败: $e');
 
       // 通知JS请求失败
-      final requestId = requestData?['id'] ?? 'unknown';
+      final requestId = requestData['id'] ?? 'unknown';
       final errorScript = '''
-        if (globalThis._pendingRequests['$requestId']) {
-          const callback = globalThis._pendingRequests['$requestId'];
-          delete globalThis._pendingRequests['$requestId'];
-          callback(new Error('${e.toString().replaceAll("'", "\\'")}'), null);
-        }
+        (function() {
+          try {
+            if (globalThis._pendingRequests['$requestId']) {
+              const callback = globalThis._pendingRequests['$requestId'];
+              delete globalThis._pendingRequests['$requestId'];
+              console.log('[JSProxy] 调用错误回调，请求ID: $requestId');
+              callback(new Error('${e.toString().replaceAll("'", "\\'")}'), null);
+              return true;
+            } else {
+              console.log('[JSProxy] 未找到错误回调: $requestId');
+              return false;
+            }
+          } catch (callbackError) {
+            console.error('[JSProxy] 错误回调执行失败:', callbackError);
+            return false;
+          }
+        })()
       ''';
 
       _runtime!.evaluate(errorScript);
@@ -178,9 +317,8 @@ class JSProxyExecutorService {
   }
 
   /// 处理JS发送的事件
-  void _handleEventSend(dynamic args) {
+  void _handleEventSend(Map<String, dynamic> eventData) {
     try {
-      final eventData = jsonDecode(args);
       final eventName = eventData['event'];
       final data = eventData['data'];
 
@@ -190,6 +328,12 @@ class JSProxyExecutorService {
       switch (eventName) {
         case 'inited':
           print('[JSProxy] 🎵 JS脚本初始化完成');
+          // 存储音源信息到全局变量
+          if (data != null && data['sources'] != null) {
+            final sourcesJson = jsonEncode(data['sources']);
+            _runtime!.evaluate('globalThis._musicSources = $sourcesJson;');
+            print('[JSProxy] 📋 已存储音源信息: ${data['sources'].keys.join(', ')}');
+          }
           break;
         case 'updateAlert':
           print('[JSProxy] 🔄 脚本更新提醒: ${data?['log']}');
@@ -273,23 +417,46 @@ class JSProxyExecutorService {
         },
       };
 
+      // 清除之前的结果
+      _runtime!.evaluate(
+        'globalThis._promiseResult = null; globalThis._promiseError = null; globalThis._promiseComplete = false;',
+      );
+
       // 调用JS处理函数
       final executeScript = '''
-        (async function() {
+        (function() {
           try {
             const params = ${jsonEncode(requestParams)};
             console.log('[JSProxy] 调用JS处理函数:', params);
             
             if (globalThis._lxHandlers && globalThis._lxHandlers.request) {
-              const result = await globalThis._lxHandlers.request(params);
-              console.log('[JSProxy] JS返回结果:', result);
-              return { success: true, result: result };
+              const result = globalThis._lxHandlers.request(params);
+              
+              // 检查是否是Promise
+              if (result && typeof result.then === 'function') {
+                console.log('[JSProxy] 检测到Promise，开始等待...');
+                result.then(function(resolvedValue) {
+                  console.log('[JSProxy] Promise resolved:', resolvedValue);
+                  globalThis._promiseResult = resolvedValue;
+                  globalThis._promiseComplete = true;
+                  console.log('[JSProxy] 设置Promise结果完成');
+                }).catch(function(error) {
+                  console.log('[JSProxy] Promise rejected:', error);
+                  globalThis._promiseError = error ? error.toString() : 'Unknown Promise error';
+                  globalThis._promiseComplete = true;
+                  console.log('[JSProxy] 设置Promise错误完成');
+                });
+                return JSON.stringify({ success: true, isPromise: true });
+              } else {
+                console.log('[JSProxy] 直接返回结果:', result);
+                return JSON.stringify({ success: true, result: result });
+              }
             } else {
-              return { success: false, error: '未找到请求处理函数' };
+              return JSON.stringify({ success: false, error: '未找到请求处理函数' });
             }
           } catch (e) {
             console.error('[JSProxy] JS执行错误:', e);
-            return { success: false, error: e.toString() };
+            return JSON.stringify({ success: false, error: e.toString() });
           }
         })()
       ''';
@@ -298,12 +465,74 @@ class JSProxyExecutorService {
       print('[JSProxy] 🔍 JS执行结果: ${result.stringResult}');
 
       // 解析结果
-      final resultData = jsonDecode(result.stringResult);
+      Map<String, dynamic> resultData;
+      try {
+        resultData = jsonDecode(result.stringResult);
+      } catch (e) {
+        print('[JSProxy] ❌ JSON解析失败: $e');
+        print('[JSProxy] 原始结果: ${result.stringResult}');
+        return null;
+      }
 
       if (resultData['success'] == true) {
-        final musicUrl = resultData['result'];
-        print('[JSProxy] ✅ 成功获取音乐链接: $musicUrl');
-        return musicUrl;
+        if (resultData['isPromise'] == true) {
+          // 等待Promise完成
+          print('[JSProxy] ⏳ 等待Promise完成...');
+
+          for (int i = 0; i < 200; i++) {
+            // 最多等待20秒
+            await Future.delayed(Duration(milliseconds: 100));
+
+            final checkResult = _runtime!.evaluate('''
+              (function() {
+                try {
+                  console.log('[JSProxy] 检查Promise状态:', globalThis._promiseComplete, globalThis._promiseResult, globalThis._promiseError);
+                  
+                  if (globalThis._promiseComplete === true) {
+                    if (globalThis._promiseResult !== null && globalThis._promiseResult !== undefined) {
+                      console.log('[JSProxy] Promise成功，结果:', globalThis._promiseResult);
+                      return JSON.stringify({ success: true, result: globalThis._promiseResult });
+                    } else if (globalThis._promiseError !== null && globalThis._promiseError !== undefined) {
+                      console.log('[JSProxy] Promise失败，错误:', globalThis._promiseError);
+                      return JSON.stringify({ success: false, error: globalThis._promiseError });
+                    } else {
+                      console.log('[JSProxy] Promise完成但无结果');
+                      return JSON.stringify({ success: false, error: 'Promise完成但无结果' });
+                    }
+                  } else {
+                    return JSON.stringify({ waiting: true });
+                  }
+                } catch (e) {
+                  console.error('[JSProxy] 检查Promise状态错误:', e);
+                  return JSON.stringify({ success: false, error: 'Check promise error: ' + e.toString() });
+                }
+              })()
+            ''');
+
+            final checkData = jsonDecode(checkResult.stringResult);
+
+            if (checkData['success'] == true) {
+              final musicUrl = checkData['result'];
+              print('[JSProxy] ✅ Promise完成，获取音乐链接: $musicUrl');
+              return musicUrl;
+            } else if (checkData['success'] == false) {
+              print('[JSProxy] ❌ Promise失败: ${checkData['error']}');
+              return null;
+            }
+
+            // 每秒显示一次等待状态
+            if (i % 10 == 0) {
+              print('[JSProxy] ⏳ 等待Promise完成... ${i / 10}秒');
+            }
+          }
+
+          print('[JSProxy] ⏰ Promise等待超时 (20秒)');
+          return null;
+        } else {
+          final musicUrl = resultData['result'];
+          print('[JSProxy] ✅ 成功获取音乐链接: $musicUrl');
+          return musicUrl;
+        }
       } else {
         print('[JSProxy] ❌ 获取音乐链接失败: ${resultData['error']}');
         return null;
@@ -324,9 +553,9 @@ class JSProxyExecutorService {
       final result = _runtime!.evaluate('''
         (function() {
           try {
-            return globalThis._musicSources || {};
+            return JSON.stringify(globalThis._musicSources || {});
           } catch (e) {
-            return {};
+            return '{}';
           }
         })()
       ''');
