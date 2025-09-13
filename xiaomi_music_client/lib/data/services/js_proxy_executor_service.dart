@@ -425,6 +425,16 @@ class JSProxyExecutorService {
     try {
       print('[JSProxy] 📜 开始加载JS脚本...');
 
+      // 为避免上次脚本遗留的全局函数影响当前脚本，重置JS运行时并重新注入环境
+      try {
+        print('[JSProxy] ♻️ 重置JS运行时，清理旧脚本环境');
+        _runtime?.dispose();
+        _runtime = getJavascriptRuntime();
+        await _setupLXMusicEnvironment();
+      } catch (e) {
+        print('[JSProxy] ⚠️ 重置JS运行时失败，继续使用现有环境: $e');
+      }
+
       // 保存脚本内容供检测使用
       _runtime!.evaluate(
         'globalThis._currentScriptContent = ${jsonEncode(scriptContent)};',
