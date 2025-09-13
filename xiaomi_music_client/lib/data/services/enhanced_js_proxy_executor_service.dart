@@ -682,8 +682,23 @@ class EnhancedJSProxyExecutorService {
       );
 
       // 执行JS脚本
+      print('[EnhancedJSProxy] 🚀 执行脚本内容，长度: ${scriptContent.length} 字符');
+      print('[EnhancedJSProxy] 🚀 脚本前100字符: ${scriptContent.substring(0, scriptContent.length > 100 ? 100 : scriptContent.length)}');
+      
       _runtime!.evaluate(scriptContent);
       _currentScript = scriptContent;
+      
+      // 立即检查脚本执行后的状态
+      final immediateCheck = _runtime!.evaluate('''
+        JSON.stringify({
+          globalThisKeys: Object.keys(globalThis).filter(k => k.includes('lx') || k.includes('on') || k.includes('EVENT')),
+          lxKeys: globalThis.lx ? Object.keys(globalThis.lx) : null,
+          handlersAfterScript: globalThis._lxHandlers,
+          hasOnFunction: typeof globalThis.on === 'function',
+          scriptExecuted: true
+        })
+      ''');
+      print('[EnhancedJSProxy] 🔍 脚本执行后立即检查: ${immediateCheck.stringResult}');
 
       // 等待脚本初始化
       await Future.delayed(const Duration(milliseconds: 1000));
