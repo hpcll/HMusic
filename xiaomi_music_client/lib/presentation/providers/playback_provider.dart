@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/models/playing_music.dart';
+import '../../data/models/online_music_result.dart';
 import 'dio_provider.dart';
 import 'device_provider.dart';
 
@@ -532,6 +533,72 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
         errorMessage = '网络连接失败，请检查服务器连接';
       } else {
         errorMessage = '播放失败: ${e.toString()}';
+      }
+
+      state = state.copyWith(isLoading: false, error: errorMessage);
+    }
+  }
+
+  /// 播放在线搜索结果（新方法，支持多种格式）
+  Future<void> playOnlineResult({
+    required String deviceId,
+    OnlineMusicResult? singleResult,
+    List<OnlineMusicResult>? resultList,
+    List<Map<String, dynamic>>? rawResults,
+    String playlistName = "在线播放",
+    Map<String, String>? defaultHeaders,
+  }) async {
+    final apiService = ref.read(apiServiceProvider);
+    if (apiService == null) {
+      state = state.copyWith(error: 'API 服务未初始化');
+      return;
+    }
+
+    try {
+      state = state.copyWith(isLoading: true, error: null);
+
+      String songInfo = "";
+      if (singleResult != null) {
+        songInfo = "${singleResult.title} - ${singleResult.author}";
+      } else if (resultList != null && resultList.isNotEmpty) {
+        songInfo = "${resultList.first.title} - ${resultList.first.author}";
+      } else if (rawResults != null && rawResults.isNotEmpty) {
+        final firstResult = rawResults.first;
+        final title = firstResult['title'] ?? firstResult['name'] ?? '未知标题';
+        final artist = firstResult['artist'] ?? firstResult['singer'] ?? '未知艺术家';
+        songInfo = "$title - $artist";
+      }
+
+      print('🎵 开始播放在线搜索结果: $songInfo, 设备ID: $deviceId');
+
+      await apiService.playOnlineSearchResult(
+        did: deviceId,
+        singleResult: singleResult,
+        resultList: resultList,
+        rawResults: rawResults,
+        playlistName: playlistName,
+        defaultHeaders: defaultHeaders,
+      );
+
+      print('🎵 在线播放请求成功');
+
+      // 等待播放状态更新
+      await Future.delayed(const Duration(milliseconds: 1500));
+      await refreshStatus();
+
+      state = state.copyWith(isLoading: false);
+    } catch (e) {
+      print('🎵 在线播放失败: $e');
+      String errorMessage = '在线播放失败';
+
+      if (e.toString().contains('Did not exist')) {
+        errorMessage = '设备不存在或离线，请检查设备状态或重新选择设备';
+      } else if (e.toString().contains('Connection')) {
+        errorMessage = '网络连接失败，请检查服务器连接';
+      } else if (e.toString().contains('FormatException')) {
+        errorMessage = '音乐格式不支持，请尝试其他歌曲';
+      } else {
+        errorMessage = '在线播放失败: ${e.toString()}';
       }
 
       state = state.copyWith(isLoading: false, error: errorMessage);

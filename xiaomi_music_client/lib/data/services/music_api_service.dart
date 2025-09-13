@@ -1,9 +1,10 @@
 import '../../core/network/dio_client.dart';
 import 'package:dio/dio.dart';
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import '../../core/constants/app_constants.dart';
+import '../adapters/music_list_json_adapter.dart';
+import '../models/online_music_result.dart';
 
 class UploadFile {
   final String fieldName;
@@ -118,7 +119,7 @@ class MusicApiService {
     return response.data; // 直接返回原始数据，可能是字符串或Map
   }
 
-  // 通过设置在线播放列表来播放音乐
+  // 通过设置在线播放列表来播放音乐（兼容旧版本）
   Future<void> playOnlineMusic({
     required String did,
     required String musicUrl,
@@ -126,41 +127,107 @@ class MusicApiService {
     required String musicAuthor,
     Map<String, String>? headers,
   }) async {
-    // 第一步：构造音乐列表数据
-    final musicListJson = [
-      {
-        "name": "在线播放",
-        "musics": [
-          {
-            "name": "$musicTitle - $musicAuthor",
-            "url": musicUrl,
-            if (headers != null) ...{
-              "api": true,
-              "headers": headers,
-            }
-          }
-        ]
-      }
-    ];
+    // 使用新的适配器创建单首歌曲JSON
+    final musicListJsonString = MusicListJsonAdapter.createSingleSongJson(
+      title: musicTitle,
+      artist: musicAuthor,
+      url: musicUrl,
+      headers: headers,
+    );
 
-    // 第二步：获取当前设置，然后更新音乐列表
+    debugPrint('🔵 完整的音乐列表JSON: $musicListJsonString');
+
+    // 获取当前设置，然后更新音乐列表
     final currentSettings = await getSettings();
     final updatedSettings = Map<String, dynamic>.from(currentSettings);
-    final musicListJsonString = jsonEncode(musicListJson);
-    debugPrint('🔵 完整的音乐列表JSON: $musicListJsonString');
     updatedSettings['music_list_json'] = musicListJsonString;
 
-    // 第三步：保存设置
+    // 保存设置
     final saveResult = await saveSetting(updatedSettings);
     debugPrint('保存设置结果: $saveResult');
 
-    // 第四步：播放音乐
+    // 播放音乐
     final playResult = await playMusicList(
       did: did,
       listName: "在线播放",
       musicName: "$musicTitle - $musicAuthor",
     );
     debugPrint('播放结果: $playResult');
+  }
+
+  /// 播放在线搜索结果（支持多种格式）
+  /// 
+  /// 这是新的通用方法，支持：
+  /// - OnlineMusicResult 对象
+  /// - 原始搜索结果JSON
+  /// - 多首歌曲的播放列表
+  Future<void> playOnlineSearchResult({
+    required String did,
+    OnlineMusicResult? singleResult,
+    List<OnlineMusicResult>? resultList,
+    List<Map<String, dynamic>>? rawResults,
+    String playlistName = "在线播放",
+    Map<String, String>? defaultHeaders,
+  }) async {
+    String musicListJsonString;
+    String targetSongName = "";
+
+    if (singleResult != null) {
+      // 播放单首歌曲
+      musicListJsonString = MusicListJsonAdapter.convertToMusicListJson(
+        results: [singleResult],
+        playlistName: playlistName,
+        defaultHeaders: defaultHeaders,
+      );
+      targetSongName = "${singleResult.title} - ${singleResult.author}";
+    } else if (resultList != null && resultList.isNotEmpty) {
+      // 播放结果列表，默认播放第一首
+      musicListJsonString = MusicListJsonAdapter.convertToMusicListJson(
+        results: resultList,
+        playlistName: playlistName,
+        defaultHeaders: defaultHeaders,
+      );
+      targetSongName = "${resultList.first.title} - ${resultList.first.author}";
+    } else if (rawResults != null && rawResults.isNotEmpty) {
+      // 播放原始JSON结果
+      musicListJsonString = MusicListJsonAdapter.convertFromRawJson(
+        rawResults: rawResults,
+        playlistName: playlistName,
+        defaultHeaders: defaultHeaders,
+      );
+      // 从原始数据中提取歌曲名
+      final firstResult = rawResults.first;
+      final title = firstResult['title'] ?? firstResult['name'] ?? '未知标题';
+      final artist = firstResult['artist'] ?? firstResult['singer'] ?? '未知艺术家';
+      targetSongName = "$title - $artist";
+    } else {
+      throw ArgumentError('必须提供 singleResult、resultList 或 rawResults 中的至少一个参数');
+    }
+
+    debugPrint('🔵 [PlayOnlineSearchResult] 完整的音乐列表JSON: $musicListJsonString');
+    debugPrint('🔵 [PlayOnlineSearchResult] 目标歌曲: $targetSongName');
+
+    // 验证生成的JSON格式
+    if (!MusicListJsonAdapter.validateMusicListJson(musicListJsonString)) {
+      throw FormatException('生成的music_list_json格式无效');
+    }
+
+    // 获取当前设置，然后更新音乐列表
+    final currentSettings = await getSettings();
+    final updatedSettings = Map<String, dynamic>.from(currentSettings);
+    updatedSettings['music_list_json'] = musicListJsonString;
+
+    // 保存设置
+    final saveResult = await saveSetting(updatedSettings);
+    debugPrint('🔵 [PlayOnlineSearchResult] 保存设置结果: $saveResult');
+
+    // 播放音乐
+    final playResult = await playMusicList(
+      did: did,
+      listName: playlistName,
+      musicName: targetSongName,
+    );
+    debugPrint('🔵 [PlayOnlineSearchResult] 播放结果: $playResult');
   }
 
   Future<List<dynamic>> searchMusic(String name) async {

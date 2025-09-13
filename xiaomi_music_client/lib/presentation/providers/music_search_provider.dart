@@ -468,7 +468,7 @@ class MusicSearchNotifier extends StateNotifier<MusicSearchState> {
 
     final nextPage = state.currentPage + 1;
     print('[XMC] 🔄 开始加载第${nextPage}页...');
-    
+
     try {
       state = state.copyWith(isLoadingMore: true, error: null);
 
@@ -490,7 +490,7 @@ class MusicSearchNotifier extends StateNotifier<MusicSearchState> {
             ref,
             page: nextPage,
           ).timeout(const Duration(seconds: 10));
-          
+
           // 如果JS音源无结果，且不是强制JS模式，尝试统一API
           if (pageResults.isEmpty && settings.useUnifiedApi) {
             print('[XMC] 🔄 JS音源无结果，尝试统一API分页');
@@ -521,20 +521,24 @@ class MusicSearchNotifier extends StateNotifier<MusicSearchState> {
       }
 
       // 智能去重：避免重复结果
-      final existingSongIds = state.onlineResults
-          .map((r) => '${r.title}_${r.author}')
-          .toSet();
-      
-      final uniqueResults = pageResults.where((result) {
-        final key = '${result.title}_${result.author}';
-        return !existingSongIds.contains(key);
-      }).toList();
-      
+      final existingSongIds =
+          state.onlineResults.map((r) => '${r.title}_${r.author}').toSet();
+
+      final uniqueResults =
+          pageResults.where((result) {
+            final key = '${result.title}_${result.author}';
+            return !existingSongIds.contains(key);
+          }).toList();
+
       if (uniqueResults.length < pageResults.length) {
-        print('[XMC] 🔄 过滤了 ${pageResults.length - uniqueResults.length} 个重复结果');
+        print(
+          '[XMC] 🔄 过滤了 ${pageResults.length - uniqueResults.length} 个重复结果',
+        );
       }
 
-      final bool hasMore = uniqueResults.isNotEmpty && uniqueResults.length >= 5; // 至少5个结果才认为还有更多
+      final bool hasMore =
+          uniqueResults.isNotEmpty &&
+          uniqueResults.length >= 5; // 至少5个结果才认为还有更多
       final List<OnlineMusicResult> merged = List.of(state.onlineResults)
         ..addAll(uniqueResults);
 
@@ -545,17 +549,16 @@ class MusicSearchNotifier extends StateNotifier<MusicSearchState> {
         currentPage: uniqueResults.isNotEmpty ? nextPage : state.currentPage,
         error: uniqueResults.isEmpty ? loadMoreError : null,
       );
-      
+
       if (uniqueResults.isNotEmpty) {
         print('[XMC] ✅ 第${nextPage}页加载成功，新增 ${uniqueResults.length} 个结果');
       } else {
         print('[XMC] 📄 第${nextPage}页无更多结果，停止分页');
       }
-      
     } catch (e) {
       print('[XMC] ❌ 分页加载异常: $e');
       state = state.copyWith(
-        isLoadingMore: false, 
+        isLoadingMore: false,
         hasMore: false,
         error: '分页加载失败: $e',
       );

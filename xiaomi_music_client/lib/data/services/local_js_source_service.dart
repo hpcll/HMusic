@@ -43,13 +43,13 @@ class LocalJsSourceService {
         print('[XMC] ❌ [LocalJsSource] 本地文件不存在: $filePath');
         return null;
       }
-      
+
       final script = await file.readAsString();
       if (script.isEmpty) {
         print('[XMC] ⚠️ [LocalJsSource] 本地脚本内容为空: $filePath');
         return null;
       }
-      
+
       print('[XMC] ✅ [LocalJsSource] 成功读取本地脚本: $filePath');
       return script;
     } catch (e) {
@@ -87,7 +87,10 @@ class LocalJsSourceService {
     }
   }
 
-  Future<void> loadScript(SourceSettings settings, [JsScript? selectedScript]) async {
+  Future<void> loadScript(
+    SourceSettings settings, [
+    JsScript? selectedScript,
+  ]) async {
     print('[XMC] 🔧 [LocalJsSource] 开始加载JS音源');
     print('[XMC] 🔧 [LocalJsSource] 启用状态: ${settings.enabled}');
     print('[XMC] 🔧 [LocalJsSource] 主要音源: ${settings.primarySource}');
@@ -98,7 +101,7 @@ class LocalJsSourceService {
       _loaded = false;
       return;
     }
-    
+
     if (selectedScript == null) {
       print('[XMC] ❌ [LocalJsSource] 未选择脚本');
       _loaded = false;
@@ -107,7 +110,7 @@ class LocalJsSourceService {
 
     // 获取脚本内容
     String? scriptContent;
-    
+
     switch (selectedScript.source) {
       case JsScriptSource.builtin:
       case JsScriptSource.url:
@@ -123,7 +126,7 @@ class LocalJsSourceService {
           }
         }
         break;
-        
+
       case JsScriptSource.localFile:
         // 从本地文件加载
         print('📁 [LocalJsSource] 从本地文件加载脚本: ${selectedScript.content}');
@@ -136,7 +139,7 @@ class LocalJsSourceService {
       _loaded = false;
       return;
     }
-    
+
     // 预处理脚本内容，检测和修复常见问题
     scriptContent = _preprocessScript(scriptContent);
 
@@ -510,7 +513,7 @@ class LocalJsSourceService {
 
       // 验证脚本加载结果
       final validation = await _validateScriptLoading();
-      
+
       if (validation['success']) {
         print('[XMC] ✅ [LocalJsSource] JS脚本加载和验证成功！');
         print('[XMC] ✅ [LocalJsSource] 可用功能: ${validation['functions']}');
@@ -522,7 +525,7 @@ class LocalJsSourceService {
     } catch (e) {
       print('[XMC] ❌ [LocalJsSource] 脚本执行失败，错误: $e');
       _loaded = false;
-      
+
       // 尝试错误恢复
       try {
         print('[XMC] 🔄 [LocalJsSource] 尝试错误恢复...');
@@ -541,18 +544,18 @@ class LocalJsSourceService {
     if (script.startsWith('\uFEFF')) {
       script = script.substring(1);
     }
-    
+
     // 修复常见的编码问题
     script = script.replaceAll('\r\n', '\n').replaceAll('\r', '\n');
-    
+
     // 添加严格模式保护
     if (!script.contains('use strict') && !script.contains('"use strict"')) {
       script = '"use strict";\n' + script;
     }
-    
+
     // 包装在IIFE中以避免全局变量污染
     script = '(function() {\n' + script + '\n})();';
-    
+
     return script;
   }
 
@@ -563,31 +566,22 @@ class LocalJsSourceService {
       final checkResult = await detectAdapterFunctions();
       if (checkResult['ok'] == true) {
         final functions = checkResult['functions'] as List<String>;
-        return {
-          'success': true,
-          'functions': functions,
-        };
+        return {'success': true, 'functions': functions};
       }
-      
-      return {
-        'success': false,
-        'error': '未找到可用的搜索函数',
-      };
+
+      return {'success': false, 'error': '未找到可用的搜索函数'};
     } catch (e) {
-      return {
-        'success': false,
-        'error': '验证过程异常: $e',
-      };
+      return {'success': false, 'error': '验证过程异常: $e'};
     }
   }
 
   /// 尝试错误恢复
   Future<void> _attemptErrorRecovery(String error, String scriptContent) async {
     print('[XMC] 🔄 [LocalJsSource] 分析错误类型: $error');
-    
+
     if (error.contains('SyntaxError') || error.contains('Unexpected token')) {
       print('[XMC] 🔄 [LocalJsSource] 检测到语法错误，尝试兼容性修复');
-      
+
       // 尝试简化的脚本执行
       try {
         final simpleScript = '''
@@ -611,7 +605,7 @@ class LocalJsSourceService {
             module.exports = { search: search };
           }
         ''';
-        
+
         _rt.evaluate(simpleScript);
         print('[XMC] ✅ [LocalJsSource] 错误恢复成功，加载了简化版本');
         _loaded = true;
@@ -623,9 +617,9 @@ class LocalJsSourceService {
 
   /// 构建智能搜索脚本
   String _buildSearchScript(
-    String functionName, 
-    List<String> platforms, 
-    String keyword, 
+    String functionName,
+    List<String> platforms,
+    String keyword,
     int page,
   ) {
     return """
@@ -857,7 +851,7 @@ class LocalJsSourceService {
       print('[XMC] ❌ [LocalJsSource] 脚本未加载，无法搜索');
       return const [];
     }
-    
+
     // 搜索参数验证和清理
     if (keyword.trim().isEmpty) {
       print('[XMC] ⚠️ [LocalJsSource] 搜索关键词为空');
@@ -865,18 +859,19 @@ class LocalJsSourceService {
     }
     // 智能参数处理
     final escapedKw = keyword.replaceAll("'", " ").replaceAll('"', ' ').trim();
-    final platforms = platform == 'auto' 
-        ? ["qq", "netease", "kuwo", "kugou", "migu"] 
-        : [platform];
-    
+    final platforms =
+        platform == 'auto'
+            ? ["qq", "netease", "kuwo", "kugou", "migu"]
+            : [platform];
+
     // 智能函数检测：按优先级排序
     final candidateFunctions = [
-      'search',        // 最常见
-      'musicSearch',   // MusicFree格式
-      'searchMusic',   // 替代格式
-      'doSearch',      // 另一种常见格式
+      'search', // 最常见
+      'musicSearch', // MusicFree格式
+      'searchMusic', // 替代格式
+      'doSearch', // 另一种常见格式
     ];
-    
+
     print('[XMC] 🔍 [LocalJsSource] 尝试平台: ${platforms.join(', ')}');
 
     String? workingFunction;
@@ -898,9 +893,9 @@ class LocalJsSourceService {
         print('[XMC] ⚠️ [LocalJsSource] 检查函数 $funcName 失败: $e');
       }
     }
-    
+
     print('[XMC] 🔍 [LocalJsSource] 函数可用性: $functionAvailability');
-    
+
     if (workingFunction != null) {
       print('[XMC] ✅ [LocalJsSource] 使用函数: $workingFunction');
     }
@@ -908,12 +903,12 @@ class LocalJsSourceService {
     if (workingFunction != null) {
       // 构建智能搜索JS代码
       final js = _buildSearchScript(
-        workingFunction, 
-        platforms, 
-        escapedKw, 
+        workingFunction,
+        platforms,
+        escapedKw,
         page,
       );
-          "function norm(x){ " +
+      "function norm(x){ " +
           "try{ " +
           "console.log && console.log('[LocalJS] norm处理:', typeof x, Array.isArray(x)); " +
           "function safeItem(item, idx) { " +
