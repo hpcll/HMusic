@@ -31,6 +31,8 @@ class NativeMusicSearchService {
   }
 }
 
-final nativeMusicSearchServiceProvider = Provider<NativeMusicSearchService>((ref) {
+final nativeMusicSearchServiceProvider = Provider<NativeMusicSearchService>((
+  ref,
+) {
   return const NativeMusicSearchService();
 });
