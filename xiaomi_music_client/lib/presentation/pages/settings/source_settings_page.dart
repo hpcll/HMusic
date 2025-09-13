@@ -560,7 +560,7 @@ class _SourceSettingsPageState extends ConsumerState<SourceSettingsPage> {
       );
 
       await ref.read(sourceSettingsNotifierProvider).save(newSettings);
-      
+
       // 保存后尝试将所选脚本加载到 QuickJS 代理，确保播放解析使用所选脚本
       if (_primary == 'js_external' && selectedScript != null) {
         try {

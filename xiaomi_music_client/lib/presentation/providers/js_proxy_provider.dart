@@ -4,6 +4,8 @@ import '../../data/models/online_music_result.dart';
 import '../../data/models/js_script.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import '../providers/source_settings_provider.dart';
+import '../providers/js_script_manager_provider.dart';
 
 class JSProxyScriptReader {
   Future<String?> readLocal(String path) async {
@@ -52,7 +54,9 @@ class JSProxyState {
 
 /// JS代理执行器Provider
 class JSProxyNotifier extends StateNotifier<JSProxyState> {
-  JSProxyNotifier() : super(const JSProxyState()) {
+  final Ref _ref;
+
+  JSProxyNotifier(this._ref) : super(const JSProxyState()) {
     _initializeService();
   }
 
@@ -72,6 +76,23 @@ class JSProxyNotifier extends StateNotifier<JSProxyState> {
       );
 
       print('[JSProxyProvider] ✅ JS代理服务初始化完成');
+
+      // Auto-load currently selected script if JS flow is active
+      try {
+        final settings = _ref.read(sourceSettingsProvider);
+        if (settings.primarySource == 'js_external') {
+          final manager = _ref.read(jsScriptManagerProvider.notifier);
+          final selected = manager.selectedScript;
+          if (selected != null) {
+            print('[JSProxyProvider] 🚀 自动加载已选脚本: ${selected.name}');
+            await loadScriptByScript(selected);
+          } else {
+            print('[JSProxyProvider] ⚠️ 未选择脚本，跳过自动加载');
+          }
+        }
+      } catch (e) {
+        print('[JSProxyProvider] ⚠️ 自动加载脚本失败: $e');
+      }
     } catch (e) {
       state = state.copyWith(isLoading: false, error: '初始化失败: $e');
       print('[JSProxyProvider] ❌ 初始化失败: $e');
@@ -339,5 +360,5 @@ class JSProxyNotifier extends StateNotifier<JSProxyState> {
 final jsProxyProvider = StateNotifierProvider<JSProxyNotifier, JSProxyState>((
   ref,
 ) {
-  return JSProxyNotifier();
+  return JSProxyNotifier(ref);
 });
