@@ -638,6 +638,69 @@ class EnhancedJSProxyExecutorService {
         case 'updateAlert':
           print('[EnhancedJSProxy] 🔄 脚本更新提醒: ${eventPayload?['log']}');
           break;
+        case 'request':
+          print('[EnhancedJSProxy] 🔄 处理request事件，触发事件处理器...');
+          // 触发已注册的request事件处理器
+          final triggerScript = '''
+            (function() {
+              try {
+                const eventData = ${jsonEncode(eventPayload)};
+                console.log('[EnhancedJSProxy] 触发request事件处理器，数据:', eventData);
+                
+                // 查找并触发request事件处理器
+                if (globalThis._lxHandlers && globalThis._lxHandlers.request) {
+                  const handlers = Array.isArray(globalThis._lxHandlers.request) ? 
+                    globalThis._lxHandlers.request : [globalThis._lxHandlers.request];
+                  
+                  console.log('[EnhancedJSProxy] 找到', handlers.length, '个request处理器');
+                  
+                  for (let i = 0; i < handlers.length; i++) {
+                    const handler = handlers[i];
+                    if (typeof handler === 'function') {
+                      console.log('[EnhancedJSProxy] 调用第', i + 1, '个处理器');
+                      const result = handler(eventData);
+                      console.log('[EnhancedJSProxy] 处理器返回:', result);
+                      
+                      // 如果是Promise，等待完成
+                      if (result && typeof result.then === 'function') {
+                        result.then(
+                          function(value) {
+                            console.log('[EnhancedJSProxy] Promise成功:', value);
+                            globalThis._promiseResult = value;
+                            globalThis._promiseComplete = true;
+                          },
+                          function(error) {
+                            console.log('[EnhancedJSProxy] Promise失败:', error);
+                            globalThis._promiseError = error.toString();
+                            globalThis._promiseComplete = true;
+                          }
+                        );
+                      } else if (result !== undefined) {
+                        console.log('[EnhancedJSProxy] 同步结果:', result);
+                        globalThis._promiseResult = result;
+                        globalThis._promiseComplete = true;
+                      }
+                      break; // 只处理第一个处理器
+                    }
+                  }
+                } else {
+                  console.log('[EnhancedJSProxy] 没有找到request事件处理器');
+                  globalThis._promiseError = 'No request handler found';
+                  globalThis._promiseComplete = true;
+                }
+                
+                return true;
+              } catch (e) {
+                console.error('[EnhancedJSProxy] 触发处理器失败:', e);
+                globalThis._promiseError = e.toString();
+                globalThis._promiseComplete = true;
+                return false;
+              }
+            })()
+          ''';
+          
+          _runtime!.evaluate(triggerScript);
+          break;
         default:
           print('[EnhancedJSProxy] 📨 其他事件: $eventName');
       }
@@ -898,7 +961,6 @@ class EnhancedJSProxyExecutorService {
       return {};
     }
   }
-
 
   /// 释放资源
   void dispose() {
