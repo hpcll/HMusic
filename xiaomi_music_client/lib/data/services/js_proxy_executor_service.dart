@@ -369,8 +369,10 @@ class JSProxyExecutorService {
       print('[JSProxy] 📜 开始加载JS脚本...');
 
       // 保存脚本内容供检测使用
-      _runtime!.evaluate('globalThis._currentScriptContent = ${jsonEncode(scriptContent)};');
-      
+      _runtime!.evaluate(
+        'globalThis._currentScriptContent = ${jsonEncode(scriptContent)};',
+      );
+
       // 执行JS脚本
       _runtime!.evaluate(scriptContent);
       _currentScript = scriptContent;

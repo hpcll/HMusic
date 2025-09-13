@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/services/js_proxy_executor_service.dart';
+import '../../data/services/enhanced_js_proxy_executor_service.dart';
 import '../../data/models/online_music_result.dart';
 import '../../data/models/js_script.dart';
 import 'dart:io';
@@ -60,7 +60,7 @@ class JSProxyNotifier extends StateNotifier<JSProxyState> {
     _initializeService();
   }
 
-  final JSProxyExecutorService _service = JSProxyExecutorService();
+  final EnhancedJSProxyExecutorService _service = EnhancedJSProxyExecutorService();
 
   /// 初始化服务
   Future<void> _initializeService() async {
