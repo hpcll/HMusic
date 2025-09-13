@@ -272,6 +272,19 @@ class JSProxyExecutorService {
               callback(null, response);
               console.log('[JSProxy] 回调执行完成');
               
+              // 设置Promise结果供轮询检查
+              if (response.body && typeof response.body === 'object') {
+                if (response.body.code === 0) {
+                  globalThis._promiseResult = response.body.data || response.body.url;
+                  globalThis._promiseComplete = true;
+                  console.log('[JSProxy] Promise结果已设置:', globalThis._promiseResult);
+                } else if (response.body.code !== undefined) {
+                  globalThis._promiseError = response.body.msg || response.body.message || 'API返回错误';
+                  globalThis._promiseComplete = true;
+                  console.log('[JSProxy] Promise错误已设置:', globalThis._promiseError);
+                }
+              }
+              
               return true;
             } else {
               console.log('[JSProxy] 未找到请求ID对应的回调: $requestId');
@@ -419,7 +432,7 @@ class JSProxyExecutorService {
             }
           })()
         ''');
-        
+
         print('[JSProxy] 🔍 手动初始化结果: ${initResult.stringResult}');
       } catch (e) {
         print('[JSProxy] ⚠️ 手动初始化失败: $e');
