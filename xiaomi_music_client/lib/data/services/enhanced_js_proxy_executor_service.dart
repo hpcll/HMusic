@@ -698,7 +698,7 @@ class EnhancedJSProxyExecutorService {
               }
             })()
           ''';
-          
+
           _runtime!.evaluate(triggerScript);
           break;
         default:
@@ -819,31 +819,94 @@ class EnhancedJSProxyExecutorService {
             
             // 方式1: 直接调用lx.emit
             if (typeof lx !== 'undefined' && lx.emit) {
+              console.log('[EnhancedJSProxy] 尝试调用 lx.emit');
               result = lx.emit(lx.EVENT_NAMES.request, request);
+              console.log('[EnhancedJSProxy] lx.emit 返回:', result);
             }
             
             // 方式2: 调用事件处理器
             if (!result && globalThis._lxHandlers && globalThis._lxHandlers.request) {
+              console.log('[EnhancedJSProxy] 尝试调用事件处理器');
               const handlers = Array.isArray(globalThis._lxHandlers.request) ? 
                 globalThis._lxHandlers.request : [globalThis._lxHandlers.request];
               
               for (const handler of handlers) {
                 if (typeof handler === 'function') {
                   result = handler(request);
+                  console.log('[EnhancedJSProxy] 事件处理器返回:', result);
                   if (result) break;
                 }
               }
             }
             
-            // 方式3: 查找专用函数
-            const funcName = request.source + 'GetMusicUrl';
-            if (!result && typeof globalThis[funcName] === 'function') {
-              result = globalThis[funcName](request.info);
+            // 方式3: 查找专用函数 (多种命名模式)
+            const platformFunctions = [
+              request.source + 'GetMusicUrl',     // txGetMusicUrl
+              'get' + request.source.toUpperCase() + 'Url',  // getTXUrl
+              request.source + '_getMusicUrl',    // tx_getMusicUrl
+              request.source + 'Music',           // txMusic
+              'handle' + request.source.toUpperCase() + 'Url', // handleTXUrl
+              request.source.toUpperCase() + '_MUSIC_URL'      // TX_MUSIC_URL
+            ];
+            
+            for (const funcName of platformFunctions) {
+              if (!result && typeof globalThis[funcName] === 'function') {
+                console.log('[EnhancedJSProxy] 尝试调用专用函数:', funcName);
+                result = globalThis[funcName](request.info);
+                console.log('[EnhancedJSProxy] 专用函数返回:', result);
+                if (result) break;
+              }
             }
             
             // 方式4: 通用getMusicUrl
             if (!result && typeof getMusicUrl === 'function') {
+              console.log('[EnhancedJSProxy] 尝试调用通用 getMusicUrl');
               result = getMusicUrl(request.info);
+              console.log('[EnhancedJSProxy] getMusicUrl 返回:', result);
+            }
+            
+            // 方式5: 检查脚本是否定义了处理函数
+            if (!result) {
+              console.log('[EnhancedJSProxy] 检查脚本中的处理函数...');
+              const possibleHandlers = [
+                'handleRequest',
+                'processRequest', 
+                'handleMusicUrl',
+                'musicUrlHandler',
+                'getUrl',
+                'resolveUrl'
+              ];
+              
+              for (const handlerName of possibleHandlers) {
+                if (typeof globalThis[handlerName] === 'function') {
+                  console.log('[EnhancedJSProxy] 尝试调用处理函数:', handlerName);
+                  result = globalThis[handlerName](request);
+                  console.log('[EnhancedJSProxy] 处理函数返回:', result);
+                  if (result) break;
+                }
+              }
+            }
+            
+            // 方式6: 查找任何可能的音乐URL获取函数
+            if (!result) {
+              console.log('[EnhancedJSProxy] 最后尝试：查找所有可能的函数...');
+              const allFunctions = Object.getOwnPropertyNames(globalThis).filter(name => 
+                typeof globalThis[name] === 'function' && 
+                (name.toLowerCase().includes('music') || 
+                 name.toLowerCase().includes('url') ||
+                 name.toLowerCase().includes(request.source.toLowerCase()))
+              );
+              console.log('[EnhancedJSProxy] 找到可能的函数:', allFunctions);
+              
+              for (const funcName of allFunctions) {
+                try {
+                  result = globalThis[funcName](request.info || request);
+                  console.log('[EnhancedJSProxy] 函数', funcName, '返回:', result);
+                  if (result) break;
+                } catch (e) {
+                  console.log('[EnhancedJSProxy] 函数', funcName, '调用失败:', e.message);
+                }
+              }
             }
             
             if (result && typeof result.then === 'function') {
