@@ -476,45 +476,26 @@ send(EVENT_NAMES.inited, { status: true, openDevTools: DEV_ENABLE, sources: musi
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Row(
+                    Wrap(
+                      spacing: 8.0,
+                      runSpacing: 8.0,
                       children: [
                         ElevatedButton(
                           onPressed:
                               (jsProxyState.isLoading || _isFetchingUrl)
                                   ? null
                                   : () => _importScriptFromUrl(
-                                    loadAfterImport: false,
-                                  ),
-                          child: Text(_isFetchingUrl ? '下载中...' : '从链接导入'),
+                                        loadAfterImport: true,
+                                      ),
+                          child: Text(_isFetchingUrl ? '下载中...' : '从链接加载'),
                         ),
-                        const SizedBox(width: 8),
-                        ElevatedButton(
-                          onPressed:
-                              (jsProxyState.isLoading || _isFetchingUrl)
-                                  ? null
-                                  : () => _importScriptFromUrl(
-                                    loadAfterImport: true,
-                                  ),
-                          child: Text(_isFetchingUrl ? '下载中...' : '导入并加载'),
-                        ),
-                        const SizedBox(width: 8),
                         ElevatedButton(
                           onPressed:
                               (jsProxyState.isLoading || _isFetchingUrl)
                                   ? null
                                   : () => _importScriptFromLocal(
-                                    loadAfterImport: false,
-                                  ),
-                          child: const Text('从本地导入'),
-                        ),
-                        const SizedBox(width: 8),
-                        ElevatedButton(
-                          onPressed:
-                              (jsProxyState.isLoading || _isFetchingUrl)
-                                  ? null
-                                  : () => _importScriptFromLocal(
-                                    loadAfterImport: true,
-                                  ),
+                                        loadAfterImport: true,
+                                      ),
                           child: const Text('本地导入并加载'),
                         ),
                       ],
@@ -552,38 +533,73 @@ send(EVENT_NAMES.inited, { status: true, openDevTools: DEV_ENABLE, sources: musi
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _sourceController,
-                            decoration: const InputDecoration(
-                              labelText: '音源',
-                              border: OutlineInputBorder(),
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final isNarrow = constraints.maxWidth < 600;
+                        if (isNarrow) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              TextField(
+                                controller: _sourceController,
+                                decoration: const InputDecoration(
+                                  labelText: '音源',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              TextField(
+                                controller: _songIdController,
+                                decoration: const InputDecoration(
+                                  labelText: '歌曲ID',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              TextField(
+                                controller: _qualityController,
+                                decoration: const InputDecoration(
+                                  labelText: '音质',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                        return Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _sourceController,
+                                decoration: const InputDecoration(
+                                  labelText: '音源',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextField(
-                            controller: _songIdController,
-                            decoration: const InputDecoration(
-                              labelText: '歌曲ID',
-                              border: OutlineInputBorder(),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: TextField(
+                                controller: _songIdController,
+                                decoration: const InputDecoration(
+                                  labelText: '歌曲ID',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextField(
-                            controller: _qualityController,
-                            decoration: const InputDecoration(
-                              labelText: '音质',
-                              border: OutlineInputBorder(),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: TextField(
+                                controller: _qualityController,
+                                decoration: const InputDecoration(
+                                  labelText: '音质',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ],
+                          ],
+                        );
+                      },
                     ),
                     const SizedBox(height: 8),
                     ElevatedButton(
