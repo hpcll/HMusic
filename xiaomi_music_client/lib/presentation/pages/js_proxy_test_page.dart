@@ -687,6 +687,13 @@ send(EVENT_NAMES.inited, { status: true, openDevTools: DEV_ENABLE, sources: musi
                           },
                           child: const Text('查看音源'),
                         ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 4.0),
+                          child: Text(
+                            'QQ（tx）',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
                         ElevatedButton(
                           onPressed: () {
                             // 邓紫棋 - 唯一
