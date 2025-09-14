@@ -687,9 +687,10 @@ send(EVENT_NAMES.inited, { status: true, openDevTools: DEV_ENABLE, sources: musi
                           });
                         }),
                         _quickButton('查看音源', () {
-                          final sources = ref
-                              .read(jsProxyProvider.notifier)
-                              .getSupportedSourcesList();
+                          final sources =
+                              ref
+                                  .read(jsProxyProvider.notifier)
+                                  .getSupportedSourcesList();
                           setState(() {
                             _testResult = '📋 支持的音源: ${sources.join(', ')}';
                           });
@@ -773,7 +774,10 @@ console.log('✅ JS代理测试脚本加载完成');
                       children: const [
                         Icon(Icons.library_music, size: 18),
                         SizedBox(width: 6),
-                        Text('QQ（tx）', style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(
+                          'QQ（tx）',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -785,19 +789,28 @@ console.log('✅ JS代理测试脚本加载完成');
                           _sourceController.text = 'tx';
                           _songIdController.text = '001NgljR0RUhy1';
                           _qualityController.text = '320k';
-                          setState(() { _testResult = '🎵 已设置: 邓紫棋 - 唯一 (tx/001NgljR0RUhy1/320k)'; });
+                          setState(() {
+                            _testResult =
+                                '🎵 已设置: 邓紫棋 - 唯一 (tx/001NgljR0RUhy1/320k)';
+                          });
                         }),
                         _quickButton('泡沫', () {
                           _sourceController.text = 'tx';
                           _songIdController.text = '001X0PDf0W4lBq';
                           _qualityController.text = '320k';
-                          setState(() { _testResult = '🎵 已设置: 邓紫棋 - 泡沫 (tx/001X0PDf0W4lBq/320k)'; });
+                          setState(() {
+                            _testResult =
+                                '🎵 已设置: 邓紫棋 - 泡沫 (tx/001X0PDf0W4lBq/320k)';
+                          });
                         }),
                         _quickButton('光年之外', () {
                           _sourceController.text = 'tx';
                           _songIdController.text = '002E3MtF0IAMMY';
                           _qualityController.text = '320k';
-                          setState(() { _testResult = '🎵 已设置: 邓紫棋 - 光年之外 (tx/002E3MtF0IAMMY/320k)'; });
+                          setState(() {
+                            _testResult =
+                                '🎵 已设置: 邓紫棋 - 光年之外 (tx/002E3MtF0IAMMY/320k)';
+                          });
                         }),
                       ],
                     ),
@@ -809,7 +822,10 @@ console.log('✅ JS代理测试脚本加载完成');
                       children: const [
                         Icon(Icons.queue_music, size: 18),
                         SizedBox(width: 6),
-                        Text('酷我（kw）', style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(
+                          '酷我（kw）',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -821,19 +837,25 @@ console.log('✅ JS代理测试脚本加载完成');
                           _sourceController.text = 'kw';
                           _songIdController.text = '321260769';
                           _qualityController.text = '128k';
-                          setState(() { _testResult = '🎵 已设置: 唯一 (kw/321260769/128k)'; });
+                          setState(() {
+                            _testResult = '🎵 已设置: 唯一 (kw/321260769/128k)';
+                          });
                         }),
                         _quickButton('多远都要在一起', () {
                           _sourceController.text = 'kw';
                           _songIdController.text = '6307329';
                           _qualityController.text = '128k';
-                          setState(() { _testResult = '🎵 已设置: 多远都要在一起 (kw/6307329/128k)'; });
+                          setState(() {
+                            _testResult = '🎵 已设置: 多远都要在一起 (kw/6307329/128k)';
+                          });
                         }),
                         _quickButton('泡沫', () {
                           _sourceController.text = 'kw';
                           _songIdController.text = '1245657';
                           _qualityController.text = '128k';
-                          setState(() { _testResult = '🎵 已设置: 泡沫 (kw/1245657/128k)'; });
+                          setState(() {
+                            _testResult = '🎵 已设置: 泡沫 (kw/1245657/128k)';
+                          });
                         }),
                       ],
                     ),
