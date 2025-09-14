@@ -36,6 +36,9 @@ PODS:
   - Flutter (1.0.0)
   - flutter_js (0.1.0):
     - Flutter
+  - gal (1.0.0):
+    - Flutter
+    - FlutterMacOS
   - open_filex (0.0.2):
     - Flutter
   - path_provider_foundation (0.0.1):
@@ -61,6 +64,7 @@ DEPENDENCIES:
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - Flutter (from `Flutter`)
   - flutter_js (from `.symlinks/plugins/flutter_js/ios`)
+  - gal (from `.symlinks/plugins/gal/darwin`)
   - open_filex (from `.symlinks/plugins/open_filex/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
@@ -82,6 +86,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_js:
     :path: ".symlinks/plugins/flutter_js/ios"
+  gal:
+    :path: ".symlinks/plugins/gal/darwin"
   open_filex:
     :path: ".symlinks/plugins/open_filex/ios"
   path_provider_foundation:
@@ -101,6 +107,7 @@ SPEC CHECKSUMS:
   file_picker: a0560bc09d61de87f12d246fc47d2119e6ef37be
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_js: 867813c1830e1d9b2c5d547cdb6f61801e2f2145
+  gal: baecd024ebfd13c441269ca7404792a7152fde89
   open_filex: 432f3cd11432da3e39f47fcc0df2b1603854eff1
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   SDWebImage: f29024626962457f3470184232766516dee8dfea

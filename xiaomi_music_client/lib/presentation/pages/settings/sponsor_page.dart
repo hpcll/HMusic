@@ -497,13 +497,16 @@ class SponsorPage extends StatelessWidget {
       }
 
       // 从assets加载图片
-      final byteData = await rootBundle.load('assets/images/sponsor_qr_code.png');
+      final byteData = await rootBundle.load(
+        'assets/images/sponsor_qr_code.png',
+      );
       final bytes = byteData.buffer.asUint8List();
 
       // 保存到相册
       await Gal.putImageBytes(
         bytes,
-        name: 'xiaoai_music_sponsor_qr_${DateTime.now().millisecondsSinceEpoch}',
+        name:
+            'xiaoai_music_sponsor_qr_${DateTime.now().millisecondsSinceEpoch}',
       );
 
       _showSuccessSnackBar(context, '赞赏码已保存到相册 📱');
@@ -518,7 +521,6 @@ class SponsorPage extends StatelessWidget {
       }
     }
   }
-
 
   void _showLoadingSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -548,11 +550,7 @@ class SponsorPage extends StatelessWidget {
       SnackBar(
         content: Row(
           children: [
-            Icon(
-              Icons.check_circle,
-              color: Colors.white,
-              size: 20,
-            ),
+            Icon(Icons.check_circle, color: Colors.white, size: 20),
             const SizedBox(width: 12),
             Text(message),
           ],
@@ -570,11 +568,7 @@ class SponsorPage extends StatelessWidget {
       SnackBar(
         content: Row(
           children: [
-            Icon(
-              Icons.error,
-              color: Colors.white,
-              size: 20,
-            ),
+            Icon(Icons.error, color: Colors.white, size: 20),
             const SizedBox(width: 12),
             Expanded(child: Text(message)),
           ],

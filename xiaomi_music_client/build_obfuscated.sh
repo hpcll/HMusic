@@ -59,3 +59,4 @@ echo "⚠️  重要提醒："
 echo "  1. 请妥善保管 debug-info/ 目录，用于日后调试"
 echo "  2. 发布时不要包含 debug-info/ 目录"
 echo "  3. 建议对构建产物进行病毒扫描"
+
