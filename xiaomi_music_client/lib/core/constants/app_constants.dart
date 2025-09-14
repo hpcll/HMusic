@@ -8,7 +8,7 @@ class AppConstants {
   static const int sendTimeout = 20;
 
   // 默认配置
-  static const String defaultServerUrl = 'http://192.168.31.2:58090';
+  static const String defaultServerUrl = 'http://localhost:58090';
 
   // SharedPreferences keys
   static const String prefsServerUrl = 'server_url';

@@ -26,7 +26,7 @@ class _ServerSettingsPageState extends ConsumerState<ServerSettingsPage> {
   Future<void> _load() async {
     final prefs = await SharedPreferences.getInstance();
     _serverCtrl.text =
-        prefs.getString(AppConstants.prefsServerUrl) ?? 'http://192.168.31.2:8090';
+        prefs.getString(AppConstants.prefsServerUrl) ?? 'http://localhost:8090';
     _userCtrl.text = prefs.getString(AppConstants.prefsUsername) ?? '';
     _passCtrl.text = prefs.getString(AppConstants.prefsPassword) ?? '';
     setState(() {});

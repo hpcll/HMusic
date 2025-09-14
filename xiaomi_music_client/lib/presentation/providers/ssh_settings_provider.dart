@@ -51,10 +51,10 @@ class SshSettingsNotifier extends StateNotifier<SshSettings> {
   SshSettingsNotifier()
     : super(
         const SshSettings(
-          host: '192.168.31.2',
+          host: '',
           port: 22,
-          username: 'root',
-          password: 'hpc19970122',
+          username: '',
+          password: '',
           subDir: '',
           useHttpUpload: false,
         ),
