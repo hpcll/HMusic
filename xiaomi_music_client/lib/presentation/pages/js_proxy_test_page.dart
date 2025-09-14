@@ -798,6 +798,50 @@ console.log('✅ JS代理测试脚本加载完成');
                           },
                           child: const Text('简化脚本'),
                         ),
+                        const SizedBox(width: 8),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 4.0),
+                          child: Text(
+                            '酷我（kw）',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            // 酷我 - 唯一
+                            _sourceController.text = 'kw';
+                            _songIdController.text = '321260769';
+                            _qualityController.text = '128k';
+                            setState(() {
+                              _testResult = '🎵 已设置: 唯一 (kw/321260769/128k)';
+                            });
+                          },
+                          child: const Text('唯一(kw)'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            // 酷我 - 多远都要在一起
+                            _sourceController.text = 'kw';
+                            _songIdController.text = '6307329';
+                            _qualityController.text = '128k';
+                            setState(() {
+                              _testResult = '🎵 已设置: 多远都要在一起 (kw/6307329/128k)';
+                            });
+                          },
+                          child: const Text('多远都要在一起(kw)'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            // 酷我 - 泡沫
+                            _sourceController.text = 'kw';
+                            _songIdController.text = '1245657';
+                            _qualityController.text = '128k';
+                            setState(() {
+                              _testResult = '🎵 已设置: 泡沫 (kw/1245657/128k)';
+                            });
+                          },
+                          child: const Text('泡沫(kw)'),
+                        ),
                       ],
                     ),
                   ],
