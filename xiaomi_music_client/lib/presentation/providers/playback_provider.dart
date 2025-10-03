@@ -48,6 +48,7 @@ class PlaybackState {
   final String? error;
   final PlayMode playMode;
   final bool hasLoaded; // whether initial fetch attempted
+  final String? albumCoverUrl; // ✨ 当前播放歌曲的专辑封面图 URL
 
   const PlaybackState({
     this.currentMusic,
@@ -56,6 +57,7 @@ class PlaybackState {
     this.error,
     this.playMode = PlayMode.sequence,
     this.hasLoaded = false,
+    this.albumCoverUrl,
   });
 
   PlaybackState copyWith({
@@ -65,6 +67,7 @@ class PlaybackState {
     String? error,
     PlayMode? playMode,
     bool? hasLoaded,
+    String? albumCoverUrl,
   }) {
     return PlaybackState(
       currentMusic: currentMusic ?? this.currentMusic,
@@ -73,6 +76,7 @@ class PlaybackState {
       error: error,
       playMode: playMode ?? this.playMode,
       hasLoaded: hasLoaded ?? this.hasLoaded,
+      albumCoverUrl: albumCoverUrl ?? this.albumCoverUrl,
     );
   }
 }
@@ -735,6 +739,14 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
 
   void clearError() {
     state = state.copyWith(error: null);
+  }
+
+  /// 更新专辑封面图 URL
+  void updateAlbumCover(String coverUrl) {
+    if (coverUrl.isNotEmpty) {
+      state = state.copyWith(albumCoverUrl: coverUrl);
+      print('[Playback] 🖼️  封面图已更新: $coverUrl');
+    }
   }
 }
 

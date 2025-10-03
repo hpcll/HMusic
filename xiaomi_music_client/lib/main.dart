@@ -4,9 +4,18 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app_router.dart';
+import 'data/services/unified_js_runtime_service.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // ✅ 在APP启动时就开始初始化JS运行时（不阻塞UI）
+  // 这样当用户登录后，JS环境已经准备好了
+  UnifiedJsRuntimeService().initialize().then((_) {
+    print('[Main] ✅ JS运行时预初始化完成');
+  }).catchError((e) {
+    print('[Main] ⚠️ JS运行时预初始化失败: $e');
+  });
 
   // 禁用Flutter调试边框和调试信息
   debugPaintSizeEnabled = false;

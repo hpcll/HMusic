@@ -121,6 +121,11 @@ class NativeMusicSearchService {
 
       if (songs == null || songs.isEmpty) return <OnlineMusicResult>[];
 
+      // ✨ 临时日志：查看第一个结果的完整结构
+      print('========== 🖼️  QQ音乐搜索结果示例 ==========');
+      print(jsonEncode(songs.first));
+      print('============================================');
+
       return songs.whereType<Map<String, dynamic>>().map((song) {
         final String id =
             (song['mid'] ?? song['songmid'] ?? song['id'] ?? '').toString();
@@ -140,9 +145,19 @@ class NativeMusicSearchService {
         }
 
         String album = '';
+        String? albumPicUrl;
         final al = song['album'];
-        if (al is Map && al['name'] != null) {
-          album = al['name'].toString();
+        if (al is Map) {
+          if (al['name'] != null) {
+            album = al['name'].toString();
+          }
+          // ✨ 提取专辑封面图
+          // QQ音乐封面图格式：https://y.gtimg.cn/music/photo_new/T002R300x300M000{pmid}.jpg
+          final pmid = al['pmid']?.toString() ?? al['mid']?.toString();
+          if (pmid != null && pmid.isNotEmpty) {
+            albumPicUrl =
+                'https://y.gtimg.cn/music/photo_new/T002R300x300M000$pmid.jpg';
+          }
         }
 
         int duration = 0;
@@ -160,6 +175,7 @@ class NativeMusicSearchService {
           duration: duration,
           platform: 'qq',
           url: '',
+          picture: albumPicUrl, // ✨ 添加封面图
           extra: const {},
         );
       }).toList();
@@ -326,6 +342,11 @@ class NativeMusicSearchService {
 
       if (songs == null || songs.isEmpty) return <OnlineMusicResult>[];
 
+      // ✨ 临时日志：查看第一个结果的完整结构
+      print('========== 🖼️  网易云音乐搜索结果示例 ==========');
+      print(jsonEncode(songs.first));
+      print('===============================================');
+
       return songs.whereType<Map<String, dynamic>>().map((song) {
         final String id = (song['id'] ?? '').toString();
         final String title = (song['name'] ?? '').toString();
@@ -344,9 +365,17 @@ class NativeMusicSearchService {
         }
 
         String album = '';
+        String? albumPicUrl;
         final al = song['al'] ?? song['album'];
-        if (al is Map && al['name'] != null) {
-          album = al['name'].toString();
+        if (al is Map) {
+          if (al['name'] != null) {
+            album = al['name'].toString();
+          }
+          // ✨ 提取专辑封面图
+          // 网易云音乐直接提供 picUrl
+          if (al['picUrl'] != null) {
+            albumPicUrl = al['picUrl'].toString();
+          }
         }
 
         int duration = 0;
@@ -362,6 +391,7 @@ class NativeMusicSearchService {
           duration: duration,
           platform: 'wangyi',
           url: '',
+          picture: albumPicUrl, // ✨ 添加封面图
           extra: const {},
         );
       }).toList();

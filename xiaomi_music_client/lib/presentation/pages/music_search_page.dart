@@ -697,6 +697,14 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
                 .read(playbackProvider.notifier)
                 .refreshStatus(silent: true);
             print('[XMC] ✅ [Play] 播放状态刷新完成');
+
+            // ✨ 更新封面图
+            if (item.picture != null && item.picture!.isNotEmpty) {
+              ref
+                  .read(playbackProvider.notifier)
+                  .updateAlbumCover(item.picture!);
+              print('[XMC] 🖼️  [Play] 封面图已更新: ${item.picture}');
+            }
           } catch (e) {
             print('[XMC] ⚠️ [Play] 播放状态刷新失败: $e');
           }

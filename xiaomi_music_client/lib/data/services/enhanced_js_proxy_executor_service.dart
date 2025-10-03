@@ -600,17 +600,21 @@ class EnhancedJSProxyExecutorService {
               callback(null, response);
               console.log('[EnhancedJSProxy] 回调执行完成');
               
-              // 设置Promise结果
-              if (response.body && typeof response.body === 'object') {
-                if (response.body.code === 0) {
-                  globalThis._promiseResult = response.body.data || response.body.url;
+              // ✨ 双保险机制：如果 Promise 还没设置结果，网络回调作为后备
+              // 策略：不判断具体的 code 值，只检查是否有有效结果
+              // 让 JS 脚本负责业务逻辑判断，Flutter 只做快速缓存
+              if (!globalThis._promiseComplete && response.body && typeof response.body === 'object') {
+                // 尝试提取可能的结果字段
+                const result = response.body.data || response.body.url || response.body.result;
+                
+                if (result && typeof result === 'string' && result.length > 0) {
+                  // 有明确的字符串结果，设置快速路径
+                  globalThis._promiseResult = result;
                   globalThis._promiseComplete = true;
-                  console.log('[EnhancedJSProxy] Promise结果已设置:', globalThis._promiseResult);
-                } else if (response.body.code !== undefined) {
-                  globalThis._promiseError = response.body.msg || response.body.message || 'API返回错误';
-                  globalThis._promiseComplete = true;
-                  console.log('[EnhancedJSProxy] Promise错误已设置:', globalThis._promiseError);
+                  console.log('[EnhancedJSProxy] 🚀 快速路径: 检测到有效结果');
                 }
+                // 注意：不设置错误，让 JS Promise 自己判断失败情况
+                // 因为我们不知道什么 code 代表失败
               }
               
               return true;
@@ -1228,6 +1232,160 @@ class EnhancedJSProxyExecutorService {
       }
     } catch (e) {
       print('[EnhancedJSProxy] ❌ 获取音乐链接异常: $e');
+      return null;
+    }
+  }
+
+  /// 获取专辑封面图
+  Future<String?> getPic({
+    required String source,
+    required String songId,
+    Map<String, dynamic>? musicInfo,
+  }) async {
+    if (!_isInitialized || _currentScript == null) {
+      print('[EnhancedJSProxy] ⚠️ 服务未初始化或脚本未加载');
+      return null;
+    }
+
+    try {
+      print('[EnhancedJSProxy] 🖼️  开始获取专辑封面: $source/$songId');
+
+      // 构建请求参数
+      final requestParams = {
+        'action': 'pic',
+        'source': source,
+        'info': {
+          'musicInfo': {'songmid': songId, 'hash': songId, ...?musicInfo},
+        },
+      };
+
+      print('[EnhancedJSProxy] 调用JS处理函数: $requestParams');
+
+      // 重置Promise状态
+      _runtime!.evaluate(
+        'globalThis._promiseResult = null; globalThis._promiseError = null; globalThis._promiseComplete = false;',
+      );
+
+      // 调用JS处理函数
+      final jsResult = _runtime!.evaluate('''
+        (function() {
+          try {
+            const request = ${jsonEncode(requestParams)};
+            console.log('Handle Action(' + request.action + ')');
+            console.log('source', request.source);
+            console.log('musicInfo', request.info.musicInfo);
+            
+            // 尝试多种调用方式
+            let result = null;
+            
+            // 方式1: 调用已注册的request事件处理器（主要方式）
+            if (globalThis._lxHandlers && globalThis._lxHandlers.request) {
+              console.log('[EnhancedJSProxy] 尝试调用已注册的request事件处理器');
+              const handlers = Array.isArray(globalThis._lxHandlers.request) ? 
+                globalThis._lxHandlers.request : [globalThis._lxHandlers.request];
+              
+              for (const handler of handlers) {
+                if (typeof handler === 'function') {
+                  console.log('[EnhancedJSProxy] 调用处理器，参数:', request);
+                  result = handler(request);
+                  console.log('[EnhancedJSProxy] 处理器返回:', result);
+                  if (result) break;
+                }
+              }
+            }
+            
+            // 方式2: 通过 lx.emit 触发
+            if (!result && typeof lx !== 'undefined' && typeof lx.emit === 'function') {
+              console.log('[EnhancedJSProxy] 尝试通过 lx.emit 分发 request');
+              result = lx.emit(lx.EVENT_NAMES.request, request);
+              console.log('[EnhancedJSProxy] lx.emit 返回:', result);
+            }
+            
+            if (result && typeof result.then === 'function') {
+              console.log('[EnhancedJSProxy] 检测到Promise，开始等待...');
+              try {
+                result.then(function(v){
+                  try { globalThis._promiseResult = v; globalThis._promiseComplete = true; } catch(e) {}
+                }).catch(function(err){
+                  try { globalThis._promiseError = (err && (err.message || err.toString())) || 'Unknown error'; globalThis._promiseComplete = true; } catch(e) {}
+                });
+              } catch (e) { console.log('[EnhancedJSProxy] 绑定Promise回调失败:', e && e.message); }
+              return JSON.stringify({ success: true, isPromise: true });
+            } else if (result) {
+              console.log('[EnhancedJSProxy] 同步结果:', result);
+              return JSON.stringify({ success: true, result: result });
+            } else {
+              return JSON.stringify({ success: false, error: 'No suitable handler found' });
+            }
+          } catch (e) {
+            console.error('[EnhancedJSProxy] JS执行失败:', e);
+            return JSON.stringify({ success: false, error: e.toString() });
+          }
+        })()
+      ''');
+
+      print('[EnhancedJSProxy] 🔍 JS执行结果: ${jsResult.stringResult}');
+
+      // 解析JS返回结果
+      Map<String, dynamic> resultData;
+      try {
+        resultData = jsonDecode(jsResult.stringResult);
+      } catch (e) {
+        print('[EnhancedJSProxy] ❌ JSON解析失败: $e');
+        return null;
+      }
+
+      if (resultData['success'] == true) {
+        if (resultData['isPromise'] == true) {
+          // 等待Promise完成（最多3秒）
+          for (int i = 0; i < 30; i++) {
+            await Future.delayed(const Duration(milliseconds: 100));
+
+            final checkResult = _runtime!.evaluate('''
+              (function() {
+                try {
+                  if (globalThis._promiseComplete) {
+                    if (globalThis._promiseResult !== null && globalThis._promiseResult !== undefined) {
+                      console.log('[EnhancedJSProxy] Promise成功，封面URL:', globalThis._promiseResult);
+                      return JSON.stringify({ success: true, result: globalThis._promiseResult });
+                    } else if (globalThis._promiseError) {
+                      console.log('[EnhancedJSProxy] Promise失败，错误:', globalThis._promiseError);
+                      return JSON.stringify({ success: false, error: globalThis._promiseError });
+                    }
+                  }
+                  return JSON.stringify({ success: false, pending: true });
+                } catch (e) {
+                  return JSON.stringify({ success: false, error: e.toString() });
+                }
+              })()
+            ''');
+
+            final checkData = jsonDecode(checkResult.stringResult);
+
+            if (checkData['success'] == true) {
+              final picUrl = checkData['result'];
+              print('[EnhancedJSProxy] ✅ 获取封面成功: $picUrl');
+              return picUrl;
+            } else if (checkData['success'] == false &&
+                checkData['pending'] != true) {
+              print('[EnhancedJSProxy] ❌ 获取封面失败: ${checkData['error']}');
+              return null;
+            }
+          }
+
+          print('[EnhancedJSProxy] ⏰ Promise等待超时 (3秒)');
+          return null;
+        } else {
+          final picUrl = resultData['result'];
+          print('[EnhancedJSProxy] ✅ 获取封面成功: $picUrl');
+          return picUrl;
+        }
+      } else {
+        print('[EnhancedJSProxy] ❌ 获取封面失败: ${resultData['error']}');
+        return null;
+      }
+    } catch (e) {
+      print('[EnhancedJSProxy] ❌ 获取封面异常: $e');
       return null;
     }
   }

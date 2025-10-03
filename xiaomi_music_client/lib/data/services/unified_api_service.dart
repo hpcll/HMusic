@@ -81,6 +81,13 @@ class UnifiedApiService {
         }
         print('🔍 [UnifiedAPI] 原始数据包含 ${songs.length} 个结果');
 
+        // ✨ 临时日志：查看第一个结果的完整结构
+        if (songs.isNotEmpty) {
+          print('========== 🖼️  UnifiedAPI 搜索结果示例 ==========');
+          print(jsonEncode(songs.first));
+          print('================================================');
+        }
+
         final results =
             songs.map<OnlineMusicResult>((item) {
               return OnlineMusicResult(

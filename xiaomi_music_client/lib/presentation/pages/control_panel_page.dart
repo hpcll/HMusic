@@ -425,6 +425,10 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
     final screenWidth = MediaQuery.of(context).size.width;
     final artworkSize = screenWidth * 0.46;
 
+    // ✨ 获取封面图 URL
+    final playbackState = ref.watch(playbackProvider);
+    final coverUrl = playbackState.albumCoverUrl;
+
     return Center(
       child: RotationTransition(
         turns: _albumAnimationController ?? kAlwaysCompleteAnimation,
@@ -449,27 +453,48 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
             ],
           ),
           child: ClipOval(
-            child: Container(
-              padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    onSurface.withOpacity(0.02),
-                    onSurface.withOpacity(0.1),
-                  ],
-                ),
-              ),
-              child: Icon(
-                Icons.music_note_rounded,
-                size: artworkSize * 0.32,
-                color: onSurface.withOpacity(0.8),
-              ),
-            ),
+            child:
+                coverUrl != null && coverUrl.isNotEmpty
+                    ? Image.network(
+                      coverUrl,
+                      fit: BoxFit.cover,
+                      width: artworkSize,
+                      height: artworkSize,
+                      errorBuilder: (context, error, stackTrace) {
+                        // ✨ 加载失败时显示默认图标
+                        return _buildDefaultArtwork(artworkSize, onSurface);
+                      },
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child;
+                        }
+                        // ✨ 加载中显示默认图标
+                        return _buildDefaultArtwork(artworkSize, onSurface);
+                      },
+                    )
+                    : _buildDefaultArtwork(artworkSize, onSurface),
           ),
         ),
+      ),
+    );
+  }
+
+  /// 默认的专辑封面（音乐图标）
+  Widget _buildDefaultArtwork(double artworkSize, Color onSurface) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [onSurface.withOpacity(0.02), onSurface.withOpacity(0.1)],
+        ),
+      ),
+      child: Icon(
+        Icons.music_note_rounded,
+        size: artworkSize * 0.32,
+        color: onSurface.withOpacity(0.8),
       ),
     );
   }

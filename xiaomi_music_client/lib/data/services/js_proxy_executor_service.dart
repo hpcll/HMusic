@@ -329,17 +329,21 @@ class JSProxyExecutorService {
               callback(null, response);
               console.log('[JSProxy] 回调执行完成');
               
-              // 设置Promise结果供轮询检查
-              if (response.body && typeof response.body === 'object') {
-                if (response.body.code === 0) {
-                  globalThis._promiseResult = response.body.data || response.body.url;
+              // ✨ 双保险机制：如果 Promise 还没设置结果，网络回调作为后备
+              // 策略：不判断具体的 code 值，只检查是否有有效结果
+              // 让 JS 脚本负责业务逻辑判断，Flutter 只做快速缓存
+              if (!globalThis._promiseComplete && response.body && typeof response.body === 'object') {
+                // 尝试提取可能的结果字段
+                const result = response.body.data || response.body.url || response.body.result;
+                
+                if (result && typeof result === 'string' && result.length > 0) {
+                  // 有明确的字符串结果，设置快速路径
+                  globalThis._promiseResult = result;
                   globalThis._promiseComplete = true;
-                  console.log('[JSProxy] Promise结果已设置:', globalThis._promiseResult);
-                } else if (response.body.code !== undefined) {
-                  globalThis._promiseError = response.body.msg || response.body.message || 'API返回错误';
-                  globalThis._promiseComplete = true;
-                  console.log('[JSProxy] Promise错误已设置:', globalThis._promiseError);
+                  console.log('[JSProxy] 🚀 快速路径: 检测到有效结果');
                 }
+                // 注意：不设置错误，让 JS Promise 自己判断失败情况
+                // 因为我们不知道什么 code 代表失败
               }
               
               return true;

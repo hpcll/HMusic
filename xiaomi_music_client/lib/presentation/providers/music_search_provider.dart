@@ -8,6 +8,7 @@ import 'js_script_manager_provider.dart';
 import '../../data/adapters/search_adapter.dart';
 // import 'js_source_provider.dart'; // JS 搜索路径已移除
 import 'js_proxy_provider.dart';
+import 'unified_js_provider.dart'; // ✨ 使用新的统一JS服务
 
 class MusicSearchState {
   final List<Music> searchResults;
@@ -146,30 +147,71 @@ class MusicSearchNotifier extends StateNotifier<MusicSearchState> {
 
       // 🎯 如果用户选择了JS音源，检查是否有可用的脚本
       if (preferJs) {
-        final scripts = ref.read(jsScriptManagerProvider);
-        final scriptManager = ref.read(jsScriptManagerProvider.notifier);
-        final selectedScript = scriptManager.selectedScript;
+        // ✨ 优先检查新的统一JS服务
+        final unifiedJsState = ref.read(unifiedJsProvider);
 
-        if (scripts.isEmpty) {
-          // 用户选择了JS音源但没有导入任何脚本
-          throw Exception('未导入JS脚本\n请先在设置中导入JS脚本才能使用JS音源搜索');
-        } else if (selectedScript == null) {
-          // 有脚本但没有选中任何脚本
-          throw Exception('未选择JS脚本\n已导入${scripts.length}个脚本，请在设置中选择一个使用');
+        if (unifiedJsState.isReady) {
+          // 新的统一服务已就绪，可以直接使用
+          print('[XMC] ✅ 使用统一JS服务（已预加载）');
+        } else {
+          // 统一服务未就绪，检查传统方式
+          final scripts = ref.read(jsScriptManagerProvider);
+          final scriptManager = ref.read(jsScriptManagerProvider.notifier);
+          final selectedScript = scriptManager.selectedScript;
+
+          if (scripts.isEmpty) {
+            // 用户选择了JS音源但没有导入任何脚本
+            throw Exception('未导入JS脚本\n请先在设置中导入JS脚本才能使用JS音源搜索');
+          } else if (selectedScript == null) {
+            // 有脚本但没有选中任何脚本
+            throw Exception('未选择JS脚本\n已导入${scripts.length}个脚本，请在设置中选择一个使用');
+          } else if (unifiedJsState.isLoading) {
+            // JS正在加载中
+            throw Exception('JS脚本正在加载中\n请稍候再试');
+          } else if (unifiedJsState.error != null) {
+            // JS加载失败
+            throw Exception('JS脚本加载失败\n${unifiedJsState.error}');
+          } else {
+            // 有脚本但未加载，尝试加载
+            print('[XMC] ⚠️ JS脚本未加载，尝试自动加载...');
+            try {
+              final success = await ref
+                  .read(unifiedJsProvider.notifier)
+                  .loadScript(
+                    selectedScript,
+                    cookieNetease: settings.cookieNetease,
+                    cookieTencent: settings.cookieTencent,
+                  );
+              if (!success) {
+                throw Exception('JS脚本自动加载失败\n请手动重新加载或检查脚本');
+              }
+              print('[XMC] ✅ JS脚本自动加载成功');
+            } catch (e) {
+              throw Exception('JS脚本自动加载异常\n$e');
+            }
+          }
         }
       }
 
       if (preferJs) {
         print('[XMC] 🎵 [MusicSearch] JS流程（使用原生搜索 + JS解析播放）');
         try {
+          // 1. 原生搜索获取基础信息
           parsed = await _searchUsingNativeByStrategy(
             query: query,
             settings: settings,
             page: 1,
           ).timeout(const Duration(seconds: 15));
           sourceUsed = 'js_builtin';
+
           if (parsed.isEmpty) {
             lastError = '原生搜索无结果 (策略=${settings.jsSearchStrategy})';
+          } else {
+            // 搜索成功，返回结果
+            // 播放时再按需解析URL（点击哪个解析哪个）
+            print(
+              '[XMC] 🎵 [MusicSearch] 搜索成功，返回 ${parsed.length} 首（点击播放时按需解析URL）',
+            );
           }
         } catch (e) {
           lastError = 'JS流程搜索失败: $e';
@@ -399,6 +441,11 @@ class MusicSearchNotifier extends StateNotifier<MusicSearchState> {
             settings: settings,
             page: nextPage,
           ).timeout(const Duration(seconds: 10));
+
+          // 分页结果也采用后台预解析策略
+          if (pageResults.isNotEmpty) {
+            print('[XMC] 🔄 分页加载成功: ${pageResults.length} 首（稍后按需解析）');
+          }
         } catch (e) {
           loadMoreError = 'JS流程分页失败: $e';
           print('[XMC] ❌ JS流程分页加载失败: $e');
