@@ -264,9 +264,18 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
           );
         });
 
-        // 停止远程状态刷新定时器（本地模式不需要）
+        // 🔧 停止所有远程模式的定时器（本地模式不需要）
         _statusRefreshTimer?.cancel();
         _statusRefreshTimer = null;
+        _localProgressTimer?.cancel();
+        _localProgressTimer = null;
+
+        // 🔧 清除远程模式的进度预测状态
+        _lastServerOffset = null;
+        _lastUpdateTime = null;
+        _lastProgressUpdate = null;
+
+        debugPrint('✅ [PlaybackProvider] 已清理远程模式的定时器和状态');
       } else {
         debugPrint('🎵 [PlaybackProvider] 切换到远程控制模式 (设备: ${device.name})');
         _currentStrategy = RemotePlaybackStrategy(
@@ -453,7 +462,7 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
         error: null,
         isLoading: silent ? state.isLoading : false,
         hasLoaded: true,
-        albumCoverUrl: isSongChanged ? null : state.albumCoverUrl,
+        albumCoverUrl: state.albumCoverUrl,
         isFavorite: isSongChanged ? false : state.isFavorite,
         currentPlaylistSongs: playlistSongs,
       );
@@ -497,8 +506,10 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
         });
       }
 
-      // 如果音乐正在播放，启动自动刷新进度
-      _startProgressTimer(currentMusic?.isPlaying ?? false);
+      // 🔧 只有远程模式需要启动进度定时器（本地模式通过statusStream自动更新）
+      if (_currentStrategy != null && !_currentStrategy!.isLocalMode) {
+        _startProgressTimer(currentMusic?.isPlaying ?? false);
+      }
     } catch (e) {
       print('🎵 获取播放状态失败: $e');
 
@@ -569,7 +580,8 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
       );
       state = state.copyWith(currentMusic: updatedMusic);
 
-      if (_currentStrategy!.isLocalMode) {
+      // 🔧 本地模式通过statusStream自动更新，不需要定时器
+      if (!_currentStrategy!.isLocalMode) {
         _lastServerOffset = state.currentMusic!.offset;
         _lastUpdateTime = DateTime.now();
         _startProgressTimer(true);
@@ -614,7 +626,8 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
       );
       state = state.copyWith(currentMusic: updatedMusic);
 
-      if (_currentStrategy!.isLocalMode) {
+      // 🔧 本地模式通过statusStream自动更新，不需要定时器
+      if (!_currentStrategy!.isLocalMode) {
         _startProgressTimer(false);
       }
     }
@@ -661,8 +674,8 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
         );
         state = state.copyWith(currentMusic: updatedMusic, isLoading: false);
 
-        // 更新本地进度计时器
-        if (_currentStrategy!.isLocalMode) {
+        // 🔧 远程模式需要更新进度计时器
+        if (!_currentStrategy!.isLocalMode) {
           _startProgressTimer(!isPlaying);
           if (!isPlaying) {
             _lastServerOffset = state.currentMusic!.offset;
