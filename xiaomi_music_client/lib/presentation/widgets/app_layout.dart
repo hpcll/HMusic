@@ -14,9 +14,9 @@ class AppLayout {
     const double navHeight = 68.0; // matches _buildModernBottomNav
     const double navTopMargin = 10.0;
     const double baseBottomMargin = 24.0;
-    final double navBottomMargin = baseBottomMargin;
+    final double navBottomMargin = hasGesture ? (baseBottomMargin - 15.0) : baseBottomMargin;
 
-    return navHeight + navTopMargin + navBottomMargin + (hasGesture ? 10.0 : 0.0);
+    return navHeight + navTopMargin + navBottomMargin;
   }
 
   /// Suggested content bottom padding so the last item scrolls above the nav.
