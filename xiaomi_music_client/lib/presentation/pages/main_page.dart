@@ -260,31 +260,28 @@ class _MainPageState extends ConsumerState<MainPage> {
     final hasGesture = gestureInset > 0 || bottomPadding > 0;
     final onSurface = Theme.of(context).colorScheme.onSurface;
 
-    return Transform.translate(
-      offset: Offset(0, hasGesture ? 10 : 0),
-      child: Container(
-        margin: EdgeInsets.only(
-          left: 20,
-          right: 20,
-          bottom: hasGesture ? (bottomPadding + 8) : 20,
-          top: 10,
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(28),
-          border: Border.all(color: onSurface.withOpacity(0.1), width: 1),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.12),
-              blurRadius: 24,
-              offset: const Offset(0, 12),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(28),
-          child: Stack(
-            children: [
-            // Glass blur background
+    return Container(
+      margin: EdgeInsets.only(
+        left: 20,
+        right: 20,
+        bottom: hasGesture ? (bottomPadding + 8 + 10) : 20,
+        top: 10,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: onSurface.withOpacity(0.1), width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.12),
+            blurRadius: 24,
+            offset: const Offset(0, 12),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(28),
+        child: Stack(
+          children: [
             BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
               child: Container(
