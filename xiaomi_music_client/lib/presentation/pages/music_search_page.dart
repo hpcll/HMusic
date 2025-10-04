@@ -798,15 +798,24 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
               quality: '320k',
               musicInfo: {'songmid': id, 'hash': id},
             );
+
+            if (playUrl != null && playUrl.isNotEmpty) {
+              print('[XMC] ✅ [Play] QuickJS解析成功: $playUrl');
+            }
           }
 
-          // 次选 WebView JS解析
-          if (webSvc != null) {
+          // 次选 WebView JS解析（仅在QuickJS失败时尝试）
+          if ((playUrl == null || playUrl.isEmpty) && webSvc != null) {
+            print('[XMC] 🔄 [Play] QuickJS解析失败，尝试WebView解析...');
             playUrl = await webSvc.resolveMusicUrl(
               platform: platform,
               songId: id,
               quality: '320k',
             );
+
+            if (playUrl != null && playUrl.isNotEmpty) {
+              print('[XMC] ✅ [Play] WebView解析成功: $playUrl');
+            }
           }
 
           // 回退到内置JS解析
