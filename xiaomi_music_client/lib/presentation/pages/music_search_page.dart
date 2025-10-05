@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'dart:io';
 import '../providers/js_proxy_provider.dart';
 import '../providers/music_search_provider.dart';
 import '../providers/source_settings_provider.dart';
@@ -355,9 +356,20 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
         return;
       }
 
-      final dir =
-          await getDownloadsDirectory() ??
-          await getApplicationDocumentsDirectory();
+      // 确定下载目录
+      Directory dir;
+      if (Platform.isIOS) {
+        // iOS 使用应用文档目录
+        dir = await getApplicationDocumentsDirectory();
+      } else {
+        // Android 使用自定义目录 /storage/download/jiujiu
+        dir = Directory('/storage/download/jiujiu');
+        // 如果目录不存在，创建它
+        if (!await dir.exists()) {
+          await dir.create(recursive: true);
+        }
+      }
+
       final titlePart = item.title.replaceAll(RegExp(r'[\\/:*?"<>|]'), '_');
       final authorPart = item.author.replaceAll(RegExp(r'[\\/:*?"<>|]'), '_');
       final safeName =

@@ -430,7 +430,7 @@ class SettingsPage extends ConsumerWidget {
     Color onSurface,
   ) {
     return ListTile(
-      leading: Icon(Icons.high_quality_rounded, color: onSurface.withOpacity(0.7)),
+      leading: Icon(Icons.graphic_eq_rounded, color: onSurface.withOpacity(0.7)),
       title: const Text('默认下载音质'),
       subtitle: Text(_getQualityDescription(settings.defaultDownloadQuality)),
       trailing: DropdownButton<String>(
@@ -459,7 +459,7 @@ class SettingsPage extends ConsumerWidget {
       builder: (context, snapshot) {
         final path = snapshot.data ?? '加载中...';
         return ListTile(
-          leading: Icon(Icons.folder_rounded, color: onSurface.withOpacity(0.7)),
+          leading: Icon(Icons.folder_open_rounded, color: onSurface.withOpacity(0.7)),
           title: const Text('本地下载路径'),
           subtitle: Text(
             path,
@@ -510,15 +510,8 @@ class SettingsPage extends ConsumerWidget {
         final dir = await getApplicationDocumentsDirectory();
         return '${dir.path}\n(iOS 应用沙盒 Documents 目录)';
       } else {
-        // Android 使用公共下载目录
-        final dir = await getDownloadsDirectory();
-        if (dir != null) {
-          return dir.path;
-        } else {
-          // 回退到应用文档目录
-          final fallback = await getApplicationDocumentsDirectory();
-          return '${fallback.path}\n(回退到应用文档目录)';
-        }
+        // Android 使用自定义下载目录
+        return '/storage/download/jiujiu';
       }
     } catch (e) {
       return '获取路径失败: $e';
