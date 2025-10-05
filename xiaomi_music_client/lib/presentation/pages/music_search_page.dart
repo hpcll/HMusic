@@ -278,10 +278,15 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
   }
 
   Future<void> _downloadToServer(OnlineMusicResult item) async {
+    // 获取用户设置的默认下载音质
+    final settings = ref.read(sourceSettingsProvider);
+    final quality = settings.defaultDownloadQuality;
+
     try {
       var url = item.url;
       if (url.isEmpty) {
-        url = await _resolvePlayUrlForItem(item) ?? '';
+        // 使用音质降级逻辑解析
+        url = await _resolveWithQualityFallback(item, quality) ?? '';
       }
 
       if (url.isEmpty) {
@@ -326,10 +331,15 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
   }
 
   Future<void> _downloadToLocal(OnlineMusicResult item) async {
+    // 获取用户设置的默认下载音质
+    final settings = ref.read(sourceSettingsProvider);
+    final quality = settings.defaultDownloadQuality;
+
     try {
       var url = item.url;
       if (url.isEmpty) {
-        url = await _resolvePlayUrlForItem(item) ?? '';
+        // 使用音质降级逻辑解析
+        url = await _resolveWithQualityFallback(item, quality) ?? '';
       }
 
       if (url.isEmpty) {
@@ -374,9 +384,13 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
           SnackBar(
             content: Text('已保存到本地: ${p.basename(filePath)}'),
             backgroundColor: Colors.green,
+            action: SnackBarAction(
+              label: '打开',
+              textColor: Colors.white,
+              onPressed: () => OpenFilex.open(filePath),
+            ),
           ),
         );
-        await OpenFilex.open(filePath);
       }
     } catch (e) {
       if (mounted) {
@@ -388,7 +402,48 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
     }
   }
 
-  Future<String?> _resolvePlayUrlForItem(OnlineMusicResult item) async {
+  /// 音质降级逻辑：按优先级尝试不同音质
+  /// quality: 'lossless' | 'high' | 'standard'
+  Future<String?> _resolveWithQualityFallback(
+    OnlineMusicResult item,
+    String targetQuality,
+  ) async {
+    // 根据目标音质确定尝试顺序
+    final qualities = _getQualityFallbackList(targetQuality);
+
+    debugPrint('[XMC] 🎵 开始音质降级解析: $targetQuality -> ${qualities.join(' → ')}');
+
+    for (final quality in qualities) {
+      debugPrint('[XMC] 🔍 尝试音质: $quality');
+      final url = await _resolvePlayUrlForItem(item, quality: quality);
+      if (url != null && url.isNotEmpty) {
+        debugPrint('[XMC] ✅ 成功解析音质 $quality');
+        return url;
+      }
+      debugPrint('[XMC] ❌ 音质 $quality 解析失败，尝试下一个');
+    }
+
+    debugPrint('[XMC] ❌ 所有音质均解析失败');
+    return null;
+  }
+
+  /// 获取音质降级列表
+  List<String> _getQualityFallbackList(String target) {
+    switch (target) {
+      case 'lossless':
+        return ['hires', 'flac', '320k', '128k'];
+      case 'high':
+        return ['320k', '128k'];
+      case 'standard':
+      default:
+        return ['128k'];
+    }
+  }
+
+  Future<String?> _resolvePlayUrlForItem(
+    OnlineMusicResult item, {
+    String quality = '320k',
+  }) async {
     try {
       final platform = (item.platform ?? 'qq');
       final id = item.songId ?? '';
@@ -408,7 +463,7 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
           final url = await jsProxy.getMusicUrl(
             source: mapped,
             songId: id,
-            quality: '320k',
+            quality: quality,
             musicInfo: {'songmid': id, 'hash': id},
           );
           if (url != null && url.isNotEmpty) return url;
@@ -422,7 +477,7 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
           final url = await webSvc.resolveMusicUrl(
             platform: platform,
             songId: id,
-            quality: '320k',
+            quality: quality,
           );
           if (url != null && url.isNotEmpty) return url;
         }
@@ -437,7 +492,7 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
               try{
                 if (!lx || !lx.EVENT_NAMES) return '';
                 function mapPlat(p){ p=(p||'').toLowerCase(); if(p==='qq'||p==='tencent') return 'tx'; if(p==='netease'||p==='163') return 'wy'; if(p==='kuwo') return 'kw'; if(p==='kugou') return 'kg'; if(p==='migu') return 'mg'; return p; }
-                var payload = { action: 'musicUrl', source: mapPlat('$platform'), info: { type: '320k', musicInfo: { songmid: '$id', hash: '$id' } } };
+                var payload = { action: 'musicUrl', source: mapPlat('$platform'), info: { type: '$quality', musicInfo: { songmid: '$id', hash: '$id' } } };
                 var res = lx.emit(lx.EVENT_NAMES.request, payload);
                 if (res && typeof res.then === 'function') return '';
                 if (typeof res === 'string') return res;

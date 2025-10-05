@@ -24,6 +24,7 @@ class SourceSettings {
   final String localScriptPath; // 本地脚本文件路径
   final String
   jsSearchStrategy; // JS流程下搜索优先级: qqOnly|kuwoOnly|neteaseOnly|qqFirst|kuwoFirst|neteaseFirst
+  final String defaultDownloadQuality; // 默认下载音质: 'lossless' | 'high' | 'standard'
 
   const SourceSettings({
     this.enabled = true,
@@ -46,6 +47,7 @@ class SourceSettings {
     this.scriptPreset = 'custom', // 默认选择自定义
     this.localScriptPath = '', // 默认无本地脚本路径
     this.jsSearchStrategy = 'qqFirst',
+    this.defaultDownloadQuality = 'high', // 默认高品质 (320k)
   });
 
   SourceSettings copyWith({
@@ -68,6 +70,7 @@ class SourceSettings {
     String? scriptPreset,
     String? localScriptPath,
     String? jsSearchStrategy,
+    String? defaultDownloadQuality,
   }) {
     return SourceSettings(
       enabled: enabled ?? this.enabled,
@@ -90,6 +93,7 @@ class SourceSettings {
       scriptPreset: scriptPreset ?? this.scriptPreset,
       localScriptPath: localScriptPath ?? this.localScriptPath,
       jsSearchStrategy: jsSearchStrategy ?? this.jsSearchStrategy,
+      defaultDownloadQuality: defaultDownloadQuality ?? this.defaultDownloadQuality,
     );
   }
 }
@@ -114,6 +118,7 @@ class SourceSettingsNotifier extends StateNotifier<SourceSettings> {
   static const _kScriptPreset = 'source_script_preset';
   static const _kLocalScriptPath = 'source_local_script_path';
   static const _kJsSearchStrategy = 'source_js_search_strategy';
+  static const _kDefaultDownloadQuality = 'source_default_download_quality';
 
   bool _isLoaded = false;
   bool get isLoaded => _isLoaded;
@@ -144,6 +149,7 @@ class SourceSettingsNotifier extends StateNotifier<SourceSettings> {
       final scriptPreset = prefs.getString(_kScriptPreset);
       final localScriptPath = prefs.getString(_kLocalScriptPath);
       final jsSearchStrategy = prefs.getString(_kJsSearchStrategy);
+      final defaultDownloadQuality = prefs.getString(_kDefaultDownloadQuality);
 
       print('[XMC] 🔧 [SourceSettings] 加载设置:');
       print('  - enabled: $enabled');
@@ -216,6 +222,7 @@ class SourceSettingsNotifier extends StateNotifier<SourceSettings> {
         scriptPreset: scriptPreset ?? state.scriptPreset,
         localScriptPath: localScriptPath ?? state.localScriptPath,
         jsSearchStrategy: jsSearchStrategy ?? state.jsSearchStrategy,
+        defaultDownloadQuality: defaultDownloadQuality ?? state.defaultDownloadQuality,
       );
     } catch (e) {
       print('[XMC] ❌ [SourceSettings] 加载设置失败: $e');
@@ -263,6 +270,7 @@ class SourceSettingsNotifier extends StateNotifier<SourceSettings> {
       await prefs.setString(_kScriptPreset, s.scriptPreset);
       await prefs.setString(_kLocalScriptPath, s.localScriptPath);
       await prefs.setString(_kJsSearchStrategy, s.jsSearchStrategy);
+      await prefs.setString(_kDefaultDownloadQuality, s.defaultDownloadQuality);
 
       // 只有保存成功后才更新state
       state = s;

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 import '../providers/auth_provider.dart';
 import '../providers/music_library_provider.dart';
 import '../providers/playlist_provider.dart';
+import '../providers/source_settings_provider.dart';
 import '../widgets/app_snackbar.dart';
 
 class SettingsPage extends ConsumerWidget {
@@ -14,6 +18,7 @@ class SettingsPage extends ConsumerWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final onSurface = colorScheme.onSurface;
+    final settings = ref.watch(sourceSettingsProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('设置'), centerTitle: true),
@@ -96,6 +101,10 @@ class SettingsPage extends ConsumerWidget {
             context,
             title: '下载与工具',
             children: [
+              // 默认下载音质选择
+              _buildQualitySelector(context, ref, settings, onSurface),
+              // 本地下载路径显示
+              _buildDownloadPathDisplay(context, onSurface),
               _buildSettingsItem(
                 context: context,
                 icon: Icons.link_rounded,
@@ -411,5 +420,108 @@ class SettingsPage extends ConsumerWidget {
             ],
           ),
     );
+  }
+
+  /// 下载音质选择器
+  Widget _buildQualitySelector(
+    BuildContext context,
+    WidgetRef ref,
+    SourceSettings settings,
+    Color onSurface,
+  ) {
+    return ListTile(
+      leading: Icon(Icons.high_quality_rounded, color: onSurface.withOpacity(0.7)),
+      title: const Text('默认下载音质'),
+      subtitle: Text(_getQualityDescription(settings.defaultDownloadQuality)),
+      trailing: DropdownButton<String>(
+        value: settings.defaultDownloadQuality,
+        underline: const SizedBox.shrink(),
+        items: const [
+          DropdownMenuItem(value: 'lossless', child: Text('无损音质')),
+          DropdownMenuItem(value: 'high', child: Text('高品质 (320k)')),
+          DropdownMenuItem(value: 'standard', child: Text('标准音质 (128k)')),
+        ],
+        onChanged: (value) {
+          if (value != null) {
+            ref.read(sourceSettingsProvider.notifier).save(
+              settings.copyWith(defaultDownloadQuality: value),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  /// 本地下载路径显示
+  Widget _buildDownloadPathDisplay(BuildContext context, Color onSurface) {
+    return FutureBuilder<String>(
+      future: _getDownloadPath(),
+      builder: (context, snapshot) {
+        final path = snapshot.data ?? '加载中...';
+        return ListTile(
+          leading: Icon(Icons.folder_rounded, color: onSurface.withOpacity(0.7)),
+          title: const Text('本地下载路径'),
+          subtitle: Text(
+            path,
+            style: TextStyle(fontSize: 12, color: onSurface.withOpacity(0.6)),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          trailing: IconButton(
+            icon: Icon(Icons.copy_rounded, color: onSurface.withOpacity(0.7)),
+            onPressed: () async {
+              final actualPath = await _getDownloadPath();
+              await Clipboard.setData(ClipboardData(text: actualPath));
+              if (context.mounted) {
+                AppSnackBar.show(
+                  context,
+                  const SnackBar(
+                    content: Text('已复制到剪贴板'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+              }
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  /// 获取音质描述
+  String _getQualityDescription(String quality) {
+    switch (quality) {
+      case 'lossless':
+        return '尝试：hires → flac → 320k → 128k';
+      case 'high':
+        return '尝试：320k → 128k';
+      case 'standard':
+        return '固定：128k';
+      default:
+        return '未知';
+    }
+  }
+
+  /// 获取下载路径
+  Future<String> _getDownloadPath() async {
+    try {
+      if (Platform.isIOS) {
+        // iOS 没有公共下载目录，使用 Documents 目录
+        final dir = await getApplicationDocumentsDirectory();
+        return '${dir.path}\n(iOS 应用沙盒 Documents 目录)';
+      } else {
+        // Android 使用公共下载目录
+        final dir = await getDownloadsDirectory();
+        if (dir != null) {
+          return dir.path;
+        } else {
+          // 回退到应用文档目录
+          final fallback = await getApplicationDocumentsDirectory();
+          return '${fallback.path}\n(回退到应用文档目录)';
+        }
+      }
+    } catch (e) {
+      return '获取路径失败: $e';
+    }
   }
 }
