@@ -331,6 +331,10 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
 
         // 启动状态刷新定时器
         _startStatusRefreshTimer();
+
+        // 🔧 立即刷新一次状态，避免等待 5 秒才显示音箱当前播放内容
+        await refreshStatus();
+        debugPrint('✅ [PlaybackProvider] 已立即刷新音箱播放状态');
       }
 
       _currentDeviceId = deviceId;
