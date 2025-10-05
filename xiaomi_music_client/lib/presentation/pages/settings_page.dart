@@ -489,9 +489,8 @@ class SettingsPage extends ConsumerWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
-          trailing: IconButton(
-            icon: Icon(Icons.copy_rounded, color: onSurface.withOpacity(0.7)),
-            onPressed: () async {
+          trailing: InkWell(
+            onTap: () async {
               final actualPath = await _getDownloadPath();
               await Clipboard.setData(ClipboardData(text: actualPath));
               if (context.mounted) {
@@ -504,6 +503,15 @@ class SettingsPage extends ConsumerWidget {
                 );
               }
             },
+            borderRadius: BorderRadius.circular(20),
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Icon(
+                Icons.copy_rounded,
+                color: onSurface.withOpacity(0.4),
+                size: 20,
+              ),
+            ),
           ),
         );
       },
