@@ -13,6 +13,7 @@ import '../providers/js_source_provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:open_filex/open_filex.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../providers/music_library_provider.dart';
 import '../widgets/app_snackbar.dart';
 import '../widgets/app_layout.dart';
@@ -197,6 +198,7 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
         return false;
       },
       child: ListView.separated(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         key: const ValueKey('online_search_results'),
         padding: EdgeInsets.only(
           bottom: AppLayout.contentBottomPadding(context),
@@ -247,6 +249,7 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
                 borderRadius: BorderRadius.circular(10),
               ),
               onSelected: (value) async {
+                FocusManager.instance.primaryFocus?.unfocus();
                 switch (value) {
                   case 'server':
                     await _downloadToServer(item);
@@ -359,14 +362,28 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
       // 确定下载目录
       Directory dir;
       if (Platform.isIOS) {
-        // iOS 使用应用文档目录
         dir = await getApplicationDocumentsDirectory();
       } else {
-        // Android 使用自定义目录 /storage/download/HMusic
+        await Permission.storage.request();
+        await Permission.manageExternalStorage.request();
         dir = Directory('/storage/download/HMusic');
-        // 如果目录不存在，创建它
         if (!await dir.exists()) {
-          await dir.create(recursive: true);
+          try {
+            await dir.create(recursive: true);
+          } catch (e) {
+            if (mounted) {
+              AppSnackBar.show(
+                context,
+                const SnackBar(
+                  content: Text('⚠️ 无法创建目录 /storage/download/HMusic，请在系统设置授予存储权限'),
+                  backgroundColor: Colors.orange,
+                  duration: Duration(seconds: 5),
+                ),
+              );
+            }
+            await openAppSettings();
+            return;
+          }
         }
       }
 
