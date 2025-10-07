@@ -538,7 +538,11 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
 
       // 🎯 检测歌曲切换
       bool isSongChanged = false;
-      if (state.currentMusic != null && currentMusic != null) {
+      if (state.currentMusic == null && currentMusic != null) {
+        // 首次加载歌曲（从无到有）
+        isSongChanged = true;
+        print('🎵 首次加载歌曲: "${currentMusic.curMusic}"');
+      } else if (state.currentMusic != null && currentMusic != null) {
         final oldSongName = state.currentMusic!.curMusic;
         final newSongName = currentMusic.curMusic;
         if (oldSongName != newSongName) {
