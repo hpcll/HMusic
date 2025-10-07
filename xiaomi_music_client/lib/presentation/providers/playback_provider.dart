@@ -436,11 +436,18 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
           );
 
           // 🖼️ 本地模式也需要自动搜索封面图
+          debugPrint('🖼️ [PlaybackProvider-本地] 检查是否需要搜索封面');
+          debugPrint('🖼️ [PlaybackProvider-本地] currentMusic: ${status.curMusic}');
+          debugPrint('🖼️ [PlaybackProvider-本地] albumCoverUrl: ${state.albumCoverUrl}');
+
           if (status.curMusic.isNotEmpty &&
               (state.albumCoverUrl == null || state.albumCoverUrl!.isEmpty)) {
+            debugPrint('🖼️ [PlaybackProvider-本地] ✅ 触发封面自动搜索: ${status.curMusic}');
             _autoFetchAlbumCover(status.curMusic).catchError((e) {
               debugPrint('🖼️ [AutoCover] 异步搜索封面失败: $e');
             });
+          } else {
+            debugPrint('🖼️ [PlaybackProvider-本地] ❌ 不需要搜索封面（已有封面或无歌曲）');
           }
         }
       } catch (e) {
@@ -628,12 +635,20 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
       }
 
       // 🖼️ 自动搜索封面图（适用于服务端本地歌曲）
+      debugPrint('🖼️ [PlaybackProvider] 检查是否需要搜索封面');
+      debugPrint('🖼️ [PlaybackProvider] currentMusic: ${currentMusic?.curMusic}');
+      debugPrint('🖼️ [PlaybackProvider] albumCoverUrl: ${state.albumCoverUrl}');
+      debugPrint('🖼️ [PlaybackProvider] isSongChanged: $isSongChanged');
+
       if (currentMusic != null &&
           (state.albumCoverUrl == null || state.albumCoverUrl!.isEmpty)) {
+        debugPrint('🖼️ [PlaybackProvider] ✅ 触发封面自动搜索: ${currentMusic.curMusic}');
         // 异步搜索封面图，不阻塞主流程
         _autoFetchAlbumCover(currentMusic.curMusic).catchError((e) {
           print('🖼️ [AutoCover] 异步搜索封面失败: $e');
         });
+      } else {
+        debugPrint('🖼️ [PlaybackProvider] ❌ 不需要搜索封面（已有封面或无歌曲）');
       }
 
       // 🔧 只有远程模式需要启动进度定时器（本地模式通过statusStream自动更新）
