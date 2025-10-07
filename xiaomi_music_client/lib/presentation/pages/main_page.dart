@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'control_panel_page.dart';
 import 'playlist_page.dart';
 import 'music_search_page.dart';
@@ -15,6 +16,7 @@ import '../providers/music_library_provider.dart';
 import '../widgets/app_snackbar.dart';
 import '../providers/ssh_settings_provider.dart';
 import '../providers/playlist_provider.dart';
+import '../providers/playback_provider.dart';
 
 class MainPage extends ConsumerStatefulWidget {
   const MainPage({super.key});
@@ -351,17 +353,16 @@ class _MainPageState extends ConsumerState<MainPage> {
             children: [
               AnimatedSwitcher(
                 duration: const Duration(milliseconds: 200),
-                transitionBuilder:
-                    (child, animation) =>
-                        ScaleTransition(scale: animation, child: child),
-                child: Icon(
-                  isSelected ? activeIcon : icon,
-                  key: ValueKey<String>(
-                    'nav_icon_${index}_$isSelected',
-                  ), // Unique key for each navigation icon
-                  size: 26,
-                  color: isSelected ? activeColor : inactiveColor,
-                ),
+                transitionBuilder: (child, animation) =>
+                    ScaleTransition(scale: animation, child: child),
+                child: index == 0
+                    ? _buildPlayTabIcon(isSelected, activeColor, inactiveColor)
+                    : Icon(
+                        isSelected ? activeIcon : icon,
+                        key: ValueKey<String>('nav_icon_${index}_$isSelected'),
+                        size: 26,
+                        color: isSelected ? activeColor : inactiveColor,
+                      ),
               ),
               const SizedBox(height: 4),
               Text(
@@ -377,6 +378,100 @@ class _MainPageState extends ConsumerState<MainPage> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildPlayTabIcon(bool isSelected, Color activeColor, Color inactiveColor) {
+    final playback = ref.watch(playbackProvider);
+    final cover = playback.albumCoverUrl;
+    final isPlaying = playback.currentMusic?.isPlaying ?? false;
+    final borderColor = (isSelected ? activeColor : inactiveColor).withOpacity(0.6);
+
+    // 计算播放进度 (0.0 - 1.0)
+    final offset = playback.currentMusic?.offset ?? 0;
+    final duration = playback.currentMusic?.duration ?? 0;
+    final progress = duration > 0 ? (offset / duration).clamp(0.0, 1.0) : 0.0;
+
+    Widget image = Container(
+      width: 26,
+      height: 26,
+      decoration: BoxDecoration(
+        color: inactiveColor.withOpacity(0.15),
+        shape: BoxShape.circle,
+      ),
+      child: Icon(
+        Icons.play_circle_filled_rounded,
+        size: 16,
+        color: isSelected ? activeColor : inactiveColor,
+      ),
+    );
+
+    if (cover != null && cover.isNotEmpty) {
+      final thumb = Container(
+        width: 26,
+        height: 26,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: CachedNetworkImage(
+          imageUrl: cover,
+          fit: BoxFit.cover,
+          fadeInDuration: const Duration(milliseconds: 150),
+          errorWidget: (_, __, ___) => Icon(
+            Icons.music_note_rounded,
+            size: 16,
+            color: inactiveColor,
+          ),
+        ),
+      );
+      image = thumb;
+    }
+
+    return Stack(
+      key: ValueKey<String>('play_tab_icon_${cover ?? 'none'}_${isPlaying}_$isSelected'),
+      clipBehavior: Clip.none,
+      children: [
+        // 外围进度圈
+        SizedBox(
+          width: 30,
+          height: 30,
+          child: CircularProgressIndicator(
+            value: progress,
+            strokeWidth: 2.0,
+            backgroundColor: borderColor.withOpacity(0.2),
+            valueColor: AlwaysStoppedAnimation<Color>(
+              isSelected ? activeColor : inactiveColor,
+            ),
+          ),
+        ),
+        // 封面图 (居中)
+        Positioned(
+          left: 2,
+          top: 2,
+          child: image,
+        ),
+        // 播放状态指示器
+        Positioned(
+          right: -2,
+          bottom: -2,
+          child: Container(
+            width: 14,
+            height: 14,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              shape: BoxShape.circle,
+              border: Border.all(color: borderColor, width: 1),
+            ),
+            alignment: Alignment.center,
+            child: Icon(
+              isPlaying ? Icons.equalizer_rounded : Icons.pause_rounded,
+              size: 10,
+              color: isSelected ? activeColor : inactiveColor,
+            ),
+          ),
+        ),
+      ],
     );
   }
 

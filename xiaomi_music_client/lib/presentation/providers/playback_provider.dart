@@ -306,6 +306,10 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
 
         debugPrint('✅ [PlaybackProvider] 已清理远程模式的定时器和状态');
 
+        // 🔧 先清除远程播放的封面图
+        state = state.copyWith(albumCoverUrl: null);
+        debugPrint('🖼️ [PlaybackProvider] 已清除远程播放封面图');
+
         // 🔧 从 SharedPreferences 重新加载缓存数据（因为从播放设备切换回来时内存缓存可能已清空）
         try {
           final prefs = await SharedPreferences.getInstance();
@@ -379,6 +383,10 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
 
         // 启动状态刷新定时器
         _startStatusRefreshTimer();
+
+        // 🔧 清除封面图缓存，让系统重新搜索远程设备的封面
+        state = state.copyWith(albumCoverUrl: null);
+        debugPrint('🖼️ [PlaybackProvider] 已清除封面图，等待刷新远程设备状态');
 
         // 🔧 立即刷新一次状态，避免等待 5 秒才显示播放设备当前播放内容
         await refreshStatus();
@@ -580,7 +588,7 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
         error: null,
         isLoading: silent ? state.isLoading : false,
         hasLoaded: true,
-        albumCoverUrl: state.albumCoverUrl,
+        albumCoverUrl: isSongChanged ? null : state.albumCoverUrl,
         isFavorite: isSongChanged ? false : state.isFavorite,
         currentPlaylistSongs: playlistSongs,
       );

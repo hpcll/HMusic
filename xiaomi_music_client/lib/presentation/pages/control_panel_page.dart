@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:palette_generator/palette_generator.dart';
 import '../providers/playback_provider.dart';
 import '../../core/constants/app_constants.dart';
 import '../providers/auth_provider.dart';
@@ -20,6 +22,8 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
     with TickerProviderStateMixin {
   AnimationController? _albumAnimationController;
   AnimationController? _buttonAnimationController;
+  Color? _dominantColor; // 封面主色调
+  String? _lastCoverUrl; // 上一次的封面 URL
 
   @override
   void initState() {
@@ -65,6 +69,16 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
     final playbackState = ref.watch(playbackProvider);
     final authState = ref.watch(authProvider);
     final deviceState = ref.watch(deviceProvider);
+
+    // 🎨 检测封面 URL 变化并提取颜色
+    final coverUrl = playbackState.albumCoverUrl;
+    if (coverUrl != _lastCoverUrl) {
+      _lastCoverUrl = coverUrl;
+      _dominantColor = null; // 清除旧颜色
+      if (coverUrl != null && coverUrl.isNotEmpty) {
+        Future.microtask(() => _extractDominantColor(coverUrl));
+      }
+    }
 
     // 延迟动画控制以避免在build中修改状态
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -544,6 +558,9 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
     final playbackState = ref.watch(playbackProvider);
     final coverUrl = playbackState.albumCoverUrl;
 
+    // 🎨 使用提取的主色调或默认主题色
+    final glowColor = _dominantColor ?? Theme.of(context).colorScheme.primary;
+
     return Center(
       child: RotationTransition(
         turns: _albumAnimationController ?? kAlwaysCompleteAnimation,
@@ -561,7 +578,7 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
               ),
               if (isPlaying)
                 BoxShadow(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.4),
+                  color: glowColor.withOpacity(0.4),
                   blurRadius: 50,
                   spreadRadius: 10,
                 ),
@@ -1203,5 +1220,31 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
         ],
       ),
     );
+  }
+
+  /// 🎨 从封面图提取主色调
+  Future<void> _extractDominantColor(String imageUrl) async {
+    try {
+      debugPrint('🎨 [ControlPanel] 开始提取封面主色调: $imageUrl');
+      final imageProvider = CachedNetworkImageProvider(imageUrl);
+      final paletteGenerator = await PaletteGenerator.fromImageProvider(
+        imageProvider,
+        maximumColorCount: 10,
+      );
+
+      final extractedColor = paletteGenerator.dominantColor?.color ??
+          paletteGenerator.vibrantColor?.color;
+
+      debugPrint('🎨 [ControlPanel] 提取到的颜色: $extractedColor');
+
+      if (mounted) {
+        setState(() {
+          _dominantColor = extractedColor;
+        });
+        debugPrint('🎨 [ControlPanel] 颜色已应用到 UI');
+      }
+    } catch (e) {
+      debugPrint('❌ [ControlPanel] 提取封面主色调失败: $e');
+    }
   }
 }

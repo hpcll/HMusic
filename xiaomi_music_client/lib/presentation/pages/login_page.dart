@@ -62,7 +62,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Color(0xFFF7F8FA), Color(0xFFEFF3F8)],
+                    colors: [Color(0xFFF9FBFB), Color(0xFFF1F9F8)],
                   ),
                 )
                 : const BoxDecoration(
@@ -105,21 +105,21 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         height: 100,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
-                          ),
+                          color: Colors.white.withOpacity(isLight ? 1.0 : 0.1),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFF667EEA).withOpacity(0.3),
+                              color: Colors.black.withOpacity(0.05),
                               blurRadius: 20,
                               offset: const Offset(0, 10),
                             ),
                           ],
                         ),
-                        child: const Icon(
-                          Icons.music_note_rounded,
-                          size: 50,
-                          color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Image.asset(
+                            'xiaoai_music_box_icon.png',
+                            fit: BoxFit.contain,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -137,7 +137,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               isLight
                                   ? [
                                     Shadow(
-                                      color: Colors.black.withOpacity(0.1),
+                                      color: Colors.black.withOpacity(0.08),
                                       offset: const Offset(0, 1),
                                       blurRadius: 3,
                                     ),
@@ -177,7 +177,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       color:
                           isLight
                               ? Colors.white
-                              : Colors.white.withOpacity(0.08),
+                              : Colors.white.withOpacity(0.06),
                       borderRadius: BorderRadius.circular(24),
                       border: Border.all(
                         color:
@@ -190,7 +190,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           isLight
                               ? [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.06),
+                                  color: Colors.black.withOpacity(0.04),
                                   blurRadius: 24,
                                   offset: const Offset(0, 8),
                                 ),
@@ -440,7 +440,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         gradient:
             onPressed != null
                 ? const LinearGradient(
-                  colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                  colors: [Color(0xFF23B0A6), Color(0xFF1EA396)],
                 )
                 : LinearGradient(
                   colors: [
@@ -453,7 +453,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             onPressed != null
                 ? [
                   BoxShadow(
-                    color: const Color(0xFF667EEA).withOpacity(0.3),
+                    color: const Color(0xFF23B0A6).withOpacity(0.22),
                     blurRadius: 16,
                     offset: const Offset(0, 8),
                   ),

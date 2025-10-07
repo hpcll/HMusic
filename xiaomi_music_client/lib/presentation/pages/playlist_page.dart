@@ -44,6 +44,8 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage> {
           key: const ValueKey('playlist_fab'),
           onPressed: () => _showCreatePlaylistDialog(),
           tooltip: '新建列表',
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Colors.white,
           child: const Icon(Icons.add_rounded),
         ),
       ),

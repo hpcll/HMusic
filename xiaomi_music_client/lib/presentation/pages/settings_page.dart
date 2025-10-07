@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'dart:io';
 import '../providers/auth_provider.dart';
 import '../providers/music_library_provider.dart';
@@ -10,11 +11,36 @@ import '../providers/playlist_provider.dart';
 import '../providers/source_settings_provider.dart';
 import '../widgets/app_snackbar.dart';
 
-class SettingsPage extends ConsumerWidget {
+class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends ConsumerState<SettingsPage> {
+  String _appVersion = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAppVersion();
+  }
+
+  Future<void> _loadAppVersion() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    final version = packageInfo.version;
+    final buildNumber = packageInfo.buildNumber;
+    final versionText = buildNumber.isNotEmpty ? '$version ($buildNumber)' : version;
+    if (mounted) {
+      setState(() {
+        _appVersion = versionText;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final onSurface = colorScheme.onSurface;
@@ -150,8 +176,82 @@ class SettingsPage extends ConsumerWidget {
               ),
             ],
           ),
+
+          const SizedBox(height: 24),
+
+          // 关于分组
+          _buildSettingsGroup(
+            context,
+            title: '关于',
+            children: [
+              _buildAppInfo(context, onSurface),
+              _buildDeveloperInfo(context, onSurface),
+            ],
+          ),
+
+          const SizedBox(height: 24),
         ],
       ),
+    );
+  }
+
+  /// 应用信息展示
+  Widget _buildAppInfo(BuildContext context, Color onSurface) {
+    return ListTile(
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: onSurface.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(
+          Icons.info_outline_rounded,
+          color: onSurface.withOpacity(0.8),
+          size: 20,
+        ),
+      ),
+      title: Text(
+        '应用版本',
+        style: TextStyle(
+          color: onSurface.withOpacity(0.9),
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      subtitle: Text(
+        _appVersion.isEmpty ? '加载中...' : _appVersion,
+        style: TextStyle(color: onSurface.withOpacity(0.6), fontSize: 12),
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    );
+  }
+
+  /// 开发者信息展示
+  Widget _buildDeveloperInfo(BuildContext context, Color onSurface) {
+    return ListTile(
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: onSurface.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(
+          Icons.person_rounded,
+          color: onSurface.withOpacity(0.8),
+          size: 20,
+        ),
+      ),
+      title: Text(
+        '开发者',
+        style: TextStyle(
+          color: onSurface.withOpacity(0.9),
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      subtitle: Text(
+        '胡九九',
+        style: TextStyle(color: onSurface.withOpacity(0.6), fontSize: 12),
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     );
   }
 

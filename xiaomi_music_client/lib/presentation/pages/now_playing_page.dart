@@ -1,16 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:palette_generator/palette_generator.dart';
 import '../providers/playback_provider.dart';
 import '../providers/device_provider.dart';
 
-class NowPlayingPage extends ConsumerWidget {
+class NowPlayingPage extends ConsumerStatefulWidget {
   const NowPlayingPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<NowPlayingPage> createState() => _NowPlayingPageState();
+}
+
+class _NowPlayingPageState extends ConsumerState<NowPlayingPage> {
+  Color? _dominantColor;
+  String? _lastCoverUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    // 页面初始化后立即检查并提取封面颜色
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final coverUrl = ref.read(playbackProvider).albumCoverUrl;
+      if (coverUrl != null && coverUrl.isNotEmpty) {
+        debugPrint('🎨 页面初始化：检测到封面 URL，开始提取颜色');
+        _lastCoverUrl = coverUrl;
+        _extractDominantColor(coverUrl);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final playback = ref.watch(playbackProvider);
     final current = playback.currentMusic;
+    final coverUrl = playback.albumCoverUrl;
     final onSurface = Theme.of(context).colorScheme.onSurface;
+
+    debugPrint('🎨 build: coverUrl=$coverUrl, _lastCoverUrl=$_lastCoverUrl');
+
+    // 当封面 URL 变化时，提取颜色
+    if (coverUrl != _lastCoverUrl) {
+      debugPrint('🎨 检测到封面 URL 变化: $_lastCoverUrl -> $coverUrl');
+      _lastCoverUrl = coverUrl;
+      _dominantColor = null; // 立即清除旧颜色
+      if (coverUrl != null && coverUrl.isNotEmpty) {
+        // 异步提取新颜色
+        Future.microtask(() => _extractDominantColor(coverUrl));
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(title: const Text('正在播放'), centerTitle: true),
@@ -20,26 +58,7 @@ class NowPlayingPage extends ConsumerWidget {
           child: Column(
             children: [
               const SizedBox(height: 12),
-              Container(
-                width: 260,
-                height: 260,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: onSurface.withOpacity(0.06),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.15),
-                      blurRadius: 30,
-                      offset: const Offset(0, 12),
-                    ),
-                  ],
-                ),
-                child: Icon(
-                  Icons.music_note_rounded,
-                  size: 96,
-                  color: onSurface.withOpacity(0.8),
-                ),
-              ),
+              _buildAlbumCover(coverUrl, onSurface),
               const SizedBox(height: 20),
               Text(
                 current?.curMusic ?? '暂无播放',
@@ -84,6 +103,82 @@ class NowPlayingPage extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildAlbumCover(String? coverUrl, Color onSurface) {
+    final glowColor = _dominantColor ?? Theme.of(context).colorScheme.primary;
+    debugPrint('🎨 当前光圈颜色: $glowColor (提取的颜色: $_dominantColor)');
+
+    return Container(
+      width: 260,
+      height: 260,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: onSurface.withOpacity(0.06),
+        boxShadow: [
+          BoxShadow(
+            color: glowColor.withOpacity(0.4),
+            blurRadius: 40,
+            spreadRadius: 8,
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.15),
+            blurRadius: 30,
+            offset: const Offset(0, 12),
+          ),
+        ],
+      ),
+      child: coverUrl != null && coverUrl.isNotEmpty
+          ? ClipOval(
+              child: CachedNetworkImage(
+                imageUrl: coverUrl,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => Center(
+                  child: CircularProgressIndicator(
+                    color: glowColor,
+                  ),
+                ),
+                errorWidget: (context, url, error) => Icon(
+                  Icons.music_note_rounded,
+                  size: 96,
+                  color: onSurface.withOpacity(0.8),
+                ),
+              ),
+            )
+          : Icon(
+              Icons.music_note_rounded,
+              size: 96,
+              color: onSurface.withOpacity(0.8),
+            ),
+    );
+  }
+
+  Future<void> _extractDominantColor(String imageUrl) async {
+    try {
+      debugPrint('🎨 开始提取封面主色调: $imageUrl');
+      final imageProvider = CachedNetworkImageProvider(imageUrl);
+      final paletteGenerator = await PaletteGenerator.fromImageProvider(
+        imageProvider,
+        maximumColorCount: 10,
+      );
+
+      final extractedColor = paletteGenerator.dominantColor?.color ??
+          paletteGenerator.vibrantColor?.color;
+
+      debugPrint('🎨 提取到的颜色: $extractedColor');
+      debugPrint('🎨 主色调: ${paletteGenerator.dominantColor?.color}');
+      debugPrint('🎨 鲜艳色: ${paletteGenerator.vibrantColor?.color}');
+
+      if (mounted) {
+        setState(() {
+          _dominantColor = extractedColor;
+        });
+        debugPrint('🎨 颜色已应用到 UI');
+      }
+    } catch (e) {
+      // 提取颜色失败，使用默认颜色
+      debugPrint('❌ 提取封面主色调失败: $e');
+    }
   }
 }
 

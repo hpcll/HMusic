@@ -65,6 +65,8 @@ dependencies:
   audio_service: ^0.18.12
   permission_handler: ^11.3.1
   flutter_svg: ^2.0.10+1
+  package_info_plus: ^8.0.0
+  palette_generator: ^0.3.3+4
 
 dev_dependencies:
   flutter_test:

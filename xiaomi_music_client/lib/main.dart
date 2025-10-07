@@ -117,15 +117,17 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final seed = const Color(0xFF007AFF); // 小米/澎湃常用蓝
+    final seed = const Color(0xFF21B0A5);
 
     final lightScheme = ColorScheme.fromSeed(
       seedColor: seed,
       brightness: Brightness.light,
+      primary: seed,
     );
     final darkScheme = ColorScheme.fromSeed(
       seedColor: seed,
       brightness: Brightness.dark,
+      primary: seed,
     );
 
     // 在应用构建阶段预热JS代理（读取provider以触发初始化和自动加载）
@@ -143,7 +145,6 @@ class MyApp extends ConsumerWidget {
           foregroundColor: Colors.black,
           elevation: 0,
           centerTitle: true,
-          surfaceTintColor: Colors.transparent,
           scrolledUnderElevation: 0,
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
@@ -174,7 +175,6 @@ class MyApp extends ConsumerWidget {
           foregroundColor: Colors.white,
           elevation: 0,
           centerTitle: true,
-          surfaceTintColor: Colors.transparent,
           scrolledUnderElevation: 0,
         ),
         snackBarTheme: SnackBarThemeData(
