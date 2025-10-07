@@ -636,8 +636,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
         final dir = await getApplicationDocumentsDirectory();
         return '${dir.path}\n(iOS 应用沙盒 Documents 目录)';
       } else {
-        // Android 使用自定义下载目录
-        return '/storage/download/HMusic';
+        // Android 使用公共下载目录
+        return '/storage/emulated/0/Download/HMusic';
       }
     } catch (e) {
       return '获取路径失败: $e';

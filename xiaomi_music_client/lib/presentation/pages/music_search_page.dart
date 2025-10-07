@@ -390,9 +390,8 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
           return;
         }
 
-        final bases = await getExternalStorageDirectories(type: StorageDirectory.downloads);
-        final base = bases?.isNotEmpty == true ? bases!.first : Directory('/storage/emulated/0/Download');
-        dir = Directory(p.join(base.path, 'HMusic'));
+        // 直接使用公共 Download 目录
+        dir = Directory('/storage/emulated/0/Download/HMusic');
         if (!await dir.exists()) {
           await dir.create(recursive: true);
         }
