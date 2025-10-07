@@ -306,7 +306,7 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
 
         debugPrint('✅ [PlaybackProvider] 已清理远程模式的定时器和状态');
 
-        // 🔧 从 SharedPreferences 重新加载缓存数据（因为从音箱切换回来时内存缓存可能已清空）
+        // 🔧 从 SharedPreferences 重新加载缓存数据（因为从播放设备切换回来时内存缓存可能已清空）
         try {
           final prefs = await SharedPreferences.getInstance();
           final cachedUrl = prefs.getString(_localPlaybackUrlKey);
@@ -380,9 +380,9 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
         // 启动状态刷新定时器
         _startStatusRefreshTimer();
 
-        // 🔧 立即刷新一次状态，避免等待 5 秒才显示音箱当前播放内容
+        // 🔧 立即刷新一次状态，避免等待 5 秒才显示播放设备当前播放内容
         await refreshStatus();
-        debugPrint('✅ [PlaybackProvider] 已立即刷新音箱播放状态');
+        debugPrint('✅ [PlaybackProvider] 已立即刷新播放设备播放状态');
       }
 
       _currentDeviceId = deviceId;

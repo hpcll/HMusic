@@ -73,7 +73,7 @@ class _TtsSettingsPageState extends ConsumerState<TtsSettingsPage> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '可以将文字转换为语音播放到您的智能音箱，支持中文等多种语言。',
+                          '可以将文字转换为语音播放到您的播放设备，支持中文等多种语言。'
                           style: TextStyle(
                             color: Colors.blue.withOpacity(0.8),
                             fontSize: 14,

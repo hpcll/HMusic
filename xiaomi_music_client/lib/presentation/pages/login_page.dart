@@ -152,7 +152,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '连接您的智能音响',
+                        '播放 NAS 音乐',
                         style: TextStyle(
                           fontSize: 16,
                           color:

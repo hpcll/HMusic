@@ -73,7 +73,7 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
     final selectedDid = ref.read(deviceProvider).selectedDeviceId;
     if (selectedDid == null) {
       if (mounted) {
-        AppSnackBar.showText(context, '请先在控制页选择播放设备');
+        AppSnackBar.showText(context, '请先在设置中配置 NAS 服务器');
       }
       return;
     }
@@ -105,7 +105,7 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
     }
   }
 
-  // 设备选择由控制面板统一处理，此处不再弹窗
+  // NAS 播放以本地为主，设备选择逻辑移除
 
   void _deleteMusic(String musicName) {
     showDialog(

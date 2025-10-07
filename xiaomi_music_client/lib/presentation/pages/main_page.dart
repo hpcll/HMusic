@@ -298,7 +298,7 @@ class _MainPageState extends ConsumerState<MainPage> {
                   _buildTabItem(
                     icon: Icons.play_circle_outline_rounded,
                     activeIcon: Icons.play_circle_filled_rounded,
-                    label: '控制',
+                    label: '播放',
                     index: 0,
                   ),
                   _buildTabItem(

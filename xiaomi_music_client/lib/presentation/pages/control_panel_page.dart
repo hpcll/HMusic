@@ -386,7 +386,7 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              '未找到音箱设备，请检查设置',
+              '未找到播放设备，请检查设置',
               style: TextStyle(
                 color: onSurface,
                 fontSize: 13,
@@ -500,7 +500,7 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
                           device.isLocalDevice
                               ? Icons
                                   .phone_android_rounded // 本机设备
-                              : Icons.speaker_group_rounded, // 音箱设备
+                              : Icons.speaker_group_rounded, // 播放设备
                           color:
                               (device.isOnline ?? false)
                                   ? Colors.greenAccent
@@ -906,7 +906,7 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
             min: 0,
             max: 100,
             onChanged: (value) {
-              // 先本地更新，避免频繁打到后端引起音箱多次响
+              // 先本地更新，避免频繁打到后端引起设备多次响
               ref.read(playbackProvider.notifier).setVolumeLocal(value.round());
             },
             onChangeEnd: (value) {

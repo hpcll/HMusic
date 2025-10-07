@@ -234,7 +234,7 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage> {
                                 ref.read(deviceProvider).selectedDeviceId;
                             if (did == null) {
                               if (mounted) {
-                                AppSnackBar.showText(context, '请先在控制页选择播放设备');
+                                AppSnackBar.showText(context, '请先在设置中配置 NAS 服务器');
                               }
                               return;
                             }

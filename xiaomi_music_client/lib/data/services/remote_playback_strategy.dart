@@ -4,7 +4,7 @@ import 'music_api_service.dart';
 import 'playback_strategy.dart';
 
 /// 远程播放策略实现
-/// 通过API控制小米音箱播放音乐
+/// 通过API控制播放设备播放音乐
 class RemotePlaybackStrategy implements PlaybackStrategy {
   final MusicApiService _apiService;
   final String _deviceId;
