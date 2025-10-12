@@ -7,6 +7,8 @@ import 'dart:async';
 import '../../data/models/music.dart';
 import '../../data/adapters/music_list_adapter.dart';
 import '../../data/services/music_api_service.dart';
+import '../../data/services/album_cover_service.dart';
+import '../../data/services/native_music_search_service.dart';
 import 'auth_provider.dart';
 import 'dio_provider.dart';
 
@@ -52,14 +54,15 @@ class MusicLibraryState {
 
 class MusicLibraryNotifier extends StateNotifier<MusicLibraryState> {
   final Ref ref;
+  AlbumCoverService? _albumCoverService; // 封面图服务
 
   MusicLibraryNotifier(this.ref) : super(const MusicLibraryState()) {
     debugPrint('MusicLibraryProvider: 初始化完成');
-    
+
     // 监听认证状态变化，在用户登录后自动加载音乐库
     ref.listen<AuthState>(authProvider, (previous, next) {
       debugPrint('MusicLibraryProvider: 认证状态变化 - previous: ${previous.runtimeType}, next: ${next.runtimeType}');
-      
+
       if (next is AuthAuthenticated && previous is! AuthAuthenticated) {
         debugPrint('MusicLibraryProvider: 用户已认证，自动加载音乐库');
         // 延迟一点时间确保认证完全完成
@@ -88,10 +91,10 @@ class MusicLibraryNotifier extends StateNotifier<MusicLibraryState> {
 
       final response = await apiService.getMusicList();
       debugPrint('MusicLibrary: API响应: $response');
-      
+
       final musicList = MusicListAdapter.parse(response);
       debugPrint('MusicLibrary: 解析后的音乐列表数量: ${musicList.length}');
-      
+
       if (musicList.isNotEmpty) {
         debugPrint('MusicLibrary: 前5首歌曲: ${musicList.take(5).map((m) => m.name).toList()}');
       }
@@ -102,8 +105,13 @@ class MusicLibraryNotifier extends StateNotifier<MusicLibraryState> {
         isLoading: false,
         error: null,
       );
-      
+
       debugPrint('MusicLibrary: 数据加载完成，状态已更新');
+
+      // 🖼️ 异步获取所有歌曲的封面图（不阻塞UI）
+      if (musicList.isNotEmpty) {
+        _fetchAlbumCoversAsync(musicList, apiService);
+      }
     } catch (e) {
       debugPrint('MusicLibrary: 获取音乐列表失败: $e');
       state = state.copyWith(isLoading: false, error: e.toString());
@@ -396,6 +404,103 @@ class MusicLibraryNotifier extends StateNotifier<MusicLibraryState> {
 
   void clearError() {
     state = state.copyWith(error: null);
+  }
+
+  /// 🖼️ 异步获取封面图（后台执行，不阻塞UI）
+  void _fetchAlbumCoversAsync(List<Music> musicList, MusicApiService apiService) {
+    // 使用 Future 在后台执行
+    Future(() async {
+      try {
+        // 初始化 AlbumCoverService（如果未初始化）
+        if (_albumCoverService == null) {
+          final nativeSearch = ref.read(nativeMusicSearchServiceProvider);
+          _albumCoverService = AlbumCoverService(
+            musicApi: apiService,
+            nativeSearch: nativeSearch,
+          );
+          debugPrint('🖼️ [MusicLibrary] AlbumCoverService 已初始化');
+        }
+
+        debugPrint('🖼️ [MusicLibrary] 开始批量获取封面图，共 ${musicList.length} 首歌曲');
+
+        // 批量处理，每次处理 5 首歌曲，避免同时发起太多请求
+        const batchSize = 5;
+        for (int i = 0; i < musicList.length; i += batchSize) {
+          final endIndex = (i + batchSize < musicList.length) ? i + batchSize : musicList.length;
+          final batch = musicList.sublist(i, endIndex);
+
+          // 并发获取当前批次的封面图
+          await Future.wait(
+            batch.map((music) => _fetchSingleAlbumCover(music, apiService)),
+          );
+
+          debugPrint('🖼️ [MusicLibrary] 已处理 $endIndex / ${musicList.length} 首歌曲');
+
+          // 每批次之间延迟一下，避免请求过于密集
+          if (endIndex < musicList.length) {
+            await Future.delayed(const Duration(milliseconds: 500));
+          }
+        }
+
+        debugPrint('✅ [MusicLibrary] 所有封面图获取完成');
+      } catch (e) {
+        debugPrint('❌ [MusicLibrary] 批量获取封面图失败: $e');
+      }
+    });
+  }
+
+  /// 🖼️ 获取单首歌曲的封面图
+  Future<void> _fetchSingleAlbumCover(Music music, MusicApiService apiService) async {
+    try {
+      // 如果歌曲已经有封面图，跳过
+      if (music.picture != null && music.picture!.isNotEmpty) {
+        debugPrint('🖼️ [MusicLibrary] 跳过已有封面的歌曲: ${music.name}');
+        return;
+      }
+
+      debugPrint('🖼️ [MusicLibrary] 获取封面图: ${music.name}');
+
+      // 调用 AlbumCoverService 获取封面图
+      final coverUrl = await _albumCoverService!.getOrFetchAlbumCover(
+        musicName: music.name,
+        loginBaseUrl: apiService.baseUrl,
+        autoScrape: true,
+      );
+
+      if (coverUrl != null && coverUrl.isNotEmpty) {
+        debugPrint('✅ [MusicLibrary] 封面图获取成功: ${music.name}');
+
+        // 更新 Music 对象的 picture 字段
+        final updatedMusic = Music(
+          name: music.name,
+          title: music.title,
+          artist: music.artist,
+          album: music.album,
+          duration: music.duration,
+          picture: coverUrl,
+        );
+
+        // 更新状态中的音乐列表
+        final updatedMusicList = state.musicList.map((m) {
+          return m.name == music.name ? updatedMusic : m;
+        }).toList();
+
+        final updatedFilteredList = state.filteredMusicList.map((m) {
+          return m.name == music.name ? updatedMusic : m;
+        }).toList();
+
+        // 刷新 UI
+        state = state.copyWith(
+          musicList: updatedMusicList,
+          filteredMusicList: updatedFilteredList,
+        );
+      } else {
+        debugPrint('⚠️ [MusicLibrary] 未找到封面图: ${music.name}');
+      }
+    } catch (e) {
+      debugPrint('❌ [MusicLibrary] 获取封面图失败: ${music.name}, 错误: $e');
+      // 静默失败，不影响其他歌曲
+    }
   }
 
   // 批量删除相关方法
