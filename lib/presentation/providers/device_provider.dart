@@ -219,9 +219,14 @@ class DeviceNotifier extends StateNotifier<DeviceState> {
       final prefs = await SharedPreferences.getInstance();
       final saved = prefs.getString(_kSelectedDeviceKey);
       if (saved != null && saved.isNotEmpty) {
+        debugPrint('🔧 [DeviceProvider] 恢复上次选中的设备: $saved');
         state = state.copyWith(selectedDeviceId: saved);
+      } else {
+        debugPrint('🔧 [DeviceProvider] 没有保存的设备选择');
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('❌ [DeviceProvider] 加载保存的设备选择失败: $e');
+    }
   }
 }
 

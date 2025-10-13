@@ -149,6 +149,7 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
   AlbumCoverService? _albumCoverService; // 🆕 新的封面服务
   final Map<String, String> _coverCache = {}; // 歌曲名 -> 封面URL 的缓存
   String? _lastCoverSearchSong; // 上次搜索封面的歌曲名（用于防止重复搜索）
+  String? _searchingCoverForSong; // 🔧 正在搜索封面的歌曲名（防止重复搜索）
   static const String _coverCacheKey = 'album_cover_cache';
   static const int _maxCacheSize = 200;
   static const String _localPlaybackKey = 'local_playback_state';
@@ -173,7 +174,7 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
     // 🖼️ 异步加载封面图缓存
     _loadCoverCache();
     _listenToDeviceChanges();
-    _loadLocalPlayback();
+    // 🔧 不要在构造函数中恢复播放数据，避免在设备确定前显示数据
   }
 
   @override
@@ -238,6 +239,18 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
     ref.listen<DeviceState>(deviceProvider, (previous, next) {
       final newDeviceId = next.selectedDeviceId;
 
+      // 🔧 如果正在初始化，忽略设备变化（避免重复切换）
+      if (_isInitialized == false) {
+        debugPrint('🎵 [PlaybackProvider] 正在初始化，忽略设备变化');
+        return;
+      }
+
+      // 🔧 如果设备列表为空，忽略设备变化（设备还未加载完成）
+      if (next.devices.isEmpty) {
+        debugPrint('🎵 [PlaybackProvider] 设备列表为空，忽略设备变化');
+        return;
+      }
+
       // 设备ID变化时切换策略
       if (newDeviceId != _currentDeviceId && newDeviceId != null) {
         debugPrint(
@@ -251,13 +264,41 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
   // 🎵 切换播放策略
   Future<void> _switchStrategy(String deviceId, List<Device> devices) async {
     try {
-      debugPrint('🎵 [PlaybackProvider] 开始切换播放策略: $deviceId');
+      debugPrint('🎵 [PlaybackProvider] ========== 开始切换播放策略 ==========');
+      debugPrint('🎵 [PlaybackProvider] 目标设备ID: $deviceId');
+      debugPrint('🎵 [PlaybackProvider] 设备列表: ${devices.map((d) => '${d.name}(${d.id})').join(', ')}');
 
-      // 查找设备
+      // 🔧 智能判断是否需要清空UI状态
+      // 如果是首次初始化（_currentDeviceId == null），保留缓存数据，避免闪烁
+      // 如果是真正的设备切换，才清空数据
+      final isFirstInit = (_currentDeviceId == null);
+      if (isFirstInit) {
+        debugPrint('🎵 [PlaybackProvider] 首次初始化，保留缓存数据');
+        // 只标记为未加载，但不清空数据
+        state = state.copyWith(hasLoaded: false);
+      } else {
+        debugPrint('🎵 [PlaybackProvider] 设备切换，清空UI状态');
+        state = state.copyWith(
+          currentMusic: null,
+          albumCoverUrl: null,
+          hasLoaded: false,
+        );
+      }
+
+      // 🔧 直接用设备ID判断，不依赖设备列表（更可靠）
+      final isLocalMode = (deviceId == 'local_device');
+      debugPrint('🎵 [PlaybackProvider] 目标设备是否为本地: $isLocalMode (ID: $deviceId)');
+
+      // 查找设备信息（仅用于显示名称）
       final device = devices.firstWhere(
         (d) => d.id == deviceId,
-        orElse: () => Device.localDevice,
+        orElse: () {
+          debugPrint('⚠️ [PlaybackProvider] 未在列表中找到设备ID: $deviceId');
+          return Device.localDevice;
+        },
       );
+
+      debugPrint('🎵 [PlaybackProvider] 设备名称: ${device.name}');
 
       // 保存当前播放状态（用于切换后恢复）
       final currentMusic = state.currentMusic;
@@ -277,9 +318,12 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
         return;
       }
 
-      if (device.isLocalDevice) {
+      // 🔧 使用直接判断的 isLocalMode，而不是 device.isLocalDevice
+      if (isLocalMode) {
+        debugPrint('🎵 [PlaybackProvider] ========== 本地播放模式 ==========');
         _deviceSwitchProtectionUntil = DateTime.now().add(const Duration(milliseconds: 1500));
         debugPrint('🎵 [PlaybackProvider] 切换到本地播放模式');
+
         final localStrategy = LocalPlaybackStrategy(apiService: apiService);
         _currentStrategy = localStrategy;
 
@@ -437,8 +481,10 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
           debugPrint('❌ [PlaybackProvider] 恢复本地播放列表失败: $e');
         }
       } else {
+        debugPrint('🎵 [PlaybackProvider] ========== 远程控制模式 ==========');
         debugPrint('🎵 [PlaybackProvider] 切换到远程控制模式 (设备: ${device.name})');
         _deviceSwitchProtectionUntil = DateTime.now().add(const Duration(milliseconds: 1500));
+
         final remoteStrategy = RemotePlaybackStrategy(
           apiService: apiService,
           deviceId: deviceId,
@@ -459,9 +505,9 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
         // 启动状态刷新定时器
         _startStatusRefreshTimer();
 
-        // 🔧 清除封面图缓存，让系统重新搜索远程设备的封面
-        state = state.copyWith(albumCoverUrl: null);
-        debugPrint('🖼️ [PlaybackProvider] 已清除封面图，等待刷新远程设备状态');
+        // 🔧 不要在这里清除封面图，让 refreshStatus() 来决定是否需要搜索封面
+        // 避免重复清除导致封面闪烁
+        debugPrint('🖼️ [PlaybackProvider] 保留当前封面，等待刷新远程设备状态');
 
         // 🔧 立即刷新一次状态，避免等待 5 秒才显示播放设备当前播放内容
         await refreshStatus();
@@ -617,8 +663,9 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
       bool isSongChanged = false;
       if (state.currentMusic == null && currentMusic != null) {
         // 首次加载歌曲（从无到有）
-        isSongChanged = true;
-        print('🎵 首次加载歌曲: "${currentMusic.curMusic}"');
+        // 🔧 但不清除封面，因为可能是初始化时已经有封面缓存
+        isSongChanged = false; // 改为 false，避免清除已有的封面
+        print('🎵 首次加载歌曲: "${currentMusic.curMusic}"（保留已有封面）');
       } else if (state.currentMusic != null && currentMusic != null) {
         final oldSongName = state.currentMusic!.curMusic;
         final newSongName = currentMusic.curMusic;
@@ -1017,14 +1064,28 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
     }
 
     try {
-      await _currentStrategy!.seekTo(seconds);
-      await Future.delayed(const Duration(milliseconds: 500));
+      // 🎯 乐观更新：先更新本地UI状态，提升响应性
+      if (state.currentMusic != null) {
+        final updatedMusic = PlayingMusic(
+          ret: state.currentMusic!.ret,
+          curMusic: state.currentMusic!.curMusic,
+          curPlaylist: state.currentMusic!.curPlaylist,
+          isPlaying: state.currentMusic!.isPlaying,
+          offset: seconds, // 立即更新进度
+          duration: state.currentMusic!.duration,
+        );
+        state = state.copyWith(currentMusic: updatedMusic);
+      }
 
-      // 🔄 远程模式需要刷新状态
+      await _currentStrategy!.seekTo(seconds);
+
+      // 🔧 本地模式会通过 statusStream 自动更新，远程模式需要手动刷新
       if (!_currentStrategy!.isLocalMode) {
+        await Future.delayed(const Duration(milliseconds: 500));
         await refreshStatus(silent: true);
       }
     } catch (e) {
+      debugPrint('❌ [PlaybackProvider] 跳转失败: $e');
       state = state.copyWith(error: e.toString());
     }
   }
@@ -1450,6 +1511,12 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
 
   /// 🖼️ 自动搜索并获取歌曲封面图（新版：支持上传到服务器）
   Future<void> _autoFetchAlbumCover(String songName) async {
+    // 🔧 防止重复搜索同一首歌
+    if (_searchingCoverForSong == songName) {
+      debugPrint('🖼️ [AutoCover] 已在搜索中，跳过: $songName');
+      return;
+    }
+
     // 🎯 先检查内存缓存
     if (_coverCache.containsKey(songName)) {
       final cachedUrl = _coverCache[songName]!;
@@ -1464,6 +1531,9 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
         _coverCache.remove(songName); // 移除无效缓存
       }
     }
+
+    // 🔧 标记开始搜索
+    _searchingCoverForSong = songName;
 
     try {
       debugPrint('🖼️ [AutoCover] ========== 开始获取封面 ==========');
@@ -1519,6 +1589,12 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
         '❌ [AutoCover] 堆栈: ${stackTrace.toString().split('\n').take(5).join('\n')}',
       );
       // 静默失败，不影响播放
+    } finally {
+      // 🔧 搜索完成，清除标记
+      if (_searchingCoverForSong == songName) {
+        _searchingCoverForSong = null;
+        debugPrint('🖼️ [AutoCover] 搜索完成，清除标记: $songName');
+      }
     }
   }
 

@@ -70,14 +70,11 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
     final authState = ref.watch(authProvider);
     final deviceState = ref.watch(deviceProvider);
 
-    // 🎨 检测封面 URL 变化并提取颜色
+    // 🎨 检测封面 URL 变化并清除旧颜色 (颜色提取由 CachedNetworkImage.imageBuilder 处理)
     final coverUrl = playbackState.albumCoverUrl;
     if (coverUrl != _lastCoverUrl) {
       _lastCoverUrl = coverUrl;
-      _dominantColor = null; // 清除旧颜色
-      if (coverUrl != null && coverUrl.isNotEmpty) {
-        Future.microtask(() => _extractDominantColor(coverUrl));
-      }
+      _dominantColor = null; // 清除旧颜色,等待新图片加载后提取
     }
 
     // 延迟动画控制以避免在build中修改状态
@@ -587,22 +584,23 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
           child: ClipOval(
             child:
                 coverUrl != null && coverUrl.isNotEmpty
-                    ? Image.network(
-                      coverUrl,
+                    ? CachedNetworkImage(
+                      imageUrl: coverUrl,
                       fit: BoxFit.cover,
                       width: artworkSize,
                       height: artworkSize,
-                      errorBuilder: (context, error, stackTrace) {
-                        // ✨ 加载失败时显示默认图标
-                        return _buildDefaultArtwork(artworkSize, onSurface);
+                      // 🎨 图片加载完成后,延迟提取颜色(确保图片已缓存)
+                      imageBuilder: (context, imageProvider) {
+                        // 延迟提取颜色,避免与首次加载冲突
+                        Future.delayed(const Duration(milliseconds: 300), () {
+                          if (mounted && coverUrl == playbackState.albumCoverUrl) {
+                            _extractDominantColorFromProvider(imageProvider);
+                          }
+                        });
+                        return Image(image: imageProvider, fit: BoxFit.cover);
                       },
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) {
-                          return child;
-                        }
-                        // ✨ 加载中显示默认图标
-                        return _buildDefaultArtwork(artworkSize, onSurface);
-                      },
+                      placeholder: (context, url) => _buildDefaultArtwork(artworkSize, onSurface),
+                      errorWidget: (context, url, error) => _buildDefaultArtwork(artworkSize, onSurface),
                     )
                     : _buildDefaultArtwork(artworkSize, onSurface),
           ),
@@ -1222,11 +1220,36 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
     );
   }
 
-  /// 🎨 从封面图提取主色调
+  /// 🎨 从封面图提取主色调 (已废弃,改用 _extractDominantColorFromProvider)
   Future<void> _extractDominantColor(String imageUrl) async {
     try {
       debugPrint('🎨 [ControlPanel] 开始提取封面主色调: $imageUrl');
       final imageProvider = CachedNetworkImageProvider(imageUrl);
+      final paletteGenerator = await PaletteGenerator.fromImageProvider(
+        imageProvider,
+        maximumColorCount: 10,
+      );
+
+      final extractedColor = paletteGenerator.dominantColor?.color ??
+          paletteGenerator.vibrantColor?.color;
+
+      debugPrint('🎨 [ControlPanel] 提取到的颜色: $extractedColor');
+
+      if (mounted) {
+        setState(() {
+          _dominantColor = extractedColor;
+        });
+        debugPrint('🎨 [ControlPanel] 颜色已应用到 UI');
+      }
+    } catch (e) {
+      debugPrint('❌ [ControlPanel] 提取封面主色调失败: $e');
+    }
+  }
+
+  /// 🎨 从已加载的 ImageProvider 提取主色调 (避免重复加载图片)
+  Future<void> _extractDominantColorFromProvider(ImageProvider imageProvider) async {
+    try {
+      debugPrint('🎨 [ControlPanel] 从已加载的图片提取主色调');
       final paletteGenerator = await PaletteGenerator.fromImageProvider(
         imageProvider,
         maximumColorCount: 10,

@@ -19,15 +19,7 @@ class _NowPlayingPageState extends ConsumerState<NowPlayingPage> {
   @override
   void initState() {
     super.initState();
-    // 页面初始化后立即检查并提取封面颜色
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final coverUrl = ref.read(playbackProvider).albumCoverUrl;
-      if (coverUrl != null && coverUrl.isNotEmpty) {
-        debugPrint('🎨 页面初始化：检测到封面 URL，开始提取颜色');
-        _lastCoverUrl = coverUrl;
-        _extractDominantColor(coverUrl);
-      }
-    });
+    // 🎨 颜色提取现在由 CachedNetworkImage.imageBuilder 自动处理，不需要在这里手动触发
   }
 
   @override
@@ -39,15 +31,11 @@ class _NowPlayingPageState extends ConsumerState<NowPlayingPage> {
 
     debugPrint('🎨 build: coverUrl=$coverUrl, _lastCoverUrl=$_lastCoverUrl');
 
-    // 当封面 URL 变化时，提取颜色
+    // 🎨 当封面 URL 变化时，清除旧颜色 (颜色提取由 CachedNetworkImage.imageBuilder 处理)
     if (coverUrl != _lastCoverUrl) {
       debugPrint('🎨 检测到封面 URL 变化: $_lastCoverUrl -> $coverUrl');
       _lastCoverUrl = coverUrl;
-      _dominantColor = null; // 立即清除旧颜色
-      if (coverUrl != null && coverUrl.isNotEmpty) {
-        // 异步提取新颜色
-        Future.microtask(() => _extractDominantColor(coverUrl));
-      }
+      _dominantColor = null; // 立即清除旧颜色,等待新图片加载后提取
     }
 
     return Scaffold(
@@ -85,8 +73,10 @@ class _NowPlayingPageState extends ConsumerState<NowPlayingPage> {
               const SizedBox(height: 16),
               if (current != null)
                 _ProgressBar(
-                  currentTime: current.offset ?? 0,
-                  totalTime: current.duration ?? 0,
+                  currentTime: current.offset,
+                  totalTime: current.duration,
+                  // 🔧 只有当歌曲名为空时才禁用进度条，避免加载过程中无法操作
+                  disabled: current.curMusic.isEmpty,
                 )
               else
                 const _ProgressBar(
@@ -133,6 +123,16 @@ class _NowPlayingPageState extends ConsumerState<NowPlayingPage> {
               child: CachedNetworkImage(
                 imageUrl: coverUrl,
                 fit: BoxFit.cover,
+                // 🎨 图片加载完成后,延迟提取颜色(确保图片已缓存)
+                imageBuilder: (context, imageProvider) {
+                  // 延迟提取颜色,避免与首次加载冲突
+                  Future.delayed(const Duration(milliseconds: 300), () {
+                    if (mounted && coverUrl == ref.read(playbackProvider).albumCoverUrl) {
+                      _extractDominantColorFromProvider(imageProvider);
+                    }
+                  });
+                  return Image(image: imageProvider, fit: BoxFit.cover);
+                },
                 placeholder: (context, url) => Center(
                   child: CircularProgressIndicator(
                     color: glowColor,
@@ -180,6 +180,34 @@ class _NowPlayingPageState extends ConsumerState<NowPlayingPage> {
       debugPrint('❌ 提取封面主色调失败: $e');
     }
   }
+
+  /// 🎨 从已加载的 ImageProvider 提取主色调 (避免重复加载图片)
+  Future<void> _extractDominantColorFromProvider(ImageProvider imageProvider) async {
+    try {
+      debugPrint('🎨 [NowPlaying] 从已加载的图片提取主色调');
+      final paletteGenerator = await PaletteGenerator.fromImageProvider(
+        imageProvider,
+        maximumColorCount: 10,
+      );
+
+      final extractedColor = paletteGenerator.dominantColor?.color ??
+          paletteGenerator.vibrantColor?.color;
+
+      debugPrint('🎨 [NowPlaying] 提取到的颜色: $extractedColor');
+      debugPrint('🎨 [NowPlaying] 主色调: ${paletteGenerator.dominantColor?.color}');
+      debugPrint('🎨 [NowPlaying] 鲜艳色: ${paletteGenerator.vibrantColor?.color}');
+
+      if (mounted) {
+        setState(() {
+          _dominantColor = extractedColor;
+        });
+        debugPrint('🎨 [NowPlaying] 颜色已应用到 UI');
+      }
+    } catch (e) {
+      // 提取颜色失败，使用默认颜色
+      debugPrint('❌ [NowPlaying] 提取封面主色调失败: $e');
+    }
+  }
 }
 
 class _ProgressBar extends ConsumerStatefulWidget {
@@ -212,6 +240,8 @@ class _ProgressBarState extends ConsumerState<_ProgressBar> {
         ? (displayTime / widget.totalTime).clamp(0.0, 1.0)
         : 0.0;
 
+    debugPrint('🎯 [ProgressBar] disabled=${widget.disabled}, progress=$progress, currentTime=${widget.currentTime}, totalTime=${widget.totalTime}');
+
     return Column(
       children: [
         Slider(
@@ -220,6 +250,7 @@ class _ProgressBarState extends ConsumerState<_ProgressBar> {
               ? null
               : (v) {
                   // 🔧 拖动时更新临时值,实时显示进度
+                  debugPrint('🎯 [ProgressBar] onChanged: $v');
                   setState(() {
                     _draggingValue = v;
                   });
@@ -228,12 +259,14 @@ class _ProgressBarState extends ConsumerState<_ProgressBar> {
               ? null
               : (v) {
                   // 🔧 拖动结束,清除临时值并执行 seek
+                  final seekSeconds = (v * widget.totalTime).round();
+                  debugPrint('🎯 [ProgressBar] onChangeEnd: $v, seekTo: $seekSeconds seconds');
                   setState(() {
                     _draggingValue = null;
                   });
                   ref
                       .read(playbackProvider.notifier)
-                      .seekTo((v * widget.totalTime).round());
+                      .seekTo(seekSeconds);
                 },
         ),
         Row(
