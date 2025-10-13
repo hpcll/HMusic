@@ -281,11 +281,19 @@ class LocalPlaybackStrategy implements PlaybackStrategy {
 
   @override
   Future<void> seekTo(int seconds) async {
-    debugPrint('🎵 [LocalPlayback] 跳转到 $seconds 秒');
+    debugPrint('🎵 [LocalPlayback] ========== seekTo 被调用 ==========');
+    debugPrint('🎵 [LocalPlayback] 目标位置: $seconds 秒');
     final player = _ensurePlayer;
+    debugPrint('🎵 [LocalPlayback] player 状态: ${player != null ? "已初始化" : "未初始化"}');
     if (player != null) {
+      debugPrint('🎵 [LocalPlayback] 当前位置: ${player.position.inSeconds} 秒');
+      debugPrint('🎵 [LocalPlayback] 总时长: ${player.duration?.inSeconds ?? 0} 秒');
       await player.seek(Duration(seconds: seconds));
+      debugPrint('🎵 [LocalPlayback] seek 完成，新位置: ${player.position.inSeconds} 秒');
       _emitCurrentStatus();
+      debugPrint('🎵 [LocalPlayback] 状态已更新');
+    } else {
+      debugPrint('❌ [LocalPlayback] player 为 null，无法执行 seek');
     }
   }
 
