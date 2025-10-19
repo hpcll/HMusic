@@ -593,7 +593,8 @@ class EnhancedJSProxyExecutorService {
               delete globalThis._pendingRequests['$requestId'];
 
               const response = ${jsonEncode(responseData)};
-              console.log('[EnhancedJSProxy] 📊 HTTP层响应 {statusCode:', response.statusCode, ', body:', response.body, '}');
+              console.log('[EnhancedJSProxy] 📊 [HTTP层] statusCode=' + response.statusCode + ' (200=成功,404=未找到,500=服务器错误)');
+              console.log('[EnhancedJSProxy] 📦 [响应体] body=' + JSON.stringify(response.body));
 
               // 🔧 关键修复：为不同脚本提供兼容的响应格式
               // 有些脚本期望直接收到 body，有些期望收到完整的 response 对象
@@ -606,13 +607,15 @@ class EnhancedJSProxyExecutorService {
                 ...(typeof response.body === 'object' ? response.body : {})
               };
 
-              console.log('[EnhancedJSProxy] 📦 兼容格式传给脚本:', compatResponse);
-              console.log('[EnhancedJSProxy] 🔍 可用访问方式:');
-              console.log('  - compatResponse.statusCode =', compatResponse.statusCode, '(HTTP状态码)');
-              console.log('  - compatResponse.body =', compatResponse.body, '(原始body)');
-              console.log('  - compatResponse.data =', compatResponse.data, '(body别名)');
+              console.log('[EnhancedJSProxy] 🔍 [兼容层] 脚本可用的访问方式:');
+              console.log('  response.statusCode =', compatResponse.statusCode, '← [HTTP层状态码] (200=HTTP成功)');
+              console.log('  response.body =', JSON.stringify(compatResponse.body), '← [原始响应体]');
+              console.log('  response.data =', JSON.stringify(compatResponse.data), '← [快捷访问=body]');
+
+              // 检查业务状态码
               if (compatResponse.body && typeof compatResponse.body === 'object' && compatResponse.body.code !== undefined) {
-                console.log('  - compatResponse.code =', compatResponse.code, '(业务状态码,从body展开)');
+                console.log('  response.code =', compatResponse.code, '← [业务层状态码] (从body展开,0=业务成功)');
+                console.log('  ⚠️  重要: HTTP成功(200) ≠ 业务成功,需检查 code 值判断业务结果!');
               }
 
               // 执行回调（优先使用兼容格式）
