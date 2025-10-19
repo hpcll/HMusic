@@ -22,8 +22,33 @@ echo ""
 # 询问是否需要更新版本号
 read -p "是否需要修改版本号? (y/N): " update_version
 if [[ "$update_version" =~ ^[Yy]$ ]]; then
+    # 读取新版本号,如果为空则保持当前版本
     read -p "请输入新版本号 (例如 2.0.3): " new_version
-    read -p "请输入新构建号 (例如 2025101301): " new_build
+    if [ -z "$new_version" ]; then
+        new_version=$VERSION
+        echo "  保持当前版本号: $VERSION"
+    fi
+
+    # 自动生成构建号
+    # 格式: YYYYMMDDhh (年月日时，10位数字)
+    # 例如: 2025101411 表示 2025年10月14日11时
+    auto_build=$(date +"%Y%m%d%H")
+
+    # 检查新构建号是否大于当前构建号
+    if [ "$auto_build" -le "$BUILD_NUMBER" ]; then
+        # 如果自动生成的构建号不够大，则在当前基础上+1
+        auto_build=$((BUILD_NUMBER + 1))
+        echo "  ⚠️  自动生成的构建号不够大，使用递增值: $auto_build"
+    fi
+
+    read -p "请输入新构建号 (留空自动生成: $auto_build): " new_build
+    new_build=${new_build:-$auto_build}
+
+    # 再次验证新构建号是否大于当前构建号
+    if [ "$new_build" -le "$BUILD_NUMBER" ]; then
+        echo "  ❌ 错误：新构建号($new_build)必须大于当前构建号($BUILD_NUMBER)"
+        exit 1
+    fi
 
     # 更新 pubspec.yaml
     sed -i '' "s/^version: .*/version: $new_version+$new_build/" pubspec.yaml
@@ -31,7 +56,7 @@ if [[ "$update_version" =~ ^[Yy]$ ]]; then
     VERSION=$new_version
     BUILD_NUMBER=$new_build
 
-    echo "✅ 版本号已更新为: $VERSION ($BUILD_NUMBER)"
+    echo "✅ 版本号已更新为: $VERSION+$BUILD_NUMBER"
     echo ""
 fi
 

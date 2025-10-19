@@ -332,8 +332,11 @@ class _LyricsPageState extends ConsumerState<LyricsPage> {
 
         return GestureDetector(
           onTap: () {
-            // 点击歌词行跳转播放
-            ref.read(playbackProvider.notifier).seekTo(line.timestamp);
+            // 🎵 点击歌词行跳转播放（仅本地播放模式支持）
+            final playbackState = ref.read(playbackProvider);
+            if (playbackState.isLocalMode) {
+              ref.read(playbackProvider.notifier).seekTo(line.timestamp);
+            }
           },
           child: _buildLyricLine(line.text, isCurrent),
         );
@@ -407,15 +410,9 @@ class _LyricsPageState extends ConsumerState<LyricsPage> {
   Widget _buildBottomControls(dynamic currentMusic) {
     final isPlaying = currentMusic?.isPlaying ?? false;
 
-    // 🔧 获取当前选中的设备，判断是否为本机播放
-    final deviceState = ref.watch(deviceProvider);
-    final selectedDevice = deviceState.devices.firstWhere(
-      (d) => d.id == deviceState.selectedDeviceId,
-      orElse: () => Device(id: '', name: '', isOnline: false),
-    );
-
-    // 🔧 只有本机播放时才允许拖动进度条
-    final canSeek = selectedDevice.isLocalDevice && (currentMusic?.duration ?? 0) > 0;
+    // 🎵 只有本地播放模式才允许拖动进度条
+    final playbackState = ref.watch(playbackProvider);
+    final canSeek = playbackState.isLocalMode && (currentMusic?.duration ?? 0) > 0;
 
     // 🔧 计算显示的进度（拖动中显示预览值，否则显示实际值）
     final displayProgress = _draggingProgress ??
@@ -473,7 +470,7 @@ class _LyricsPageState extends ConsumerState<LyricsPage> {
                               _draggingProgress = v;
                             });
                           }
-                        : null, // 音箱播放时禁用拖动
+                        : null, // 🎵 远程播放模式禁用拖动
                     onChangeEnd: canSeek
                         ? (v) {
                             // 🔧 拖动结束时才执行 seek
@@ -486,7 +483,7 @@ class _LyricsPageState extends ConsumerState<LyricsPage> {
                                 .read(playbackProvider.notifier)
                                 .seekTo(seekSeconds);
                           }
-                        : null, // 音箱播放时禁用拖动
+                        : null, // 🎵 远程播放模式禁用拖动
                     activeColor: Colors.white.withOpacity(0.85),
                     inactiveColor: Colors.white.withOpacity(0.25),
                   ),

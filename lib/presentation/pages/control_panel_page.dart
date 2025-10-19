@@ -755,7 +755,11 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
     final progress =
         (totalTime > 0) ? (displayTime / totalTime).clamp(0.0, 1.0) : 0.0;
 
-    debugPrint('🎯 [ProgressBar] progress=$progress, currentTime=$currentTime, totalTime=$totalTime, dragging=${_draggingValue != null}');
+    // 🎵 只有本地播放模式才允许拖动进度条
+    final playbackState = ref.watch(playbackProvider);
+    final canSeek = playbackState.isLocalMode;
+
+    debugPrint('🎯 [ControlPanel-ProgressBar] isLocalMode=${playbackState.isLocalMode}, canSeek=$canSeek, progress=$progress, currentTime=$currentTime, totalTime=$totalTime, dragging=${_draggingValue != null}');
 
     return Column(
       children: [
@@ -773,25 +777,25 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
           ),
           child: Slider(
             value: progress,
-            onChanged: AppConstants.enableSeek ? (value) {
+            onChanged: canSeek ? (value) {
               // 🔧 拖动时更新临时值,实时显示进度
-              debugPrint('🎯 [ProgressBar] onChanged: $value');
+              debugPrint('🎯 [ControlPanel-ProgressBar] onChanged: $value');
               setState(() {
                 _draggingValue = value;
               });
-            } : null,
+            } : null, // 🎵 远程播放模式禁用拖动
             onChangeEnd:
-                AppConstants.enableSeek
+                canSeek
                     ? (value) {
                       // 🔧 拖动结束,清除临时值并执行 seek
                       final newPos = (value * totalTime).round();
-                      debugPrint('🎯 [ProgressBar] onChangeEnd: $value, seekTo: $newPos seconds');
+                      debugPrint('🎯 [ControlPanel-ProgressBar] onChangeEnd: $value, seekTo: $newPos seconds');
                       setState(() {
                         _draggingValue = null;
                       });
                       ref.read(playbackProvider.notifier).seekTo(newPos);
                     }
-                    : null,
+                    : null, // 🎵 远程播放模式禁用拖动
           ),
         ),
         const SizedBox(height: 4),

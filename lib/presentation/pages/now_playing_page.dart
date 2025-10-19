@@ -81,12 +81,14 @@ class _NowPlayingPageState extends ConsumerState<NowPlayingPage> {
                   totalTime: current.duration,
                   // 🔧 只有当歌曲名为空时才禁用进度条，避免加载过程中无法操作
                   disabled: current.curMusic.isEmpty,
+                  isLocalMode: playback.isLocalMode, // 🎵 传递播放模式信息
                 )
               else
                 const _ProgressBar(
                   currentTime: 0,
                   totalTime: 0,
                   disabled: true,
+                  isLocalMode: false, // 🎵 默认远程模式
                 ),
               const SizedBox(height: 16),
               _Controls(),
@@ -264,10 +266,13 @@ class _ProgressBar extends ConsumerStatefulWidget {
   final int currentTime;
   final int totalTime;
   final bool disabled;
+  final bool isLocalMode; // 🎵 是否为本地播放模式
+
   const _ProgressBar({
     required this.currentTime,
     required this.totalTime,
     this.disabled = false,
+    this.isLocalMode = false, // 🎵 默认为远程模式（不可拖动）
   });
 
   @override
@@ -290,24 +295,26 @@ class _ProgressBarState extends ConsumerState<_ProgressBar> {
         ? (displayTime / widget.totalTime).clamp(0.0, 1.0)
         : 0.0;
 
-    debugPrint('🎯 [ProgressBar] disabled=${widget.disabled}, progress=$progress, currentTime=${widget.currentTime}, totalTime=${widget.totalTime}');
+    debugPrint('🎯 [ProgressBar] disabled=${widget.disabled}, isLocalMode=${widget.isLocalMode}, progress=$progress, currentTime=${widget.currentTime}, totalTime=${widget.totalTime}');
+
+    // 🎵 只有本地播放模式才允许拖动进度条
+    final bool canSeek = widget.isLocalMode && !widget.disabled;
 
     return Column(
       children: [
         Slider(
           value: progress,
-          onChanged: widget.disabled
-              ? null
-              : (v) {
+          onChanged: canSeek
+              ? (v) {
                   // 🔧 拖动时更新临时值,实时显示进度
                   debugPrint('🎯 [ProgressBar] onChanged: $v');
                   setState(() {
                     _draggingValue = v;
                   });
-                },
-          onChangeEnd: widget.disabled
-              ? null
-              : (v) {
+                }
+              : null, // 🎵 远程播放模式禁用拖动
+          onChangeEnd: canSeek
+              ? (v) {
                   // 🔧 拖动结束,清除临时值并执行 seek
                   final seekSeconds = (v * widget.totalTime).round();
                   debugPrint('🎯 [ProgressBar] onChangeEnd: $v, seekTo: $seekSeconds seconds');
@@ -317,7 +324,8 @@ class _ProgressBarState extends ConsumerState<_ProgressBar> {
                   ref
                       .read(playbackProvider.notifier)
                       .seekTo(seekSeconds);
-                },
+                }
+              : null, // 🎵 远程播放模式禁用拖动
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

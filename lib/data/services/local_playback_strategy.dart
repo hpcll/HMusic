@@ -333,8 +333,14 @@ class LocalPlaybackStrategy implements PlaybackStrategy {
         debugPrint('🎵 [LocalPlayback] 获取到播放链接: $playUrl');
       }
 
-      // 🔧 将内网地址替换为登录时的域名
-      playUrl = _replaceWithLoginDomain(playUrl);
+      // 🔧 将内网地址替换为登录时的域名(仅对服务器本地音乐)
+      // 判断是否需要替换: 如果URL不是http/https开头或包含内网IP,才需要替换
+      if (_shouldReplaceWithLoginDomain(playUrl)) {
+        playUrl = _replaceWithLoginDomain(playUrl);
+        debugPrint('🔄 [LocalPlayback] URL已替换为登录域名');
+      } else {
+        debugPrint('🌐 [LocalPlayback] 在线音乐URL,保持原样');
+      }
       debugPrint('✅ [LocalPlayback] 最终播放链接: $playUrl');
 
       // 先更新状态和缓存
@@ -674,6 +680,39 @@ class LocalPlaybackStrategy implements PlaybackStrategy {
       debugPrint('   - URL: $_currentMusicUrl');
     } catch (e) {
       debugPrint('❌ [LocalPlayback] 保存缓存失败: $e');
+    }
+  }
+
+  /// 🔧 判断URL是否需要替换为登录域名
+  ///
+  /// 返回 true: 需要替换(服务器本地音乐)
+  /// 返回 false: 不需要替换(在线音乐直链)
+  bool _shouldReplaceWithLoginDomain(String url) {
+    try {
+      final uri = Uri.parse(url);
+      final loginBaseUrl = _apiService.baseUrl;
+      final loginUri = Uri.parse(loginBaseUrl);
+
+      // 如果URL的域名和登录服务器的域名相同,说明是服务器音乐,需要替换
+      // (可能是内网IP,需要替换成外网域名)
+      if (uri.host == loginUri.host) {
+        return true;
+      }
+
+      // 如果是内网IP地址(192.168.x.x, 10.x.x.x, 172.16-31.x.x),需要替换
+      final isPrivateIp = RegExp(
+        r'^(192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[01])\.)',
+      ).hasMatch(uri.host);
+      if (isPrivateIp) {
+        return true;
+      }
+
+      // 其他情况(外部域名)不需要替换
+      return false;
+    } catch (e) {
+      debugPrint('❌ [LocalPlayback] 判断URL是否需要替换失败: $e');
+      // 出错时保守处理,不替换
+      return false;
     }
   }
 

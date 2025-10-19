@@ -1,0 +1,378 @@
+<svg width="850" height="1500" xmlns="http://www.w3.org/2000/svg">
+  <!-- 定义渐变和滤镜 -->
+  <defs>
+    <!-- 封面主色调渐变背景 (模拟从封面提取的颜色) -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#5B8FB9;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#364F6B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2A3A4F;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- 毛玻璃效果滤镜 -->
+    <filter id="blur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="20" />
+    </filter>
+
+    <!-- 光晕效果 -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- 封面图案(模拟封面) -->
+    <pattern id="coverPattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+      <rect width="100" height="100" fill="#5B8FB9"/>
+      <circle cx="30" cy="30" r="20" fill="#7BA5C9" opacity="0.6"/>
+      <circle cx="70" cy="60" r="25" fill="#4A7A9E" opacity="0.5"/>
+      <circle cx="50" cy="80" r="15" fill="#364F6B" opacity="0.7"/>
+    </pattern>
+  </defs>
+
+  <!-- 标题 -->
+  <text x="425" y="35" font-family="-apple-system, SF Pro Display, Arial, sans-serif" font-size="20" font-weight="600" fill="#1a1a1a" text-anchor="middle">
+    歌词页面设计方案(符合APP风格)
+  </text>
+
+  <!-- ========== 歌词页面(有歌词) ========== -->
+  <g id="lyrics-page">
+    <!-- 手机外框 -->
+    <rect x="40" y="70" width="360" height="720" rx="40" fill="#1a1a1a" stroke="#333" stroke-width="4"/>
+
+    <!-- 屏幕内容区 -->
+    <g clip-path="url(#screenClip1)">
+      <clipPath id="screenClip1">
+        <rect x="48" y="78" width="344" height="704" rx="36"/>
+      </clipPath>
+
+      <!-- 背景:封面模糊图 -->
+      <rect x="48" y="78" width="344" height="704" fill="url(#coverPattern)" filter="url(#blur)"/>
+
+      <!-- 渐变遮罩层 -->
+      <rect x="48" y="78" width="344" height="704" fill="url(#bgGradient)" opacity="0.7"/>
+    </g>
+
+    <!-- 顶部毛玻璃信息栏 -->
+    <rect x="68" y="98" width="304" height="90" rx="24" fill="#fff" opacity="0.15"/>
+    <text x="220" y="130" font-family="-apple-system, SF Pro Display, Arial, sans-serif" font-size="20" font-weight="700" fill="#fff" text-anchor="middle">
+      晴天
+    </text>
+    <text x="220" y="158" font-family="-apple-system, SF Pro Display, Arial, sans-serif" font-size="14" fill="#fff" opacity="0.8" text-anchor="middle">
+      周杰伦 · 叶惠美
+    </text>
+
+    <!-- 关闭按钮(右上角毛玻璃) -->
+    <circle cx="360" cy="118" r="18" fill="#fff" opacity="0.2"/>
+    <line x1="354" y1="112" x2="366" y2="124" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="366" y1="112" x2="354" y2="124" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- 歌词区域 -->
+    <g id="lyrics-content">
+      <!-- 非当前行 - 上方 -->
+      <text x="220" y="270" font-family="-apple-system, SF Pro Display, Arial, sans-serif" font-size="16" fill="#fff" opacity="0.45" text-anchor="middle">
+        微微笑 小酒窝
+      </text>
+      <text x="220" y="320" font-family="-apple-system, SF Pro Display, Arial, sans-serif" font-size="16" fill="#fff" opacity="0.55" text-anchor="middle">
+        长睫毛 迷人的无可救药
+      </text>
+
+      <!-- 当前播放行 - 高亮放大 + 光晕 -->
+      <text x="220" y="390" font-family="-apple-system, SF Pro Display, Arial, sans-serif" font-size="26" font-weight="700" fill="#fff" text-anchor="middle" filter="url(#glow)">
+        我放慢了步调
+      </text>
+
+      <!-- 当前行下方的小圆点指示器 -->
+      <circle cx="205" cy="408" r="3" fill="#fff" opacity="0.5"/>
+      <circle cx="220" cy="408" r="3" fill="#fff" opacity="0.9"/>
+      <circle cx="235" cy="408" r="3" fill="#fff" opacity="0.5"/>
+
+      <!-- 非当前行 - 下方 -->
+      <text x="220" y="460" font-family="-apple-system, SF Pro Display, Arial, sans-serif" font-size="16" fill="#fff" opacity="0.55" text-anchor="middle">
+        感觉像是一阵阵暖风
+      </text>
+      <text x="220" y="510" font-family="-apple-system, SF Pro Display, Arial, sans-serif" font-size="16" fill="#fff" opacity="0.45" text-anchor="middle">
+        手中的我和你
+      </text>
+    </g>
+
+    <!-- 底部毛玻璃控制栏 -->
+    <g id="bottom-controls">
+      <!-- 毛玻璃容器 -->
+      <rect x="68" y="670" width="304" height="90" rx="28" fill="#fff" opacity="0.2"/>
+
+      <!-- 时间进度 -->
+      <text x="88" y="698" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="12" fill="#fff" opacity="0.8" font-weight="500">
+        1:23
+      </text>
+      <text x="352" y="698" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="12" fill="#fff" opacity="0.8" font-weight="500" text-anchor="end">
+        4:32
+      </text>
+
+      <!-- 进度条背景 -->
+      <rect x="88" y="705" width="264" height="3" rx="1.5" fill="#fff" opacity="0.25"/>
+      <!-- 进度条当前进度 -->
+      <rect x="88" y="705" width="120" height="3" rx="1.5" fill="#fff" opacity="0.85"/>
+
+      <!-- 播放控制按钮 -->
+      <g id="control-buttons">
+        <!-- 上一曲按钮 -->
+        <circle cx="140" cy="738" r="20" fill="#fff" opacity="0.2"/>
+        <path d="M 148 738 L 137 731 L 137 745 Z M 135 731 L 135 745" stroke="#fff" stroke-width="2" fill="#fff" opacity="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+
+        <!-- 播放/暂停按钮(主要按钮) -->
+        <circle cx="220" cy="738" r="26" fill="#fff" opacity="0.95"/>
+        <path d="M 216 730 L 216 746 L 228 738 Z" fill="#5B8FB9"/>
+
+        <!-- 下一曲按钮 -->
+        <circle cx="300" cy="738" r="20" fill="#fff" opacity="0.2"/>
+        <path d="M 292 738 L 303 731 L 303 745 Z M 305 731 L 305 745" stroke="#fff" stroke-width="2" fill="#fff" opacity="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+    </g>
+
+    <!-- 标注 -->
+    <text x="220" y="820" font-family="-apple-system, SF Pro Display, Arial, sans-serif" font-size="13" fill="#666" text-anchor="middle">
+      状态1: 有歌词 - 背景毛玻璃 + 当前行高亮
+    </text>
+  </g>
+
+  <!-- ========== 无歌词状态 ========== -->
+  <g id="no-lyrics-page" transform="translate(450, 0)">
+    <!-- 手机外框 -->
+    <rect x="40" y="70" width="360" height="720" rx="40" fill="#1a1a1a" stroke="#333" stroke-width="4"/>
+
+    <!-- 屏幕内容区 -->
+    <g clip-path="url(#screenClip2)">
+      <clipPath id="screenClip2">
+        <rect x="48" y="78" width="344" height="704" rx="36"/>
+      </clipPath>
+
+      <!-- 背景:封面模糊图 -->
+      <rect x="48" y="78" width="344" height="704" fill="url(#coverPattern)" filter="url(#blur)"/>
+
+      <!-- 渐变遮罩层 -->
+      <rect x="48" y="78" width="344" height="704" fill="url(#bgGradient)" opacity="0.7"/>
+    </g>
+
+    <!-- 顶部毛玻璃信息栏 -->
+    <rect x="68" y="98" width="304" height="90" rx="24" fill="#fff" opacity="0.15"/>
+    <text x="220" y="130" font-family="-apple-system, SF Pro Display, Arial, sans-serif" font-size="20" font-weight="700" fill="#fff" text-anchor="middle">
+      夜曲
+    </text>
+    <text x="220" y="158" font-family="-apple-system, SF Pro Display, Arial, sans-serif" font-size="14" fill="#fff" opacity="0.8" text-anchor="middle">
+      周杰伦 · 十一月的萧邦
+    </text>
+
+    <!-- 关闭按钮 -->
+    <circle cx="360" cy="118" r="18" fill="#fff" opacity="0.2"/>
+    <line x1="354" y1="112" x2="366" y2="124" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="366" y1="112" x2="354" y2="124" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- 无歌词提示 -->
+    <g id="no-lyrics-hint">
+      <!-- 毛玻璃圆形容器 -->
+      <circle cx="220" cy="400" r="70" fill="#fff" opacity="0.15"/>
+
+      <!-- 音乐符号图标 -->
+      <circle cx="220" cy="390" r="38" fill="none" stroke="#fff" stroke-width="3" opacity="0.4"/>
+      <path d="M 210 385 Q 215 380 220 385 Q 225 390 230 385 M 220 385 L 220 408 M 215 403 L 220 408 L 225 403" stroke="#fff" stroke-width="3" fill="none" opacity="0.6" stroke-linecap="round" stroke-linejoin="round"/>
+
+      <text x="220" y="460" font-family="-apple-system, SF Pro Display, Arial, sans-serif" font-size="18" fill="#fff" opacity="0.8" text-anchor="middle" font-weight="600">
+        暂无歌词
+      </text>
+      <text x="220" y="490" font-family="-apple-system, SF Pro Display, Arial, sans-serif" font-size="14" fill="#fff" opacity="0.6" text-anchor="middle">
+        纯享音乐模式
+      </text>
+    </g>
+
+    <!-- 音频波形动画(装饰) -->
+    <g opacity="0.35" transform="translate(0, 30)">
+      <rect x="155" y="530" width="5" height="35" rx="2.5" fill="#fff">
+        <animate attributeName="height" values="35;55;35" dur="0.6s" repeatCount="indefinite"/>
+        <animate attributeName="y" values="530;510;530" dur="0.6s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="172" y="520" width="5" height="55" rx="2.5" fill="#fff">
+        <animate attributeName="height" values="55;75;55" dur="0.8s" repeatCount="indefinite"/>
+        <animate attributeName="y" values="520;500;520" dur="0.8s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="189" y="525" width="5" height="45" rx="2.5" fill="#fff">
+        <animate attributeName="height" values="45;65;45" dur="0.7s" repeatCount="indefinite"/>
+        <animate attributeName="y" values="525;505;525" dur="0.7s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="206" y="515" width="5" height="65" rx="2.5" fill="#fff">
+        <animate attributeName="height" values="65;85;65" dur="0.9s" repeatCount="indefinite"/>
+        <animate attributeName="y" values="515;495;515" dur="0.9s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="223" y="530" width="5" height="35" rx="2.5" fill="#fff">
+        <animate attributeName="height" values="35;50;35" dur="0.6s" repeatCount="indefinite"/>
+        <animate attributeName="y" values="530;515;530" dur="0.6s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="240" y="520" width="5" height="55" rx="2.5" fill="#fff">
+        <animate attributeName="height" values="55;40;55" dur="0.7s" repeatCount="indefinite"/>
+        <animate attributeName="y" values="520;535;520" dur="0.7s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="257" y="525" width="5" height="45" rx="2.5" fill="#fff">
+        <animate attributeName="height" values="45;70;45" dur="0.8s" repeatCount="indefinite"/>
+        <animate attributeName="y" values="525;500;525" dur="0.8s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="274" y="535" width="5" height="25" rx="2.5" fill="#fff">
+        <animate attributeName="height" values="25;50;25" dur="0.6s" repeatCount="indefinite"/>
+        <animate attributeName="y" values="535;510;535" dur="0.6s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+
+    <!-- 底部毛玻璃控制栏 -->
+    <g id="bottom-controls2">
+      <rect x="68" y="670" width="304" height="90" rx="28" fill="#fff" opacity="0.2"/>
+
+      <text x="88" y="698" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="12" fill="#fff" opacity="0.8" font-weight="500">
+        2:15
+      </text>
+      <text x="352" y="698" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="12" fill="#fff" opacity="0.8" font-weight="500" text-anchor="end">
+        3:48
+      </text>
+
+      <rect x="88" y="705" width="264" height="3" rx="1.5" fill="#fff" opacity="0.25"/>
+      <rect x="88" y="705" width="180" height="3" rx="1.5" fill="#fff" opacity="0.85"/>
+
+      <g id="control-buttons2">
+        <circle cx="140" cy="738" r="20" fill="#fff" opacity="0.2"/>
+        <path d="M 148 738 L 137 731 L 137 745 Z M 135 731 L 135 745" stroke="#fff" stroke-width="2" fill="#fff" opacity="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+
+        <circle cx="220" cy="738" r="26" fill="#fff" opacity="0.95"/>
+        <path d="M 216 730 L 216 746 L 228 738 Z" fill="#5B8FB9"/>
+
+        <circle cx="300" cy="738" r="20" fill="#fff" opacity="0.2"/>
+        <path d="M 292 738 L 303 731 L 303 745 Z M 305 731 L 305 745" stroke="#fff" stroke-width="2" fill="#fff" opacity="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+    </g>
+
+    <text x="220" y="820" font-family="-apple-system, SF Pro Display, Arial, sans-serif" font-size="13" fill="#666" text-anchor="middle">
+      状态2: 无歌词 - 显示音频波形动画
+    </text>
+  </g>
+
+  <!-- ========== 设计说明 ========== -->
+  <g id="design-notes" transform="translate(0, 870)">
+    <rect x="40" y="0" width="810" height="600" fill="#f8f9fa" stroke="#dee2e6" stroke-width="2" rx="16"/>
+
+    <text x="445" y="35" font-family="-apple-system, SF Pro Display, Arial, sans-serif" font-size="18" font-weight="600" fill="#212529" text-anchor="middle">
+      🎨 设计说明 - 符合APP毛玻璃风格
+    </text>
+
+    <!-- 左列 -->
+    <g id="left-column">
+      <text x="60" y="75" font-family="-apple-system, SF Pro Display, Arial, sans-serif" font-size="15" font-weight="600" fill="#5B8FB9">
+        1️⃣ 背景设计(重点改进)
+      </text>
+      <text x="80" y="100" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#495057">
+        • 背景层1: 封面图放大+模糊(filter: blur(20px))
+      </text>
+      <text x="80" y="122" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#495057">
+        • 背景层2: 封面主色调渐变遮罩(opacity: 0.7)
+      </text>
+      <text x="80" y="144" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#495057">
+        • 复用现有 _dominantColor 颜色提取系统
+      </text>
+      <text x="80" y="166" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#495057">
+        • 沉浸式视觉体验,每首歌都有独特氛围
+      </text>
+
+      <text x="60" y="210" font-family="-apple-system, SF Pro Display, Arial, sans-serif" font-size="15" font-weight="600" fill="#5B8FB9">
+        2️⃣ 毛玻璃风格(符合APP)
+      </text>
+      <text x="80" y="235" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#495057">
+        • 顶部信息栏: 白色半透明(opacity: 0.15) + 28px圆角
+      </text>
+      <text x="80" y="257" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#495057">
+        • 底部控制栏: 白色半透明(opacity: 0.2) + 28px圆角
+      </text>
+      <text x="80" y="279" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#495057">
+        • BackdropFilter blur效果,与底部导航栏风格一致
+      </text>
+      <text x="80" y="301" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#495057">
+        • 柔和阴影和边框(alpha: 0.04-0.06)
+      </text>
+
+      <text x="60" y="345" font-family="-apple-system, SF Pro Display, Arial, sans-serif" font-size="15" font-weight="600" fill="#5B8FB9">
+        3️⃣ 歌词显示规则
+      </text>
+      <text x="80" y="370" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#495057">
+        • 当前行: 26px 粗体,纯白色,带光晕效果
+      </text>
+      <text x="80" y="392" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#495057">
+        • 其他行: 16px 常规,白色半透明(0.45-0.55)
+      </text>
+      <text x="80" y="414" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#495057">
+        • 行间距: 50px,居中垂直滚动
+      </text>
+      <text x="80" y="436" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#495057">
+        • 小圆点指示器: 显示当前歌词位置
+      </text>
+    </g>
+
+    <!-- 右列 -->
+    <g id="right-column">
+      <text x="460" y="75" font-family="-apple-system, SF Pro Display, Arial, sans-serif" font-size="15" font-weight="600" fill="#5B8FB9">
+        4️⃣ 交互设计
+      </text>
+      <text x="480" y="100" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#495057">
+        • 入口: 点击 NowPlayingPage 封面进入歌词页
+      </text>
+      <text x="480" y="122" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#495057">
+        • 退出: 再次点击或下滑手势返回
+      </text>
+      <text x="480" y="144" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#495057">
+        • 点击歌词行: 跳转到对应时间点(seek)
+      </text>
+      <text x="480" y="166" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#495057">
+        • 底部控制栏: 无需返回即可播放控制
+      </text>
+
+      <text x="460" y="210" font-family="-apple-system, SF Pro Display, Arial, sans-serif" font-size="15" font-weight="600" fill="#5B8FB9">
+        5️⃣ 配色方案
+      </text>
+      <text x="480" y="235" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#495057">
+        • 主色调: 使用主题 primary 色(蓝色系)
+      </text>
+      <text x="480" y="257" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#495057">
+        • 文字颜色: 纯白色 + 不同透明度(0.45-1.0)
+      </text>
+      <text x="480" y="279" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#495057">
+        • 按钮: 白色半透明背景,与底部导航一致
+      </text>
+      <text x="480" y="301" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#495057">
+        • 播放按钮: 白色实心,主色调图标(强调)
+      </text>
+
+      <text x="460" y="345" font-family="-apple-system, SF Pro Display, Arial, sans-serif" font-size="15" font-weight="600" fill="#5B8FB9">
+        6️⃣ 技术实现要点
+      </text>
+      <text x="480" y="370" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#495057">
+        • 歌词数据: 从服务端 API 获取 LRC 格式
+      </text>
+      <text x="480" y="392" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#495057">
+        • 背景实现: CachedNetworkImage + ImageFiltered
+      </text>
+      <text x="480" y="414" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#495057">
+        • 滚动效果: ListView.builder + ScrollController
+      </text>
+      <text x="480" y="436" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#495057">
+        • 时间同步: 监听 playbackProvider.offset 变化
+      </text>
+    </g>
+
+    <!-- 底部强调 -->
+    <rect x="60" y="470" width="770" height="100" rx="12" fill="#e7f5ff" stroke="#74c0fc" stroke-width="1.5"/>
+    <text x="445" y="500" font-family="-apple-system, SF Pro Display, Arial, sans-serif" font-size="14" font-weight="600" fill="#1971c2" text-anchor="middle">
+      ✨ 核心改进亮点
+    </text>
+    <text x="445" y="525" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#1864ab" text-anchor="middle">
+      1. 背景使用封面模糊+主色调渐变,沉浸式体验  2. 毛玻璃风格与APP底部导航栏完美统一
+    </text>
+    <text x="445" y="548" font-family="-apple-system, SF Pro Text, Arial, sans-serif" font-size="13" fill="#1864ab" text-anchor="middle">
+      3. 纯白色文字配色,简洁现代  4. 保留播放控制,交互便捷流畅
+    </text>
+  </g>
+</svg>

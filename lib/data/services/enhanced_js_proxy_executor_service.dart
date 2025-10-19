@@ -1233,14 +1233,14 @@ class EnhancedJSProxyExecutorService {
             // 方式6: 查找任何可能的音乐URL获取函数
             if (!result) {
               console.log('[EnhancedJSProxy] 最后尝试：查找所有可能的函数...');
-              const allFunctions = Object.getOwnPropertyNames(globalThis).filter(name => 
-                typeof globalThis[name] === 'function' && 
-                (name.toLowerCase().includes('music') || 
+              const allFunctions = Object.getOwnPropertyNames(globalThis).filter(name =>
+                typeof globalThis[name] === 'function' &&
+                (name.toLowerCase().includes('music') ||
                  name.toLowerCase().includes('url') ||
                  name.toLowerCase().includes(request.source.toLowerCase()))
               );
               console.log('[EnhancedJSProxy] 找到可能的函数:', allFunctions);
-              
+
               for (const funcName of allFunctions) {
                 try {
                   result = globalThis[funcName](request.info || request);
@@ -1251,21 +1251,30 @@ class EnhancedJSProxyExecutorService {
                 }
               }
             }
-            
+
             if (result && typeof result.then === 'function') {
               console.log('[EnhancedJSProxy] 检测到Promise，开始等待...');
               try {
                 result.then(function(v){
-                  try { globalThis._promiseResult = v; globalThis._promiseComplete = true; } catch(e) {}
+                  try {
+                    console.log('[EnhancedJSProxy] 📦 JS脚本返回结果(Promise resolved):', JSON.stringify(v));
+                    globalThis._promiseResult = v;
+                    globalThis._promiseComplete = true;
+                  } catch(e) {}
                 }).catch(function(err){
-                  try { globalThis._promiseError = (err && (err.message || err.toString())) || 'Unknown error'; globalThis._promiseComplete = true; } catch(e) {}
+                  try {
+                    console.log('[EnhancedJSProxy] ❌ JS脚本返回错误(Promise rejected):', err);
+                    globalThis._promiseError = (err && (err.message || err.toString())) || 'Unknown error';
+                    globalThis._promiseComplete = true;
+                  } catch(e) {}
                 });
               } catch (e) { console.log('[EnhancedJSProxy] 绑定Promise回调失败:', e && e.message); }
               return JSON.stringify({ success: true, isPromise: true });
             } else if (result) {
-              console.log('[EnhancedJSProxy] 同步结果:', result);
+              console.log('[EnhancedJSProxy] 📦 JS脚本返回结果(同步):', JSON.stringify(result));
               return JSON.stringify({ success: true, result: result });
             } else {
+              console.log('[EnhancedJSProxy] ⚠️ JS脚本未返回任何结果');
               return JSON.stringify({ success: false, error: 'No suitable handler found' });
             }
           } catch (e) {
@@ -1298,17 +1307,17 @@ class EnhancedJSProxyExecutorService {
               (function() {
                 try {
                   console.log('[EnhancedJSProxy] 检查Promise状态:', globalThis._promiseComplete, globalThis._promiseResult, globalThis._promiseError);
-                  
+
                   if (globalThis._promiseComplete) {
                     if (globalThis._promiseResult !== null && globalThis._promiseResult !== undefined) {
-                      console.log('[EnhancedJSProxy] Promise成功，结果:', globalThis._promiseResult);
+                      console.log('[EnhancedJSProxy] ✅ Promise成功，结果:', JSON.stringify(globalThis._promiseResult));
                       return JSON.stringify({ success: true, result: globalThis._promiseResult });
                     } else if (globalThis._promiseError) {
-                      console.log('[EnhancedJSProxy] Promise失败，错误:', globalThis._promiseError);
+                      console.log('[EnhancedJSProxy] ❌ Promise失败，错误:', globalThis._promiseError);
                       return JSON.stringify({ success: false, error: globalThis._promiseError });
                     }
                   }
-                  
+
                   return JSON.stringify({ success: false, pending: true });
                 } catch (e) {
                   return JSON.stringify({ success: false, error: e.toString() });
@@ -1415,21 +1424,30 @@ class EnhancedJSProxyExecutorService {
               result = lx.emit(lx.EVENT_NAMES.request, request);
               console.log('[EnhancedJSProxy] lx.emit 返回:', result);
             }
-            
+
             if (result && typeof result.then === 'function') {
               console.log('[EnhancedJSProxy] 检测到Promise，开始等待...');
               try {
                 result.then(function(v){
-                  try { globalThis._promiseResult = v; globalThis._promiseComplete = true; } catch(e) {}
+                  try {
+                    console.log('[EnhancedJSProxy] 📦 JS脚本返回封面URL(Promise resolved):', JSON.stringify(v));
+                    globalThis._promiseResult = v;
+                    globalThis._promiseComplete = true;
+                  } catch(e) {}
                 }).catch(function(err){
-                  try { globalThis._promiseError = (err && (err.message || err.toString())) || 'Unknown error'; globalThis._promiseComplete = true; } catch(e) {}
+                  try {
+                    console.log('[EnhancedJSProxy] ❌ JS脚本返回错误(Promise rejected):', err);
+                    globalThis._promiseError = (err && (err.message || err.toString())) || 'Unknown error';
+                    globalThis._promiseComplete = true;
+                  } catch(e) {}
                 });
               } catch (e) { console.log('[EnhancedJSProxy] 绑定Promise回调失败:', e && e.message); }
               return JSON.stringify({ success: true, isPromise: true });
             } else if (result) {
-              console.log('[EnhancedJSProxy] 同步结果:', result);
+              console.log('[EnhancedJSProxy] 📦 JS脚本返回封面URL(同步):', JSON.stringify(result));
               return JSON.stringify({ success: true, result: result });
             } else {
+              console.log('[EnhancedJSProxy] ⚠️ JS脚本未返回任何封面URL');
               return JSON.stringify({ success: false, error: 'No suitable handler found' });
             }
           } catch (e) {

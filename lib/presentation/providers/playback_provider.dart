@@ -86,6 +86,7 @@ class PlaybackState {
   final int timerMinutes; // ⏰ 定时关机分钟数（0 表示未设置）
   final bool isFavorite; // ⭐ 当前歌曲是否已收藏
   final List<String> currentPlaylistSongs; // 🎵 当前播放列表的所有歌曲
+  final bool isLocalMode; // 🎵 是否为本地播放模式（用于判断进度条是否可拖动）
 
   const PlaybackState({
     this.currentMusic,
@@ -98,6 +99,7 @@ class PlaybackState {
     this.timerMinutes = 0, // 默认未设置定时
     this.isFavorite = false, // 默认未收藏
     this.currentPlaylistSongs = const [], // 默认空列表
+    this.isLocalMode = false, // 默认非本地播放
   });
 
   PlaybackState copyWith({
@@ -111,6 +113,7 @@ class PlaybackState {
     int? timerMinutes,
     bool? isFavorite,
     List<String>? currentPlaylistSongs,
+    bool? isLocalMode,
   }) {
     return PlaybackState(
       currentMusic: currentMusic ?? this.currentMusic,
@@ -126,6 +129,7 @@ class PlaybackState {
       timerMinutes: timerMinutes ?? this.timerMinutes,
       isFavorite: isFavorite ?? this.isFavorite,
       currentPlaylistSongs: currentPlaylistSongs ?? this.currentPlaylistSongs,
+      isLocalMode: isLocalMode ?? this.isLocalMode,
     );
   }
 }
@@ -338,6 +342,7 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
             currentMusic: status,
             hasLoaded: true,
             isLoading: false,
+            isLocalMode: true, // 🎵 本地播放模式
           );
           await _saveLocalPlayback(status);
           localStrategy.refreshNotification();
@@ -417,6 +422,7 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
               currentMusic: cachedMusic,
               hasLoaded: true,
               isLoading: false,
+              isLocalMode: true, // 🎵 本地播放模式
             );
             debugPrint('✅ [PlaybackProvider] UI 状态已更新');
             if (_currentStrategy is LocalPlaybackStrategy) {
@@ -512,6 +518,9 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
         // 🔧 立即刷新一次状态，避免等待 5 秒才显示播放设备当前播放内容
         await refreshStatus();
         debugPrint('✅ [PlaybackProvider] 已立即刷新播放设备播放状态');
+
+        // 🎵 远程播放模式：更新状态
+        state = state.copyWith(isLocalMode: false);
       }
 
       _currentDeviceId = deviceId;
