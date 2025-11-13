@@ -20,9 +20,14 @@ class PlaylistAdapter {
     final List<Playlist> playlists =
         allNames.map((n) {
             int? count;
+            List<String>? musicList;
             final v = musicListResponse[n];
-            if (v is List) count = v.length;
-            return Playlist(name: n, count: count);
+            if (v is List) {
+              count = v.length;
+              // 将歌曲列表转换为字符串列表
+              musicList = v.map((e) => e.toString()).toList();
+            }
+            return Playlist(name: n, count: count, musicList: musicList);
           })
           // 过滤掉没有歌曲的系统内置列表（不可删除且无歌曲的列表）
           .where((playlist) {

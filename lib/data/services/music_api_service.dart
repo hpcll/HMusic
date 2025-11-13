@@ -460,14 +460,15 @@ class MusicApiService {
     );
   }
 
-  Future<void> removeMusicFromPlaylist({
+  Future<Map<String, dynamic>> removeMusicFromPlaylist({
     required String playlistName,
     required List<String> musicList,
   }) async {
-    await _client.post(
+    final response = await _client.post(
       '/playlistdelmusic',
       data: {'name': playlistName, 'music_list': musicList},
     );
+    return response.data as Map<String, dynamic>;
   }
 
   // 音乐库相关方法

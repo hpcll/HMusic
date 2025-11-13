@@ -215,6 +215,162 @@ class PlaylistNotifier extends StateNotifier<PlaylistState> {
   void clearError() {
     state = state.copyWith(error: null);
   }
+
+  /// 将歌曲从当前播放列表移动到目标播放列表
+  ///
+  /// [musicNames] 要移动的歌曲名称列表
+  /// [sourcePlaylistName] 源播放列表名称
+  /// [targetPlaylistName] 目标播放列表名称
+  Future<void> moveMusicToPlaylist({
+    required List<String> musicNames,
+    required String sourcePlaylistName,
+    required String targetPlaylistName,
+  }) async {
+    final apiService = ref.read(apiServiceProvider);
+    if (apiService == null) return;
+
+    try {
+      state = state.copyWith(isLoading: true);
+      debugPrint('📦 [PlaylistProvider] 移动歌曲: $musicNames 从 $sourcePlaylistName 到 $targetPlaylistName');
+
+      // 1. 先添加到目标播放列表
+      await apiService.addMusicToPlaylist(
+        playlistName: targetPlaylistName,
+        musicList: musicNames,
+      );
+      debugPrint('✅ [PlaylistProvider] 已添加到目标播放列表: $targetPlaylistName');
+
+      // 2. 尝试从源播放列表删除
+      final deleteResult = await apiService.removeMusicFromPlaylist(
+        playlistName: sourcePlaylistName,
+        musicList: musicNames,
+      );
+
+      // 3. 检查删除结果
+      final deleteSuccess = _isDeleteSuccessful(deleteResult);
+      if (deleteSuccess) {
+        debugPrint('✅ [PlaylistProvider] 已从源播放列表删除: $sourcePlaylistName');
+      } else {
+        debugPrint('⚠️ [PlaylistProvider] 从源播放列表删除失败: $sourcePlaylistName, 响应: $deleteResult');
+        // 如果删除失败，尝试回滚：从目标播放列表移除
+        try {
+          await apiService.removeMusicFromPlaylist(
+            playlistName: targetPlaylistName,
+            musicList: musicNames,
+          );
+          debugPrint('🔄 [PlaylistProvider] 已回滚添加操作');
+        } catch (rollbackError) {
+          debugPrint('❌ [PlaylistProvider] 回滚失败: $rollbackError');
+        }
+
+        // 抛出异常，告知用户操作失败
+        final errorMsg = deleteResult['ret'] ?? '未知错误';
+        throw Exception('无法从 $sourcePlaylistName 移动歌曲: $errorMsg');
+      }
+
+      // 4. 刷新播放列表数据
+      await _loadPlaylists();
+
+      // 5. 如果当前正在查看源播放列表，刷新其内容
+      if (state.currentPlaylist == sourcePlaylistName) {
+        await loadPlaylistMusics(sourcePlaylistName);
+      }
+
+      state = state.copyWith(isLoading: false);
+      debugPrint('✅ [PlaylistProvider] 移动歌曲成功');
+    } catch (e) {
+      debugPrint('❌ [PlaylistProvider] 移动歌曲失败: $e');
+      state = state.copyWith(isLoading: false, error: e.toString());
+      rethrow;
+    }
+  }
+
+  /// 检查删除操作是否成功
+  bool _isDeleteSuccessful(Map<String, dynamic> response) {
+    final ret = response['ret'];
+    if (ret == null) return false;
+
+    // 成功的响应通常是 "OK" 或 "Del OK"
+    final retStr = ret.toString().toLowerCase();
+    return retStr == 'ok' || retStr == 'del ok' || retStr.contains('success');
+  }
+
+  /// 添加歌曲到播放列表（不删除源列表）
+  ///
+  /// [musicNames] 要添加的歌曲名称列表
+  /// [playlistName] 目标播放列表名称
+  Future<void> addMusicToPlaylist({
+    required List<String> musicNames,
+    required String playlistName,
+  }) async {
+    final apiService = ref.read(apiServiceProvider);
+    if (apiService == null) return;
+
+    try {
+      state = state.copyWith(isLoading: true);
+      debugPrint('➕ [PlaylistProvider] 添加歌曲到播放列表: $playlistName');
+
+      await apiService.addMusicToPlaylist(
+        playlistName: playlistName,
+        musicList: musicNames,
+      );
+
+      // 刷新播放列表数据
+      await _loadPlaylists();
+
+      state = state.copyWith(isLoading: false);
+      debugPrint('✅ [PlaylistProvider] 添加歌曲成功');
+    } catch (e) {
+      debugPrint('❌ [PlaylistProvider] 添加歌曲失败: $e');
+      state = state.copyWith(isLoading: false, error: e.toString());
+      rethrow;
+    }
+  }
+
+  /// 从播放列表删除歌曲
+  ///
+  /// [musicNames] 要删除的歌曲名称列表
+  /// [playlistName] 播放列表名称
+  Future<void> removeMusicFromPlaylist({
+    required List<String> musicNames,
+    required String playlistName,
+  }) async {
+    final apiService = ref.read(apiServiceProvider);
+    if (apiService == null) return;
+
+    try {
+      state = state.copyWith(isLoading: true);
+      debugPrint('➖ [PlaylistProvider] 从播放列表删除歌曲: $playlistName');
+
+      final deleteResult = await apiService.removeMusicFromPlaylist(
+        playlistName: playlistName,
+        musicList: musicNames,
+      );
+
+      // 检查删除结果
+      final deleteSuccess = _isDeleteSuccessful(deleteResult);
+      if (!deleteSuccess) {
+        final errorMsg = deleteResult['ret'] ?? '未知错误';
+        debugPrint('❌ [PlaylistProvider] 删除歌曲失败: $errorMsg');
+        throw Exception('无法从 $playlistName 删除歌曲: $errorMsg');
+      }
+
+      // 刷新播放列表数据
+      await _loadPlaylists();
+
+      // 如果当前正在查看该播放列表，刷新其内容
+      if (state.currentPlaylist == playlistName) {
+        await loadPlaylistMusics(playlistName);
+      }
+
+      state = state.copyWith(isLoading: false);
+      debugPrint('✅ [PlaylistProvider] 删除歌曲成功');
+    } catch (e) {
+      debugPrint('❌ [PlaylistProvider] 删除歌曲失败: $e');
+      state = state.copyWith(isLoading: false, error: e.toString());
+      rethrow;
+    }
+  }
 }
 
 final playlistProvider = StateNotifierProvider<PlaylistNotifier, PlaylistState>(

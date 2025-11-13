@@ -175,12 +175,21 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage> {
                 final deletable = playlistState.deletablePlaylists.contains(
                   playlist.name,
                 );
-                return Card(
+                final isLight = Theme.of(context).brightness == Brightness.light;
+                return Container(
                   margin: const EdgeInsets.symmetric(vertical: 3.0),
-                  shape: RoundedRectangleBorder(
+                  decoration: BoxDecoration(
+                    color: isLight
+                        ? Colors.black.withOpacity(0.03)
+                        : Colors.white.withValues(alpha: 0.05),
                     borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: isLight
+                          ? Colors.black.withOpacity(0.06)
+                          : Colors.white.withValues(alpha: 0.1),
+                      width: 1,
+                    ),
                   ),
-                  elevation: 0.5,
                   child: ListTile(
                     dense: true,
                     visualDensity: const VisualDensity(

@@ -5,6 +5,7 @@ import '../widgets/app_snackbar.dart';
 import '../providers/music_library_provider.dart';
 import '../providers/playback_provider.dart';
 import '../providers/device_provider.dart';
+import '../providers/playlist_provider.dart';
 import '../widgets/music_list_item.dart';
 import '../widgets/app_layout.dart';
 
@@ -656,6 +657,9 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
           case 'play':
             _playMusic(music.name);
             break;
+          case 'add':
+            _showAddToPlaylistDialog(music.name);
+            break;
           case 'delete':
             _deleteMusic(music.name);
             break;
@@ -673,6 +677,20 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
                   Icon(Icons.play_arrow_rounded, color: Colors.green, size: 20),
                   const SizedBox(width: 12),
                   const Text('播放'),
+                ],
+              ),
+            ),
+            PopupMenuItem(
+              value: 'add',
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.playlist_add_rounded,
+                    color: Theme.of(context).colorScheme.primary,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 12),
+                  const Text('添加到...'),
                 ],
               ),
             ),
@@ -774,10 +792,126 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
     );
   }
 
+  /// 检查是否为虚拟播放列表
+  bool _isVirtualPlaylist(String playlistName) {
+    const virtualPlaylists = [
+      '下载',
+      '所有歌曲',
+      '全部',
+      '临时搜索列表',
+      '在线播放',
+      '最近新增',
+    ];
+    return virtualPlaylists.contains(playlistName);
+  }
+
+  /// 显示添加到播放列表的对话框
+  Future<void> _showAddToPlaylistDialog(String musicName) async {
+    if (!mounted) return;
+
+    final playlistState = ref.read(playlistProvider);
+    final allPlaylists = playlistState.playlists;
+
+    // 过滤掉虚拟播放列表(虚拟列表不能作为目标)
+    final availablePlaylists = allPlaylists
+        .where((p) => !_isVirtualPlaylist(p.name))
+        .toList();
+
+    if (availablePlaylists.isEmpty) {
+      if (mounted) {
+        AppSnackBar.showText(context, '没有可用的播放列表,请先创建一个播放列表');
+      }
+      return;
+    }
+
+    final selectedPlaylist = await showModalBottomSheet<String>(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  '添加到播放列表',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ),
+              const Divider(height: 1),
+              Flexible(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: availablePlaylists.length,
+                  itemBuilder: (context, index) {
+                    final playlist = availablePlaylists[index];
+                    return ListTile(
+                      leading: const Icon(Icons.playlist_play_rounded),
+                      title: Text(playlist.name),
+                      subtitle: playlist.count != null
+                          ? Text('${playlist.count} 首歌曲')
+                          : null,
+                      onTap: () => Navigator.pop(context, playlist.name),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 8),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (selectedPlaylist == null || !mounted) return;
+
+    // 添加到播放列表
+    try {
+      await ref.read(playlistProvider.notifier).addMusicToPlaylist(
+            musicNames: [musicName],
+            playlistName: selectedPlaylist,
+          );
+      if (mounted) {
+        AppSnackBar.showText(
+          context,
+          '已添加到 $selectedPlaylist',
+          backgroundColor: Colors.green,
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        AppSnackBar.showText(context, '添加失败: $e');
+      }
+    }
+  }
+
+  /// 获取包含指定歌曲的播放列表(从当前已加载的播放列表数据中查找)
+  List<String> _getPlaylistsContainingMusic(String musicName, PlaylistState playlistState) {
+    final containingPlaylists = <String>[];
+
+    for (final playlist in playlistState.playlists) {
+      // 跳过虚拟播放列表,不显示在结果中
+      if (_isVirtualPlaylist(playlist.name)) {
+        continue;
+      }
+
+      // 检查播放列表的歌曲列表中是否包含此歌曲
+      if (playlist.musicList != null && playlist.musicList!.contains(musicName)) {
+        containingPlaylists.add(playlist.name);
+      }
+    }
+
+    return containingPlaylists;
+  }
+
   void _showMusicInfo(music) {
-    final onSurface = Theme.of(context).colorScheme.onSurface;
     final primary = Theme.of(context).colorScheme.primary;
     final ext = music.name.contains('.') ? music.name.split('.').last : '未知';
+
+    // 获取包含此歌曲的播放列表
+    final playlistState = ref.read(playlistProvider);
+    final containingPlaylists = _getPlaylistsContainingMusic(music.name, playlistState);
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -789,91 +923,136 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
           music.title ?? music.name,
           style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w600),
         ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (music.artist != null)
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (music.artist != null)
+                Row(
+                  children: [
+                    Icon(Icons.person_rounded, color: primary, size: 18),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        music.artist!,
+                        style: TextStyle(color: Colors.black54),
+                      ),
+                    ),
+                  ],
+                ),
+              if (music.artist != null) const SizedBox(height: 8),
+              if (music.album != null)
+                Row(
+                  children: [
+                    Icon(Icons.album_rounded, color: primary, size: 18),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        music.album!,
+                        style: TextStyle(color: Colors.black54),
+                      ),
+                    ),
+                  ],
+                ),
+              if (music.album != null) const SizedBox(height: 8),
+              if (music.duration != null)
+                Row(
+                  children: [
+                    Icon(Icons.access_time_rounded, color: primary, size: 18),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        music.duration!,
+                        style: TextStyle(color: Colors.black54),
+                      ),
+                    ),
+                  ],
+                ),
+              if (music.duration != null) const SizedBox(height: 8),
               Row(
                 children: [
-                  Icon(Icons.person_rounded, color: primary, size: 18),
+                  Icon(Icons.insert_drive_file_rounded, color: primary, size: 18),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      music.artist!,
+                      music.name,
+                      style: TextStyle(color: Colors.black87),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(Icons.tag_rounded, color: primary, size: 18),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      '后缀: $ext',
                       style: TextStyle(color: Colors.black54),
                     ),
                   ),
                 ],
               ),
-            if (music.artist != null) const SizedBox(height: 8),
-            if (music.album != null)
-              Row(
-                children: [
-                  Icon(Icons.album_rounded, color: primary, size: 18),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      music.album!,
-                      style: TextStyle(color: Colors.black54),
+              // 显示包含此歌曲的播放列表
+              if (containingPlaylists.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                const Divider(),
+                const SizedBox(height: 8),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(Icons.playlist_play_rounded, color: primary, size: 18),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '所属播放列表:',
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Wrap(
+                            spacing: 6,
+                            runSpacing: 6,
+                            children: containingPlaylists.map((playlistName) {
+                              return Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: primary.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: primary.withOpacity(0.3),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Text(
+                                  playlistName,
+                                  style: TextStyle(
+                                    color: primary,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            if (music.album != null) const SizedBox(height: 8),
-            if (music.duration != null)
-              Row(
-                children: [
-                  Icon(Icons.access_time_rounded, color: primary, size: 18),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      music.duration!,
-                      style: TextStyle(color: Colors.black54),
-                    ),
-                  ),
-                ],
-              ),
-            if (music.duration != null) const SizedBox(height: 8),
-            Row(
-              children: [
-                Icon(Icons.insert_drive_file_rounded, color: primary, size: 18),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    music.name,
-                    style: TextStyle(color: Colors.black87),
-                  ),
+                  ],
                 ),
               ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Icon(Icons.tag_rounded, color: primary, size: 18),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    '后缀: $ext',
-                    style: TextStyle(color: Colors.black54),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Icon(Icons.folder_rounded, color: primary, size: 18),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    '文件路径: 未提供',
-                    style: TextStyle(color: Colors.black45),
-                  ),
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
         actions: [
           TextButton(
