@@ -17,6 +17,8 @@ import '../widgets/app_snackbar.dart';
 import '../providers/ssh_settings_provider.dart';
 import '../providers/playlist_provider.dart';
 import '../providers/playback_provider.dart';
+import '../providers/usage_stats_provider.dart';
+import '../widgets/sponsor_prompt_dialog.dart';
 
 class MainPage extends ConsumerStatefulWidget {
   const MainPage({super.key});
@@ -25,10 +27,13 @@ class MainPage extends ConsumerStatefulWidget {
   ConsumerState<MainPage> createState() => _MainPageState();
 }
 
-class _MainPageState extends ConsumerState<MainPage> {
+class _MainPageState extends ConsumerState<MainPage> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   final _searchController = TextEditingController();
   Timer? _searchDebounce;
+  late AnimationController _heartbeatController;
+  late Animation<double> _heartbeatAnimation;
+  bool _hasPlayedHeartbeat = false;
 
   List<Widget> get _pages => [
     const ControlPanelPage(
@@ -58,6 +63,89 @@ class _MainPageState extends ConsumerState<MainPage> {
   void initState() {
     super.initState();
     _searchController.addListener(_handleSearchTextChanged);
+
+    // 初始化心跳动画
+    _heartbeatController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    _heartbeatAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(parent: _heartbeatController, curve: Curves.easeInOut),
+    );
+
+    // 延迟检查里程碑，避免在初始化时打扰用户
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) {
+        _checkMilestones();
+      }
+    });
+
+    // 延迟播放心跳动画（只播放3次）
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted && !_hasPlayedHeartbeat) {
+        _playHeartbeatAnimation();
+      }
+    });
+  }
+
+  /// 播放心跳动画(3次)
+  void _playHeartbeatAnimation() async {
+    _hasPlayedHeartbeat = true;
+    for (int i = 0; i < 3; i++) {
+      await _heartbeatController.forward();
+      await _heartbeatController.reverse();
+      await Future.delayed(const Duration(milliseconds: 200));
+    }
+  }
+
+  /// 检查并显示里程碑
+  void _checkMilestones() async {
+    final usageStats = ref.read(usageStatsProvider.notifier);
+
+    // 检查使用天数里程碑
+    if (usageStats.checkDaysMilestone()) {
+      final result = await SponsorPromptDialog.showDaysMilestone(context);
+      if (result == true || result == 'never') {
+        await usageStats.markDaysMilestoneShown();
+        await usageStats.updateLastPromptDate();
+        if (result == 'never') {
+          await usageStats.setNeverShowPrompt(true);
+        }
+      }
+      return; // 一次只显示一个提示
+    }
+
+    // 检查播放里程碑
+    if (usageStats.checkPlaysMilestone()) {
+      final result = await SponsorPromptDialog.showPlaysMilestone(context);
+      if (result == true) {
+        await usageStats.markPlaysMilestoneShown();
+        await usageStats.updateLastPromptDate();
+      }
+      return;
+    }
+
+    // 检查歌词里程碑
+    if (usageStats.checkLyricsMilestone()) {
+      final result = await SponsorPromptDialog.showLyricsMilestone(context);
+      if (result == true) {
+        await usageStats.markLyricsMilestoneShown();
+        await usageStats.updateLastPromptDate();
+      }
+      return;
+    }
+
+    // 检查30天间隔提示
+    final stats = ref.read(usageStatsProvider);
+    if (stats.shouldShowIntervalPrompt) {
+      final result = await SponsorPromptDialog.showIntervalPrompt(context);
+      if (result == true || result == 'never') {
+        await usageStats.updateLastPromptDate();
+        if (result == 'never') {
+          await usageStats.setNeverShowPrompt(true);
+        }
+      }
+    }
   }
 
   void _handleSearchTextChanged() {
@@ -83,6 +171,7 @@ class _MainPageState extends ConsumerState<MainPage> {
     _searchDebounce?.cancel();
     _searchController.removeListener(_handleSearchTextChanged);
     _searchController.dispose();
+    _heartbeatController.dispose();
     super.dispose();
   }
 
@@ -186,6 +275,29 @@ class _MainPageState extends ConsumerState<MainPage> {
                   tooltip: '上传音乐文件',
                 ),
               ),
+            // Sponsor button
+            Container(
+              margin: const EdgeInsets.only(right: 8),
+              child: ScaleTransition(
+                scale: _heartbeatAnimation,
+                child: IconButton(
+                  icon: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: onSurface.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      Icons.favorite_rounded,
+                      color: Colors.pink.shade400,
+                      size: 20,
+                    ),
+                  ),
+                  onPressed: () => context.push('/settings/sponsor'),
+                  tooltip: '赞赏支持',
+                ),
+              ),
+            ),
             IconButton(
               onPressed: () => context.push('/settings'),
               icon: Container(

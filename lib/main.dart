@@ -3,9 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_router.dart';
 import 'presentation/providers/js_proxy_provider.dart';
+import 'presentation/providers/usage_stats_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +17,9 @@ void main() async {
     // ignore: unnecessary_statements
     DefaultCacheManager();
   } catch (_) {}
+
+  // 初始化SharedPreferences
+  final prefs = await SharedPreferences.getInstance();
 
   // 禁用Flutter调试边框和调试信息
   debugPaintSizeEnabled = false;
@@ -65,7 +70,14 @@ void main() async {
     FlutterError.presentError(details);
   };
 
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(
+    ProviderScope(
+      overrides: [
+        usageStatsProvider.overrideWith((ref) => UsageStatsNotifier(prefs)),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends ConsumerWidget {

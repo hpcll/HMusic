@@ -12,7 +12,7 @@ class SponsorPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('赞赏支持'),
-        backgroundColor: colorScheme.inversePrimary,
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
