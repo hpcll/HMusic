@@ -21,6 +21,8 @@ import '../providers/device_provider.dart';
 import '../providers/dio_provider.dart';
 import '../../data/models/device.dart';
 import '../providers/playback_provider.dart';
+import '../providers/direct_mode_provider.dart';
+import '../../data/services/mi_iot_direct_playback_strategy.dart';
 
 class MusicSearchPage extends ConsumerStatefulWidget {
   const MusicSearchPage({super.key});
@@ -561,7 +563,123 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
     }
   }
 
+  /// 🎵 直连模式播放音乐
+  Future<void> _playViaDirectMode(OnlineMusicResult item) async {
+    try {
+      debugPrint('[DirectMode] 🎵 开始直连模式播放: ${item.title}');
+
+      // 1. 获取直连模式状态
+      final directState = ref.read(directModeProvider);
+
+      if (directState is! DirectModeAuthenticated) {
+        if (mounted) {
+          AppSnackBar.show(
+            context,
+            const SnackBar(
+              content: Text('❌ 直连模式未登录，请先登录'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+        return;
+      }
+
+      if (directState.devices.isEmpty) {
+        if (mounted) {
+          AppSnackBar.show(
+            context,
+            const SnackBar(
+              content: Text('❌ 没有可用的小米设备'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+        return;
+      }
+
+      // 2. 使用第一个设备（后续可以优化为让用户选择）
+      final device = directState.devices.first;
+      debugPrint('[DirectMode] 🎵 使用设备: ${device.name} (${device.deviceId})');
+
+      // 3. 解析音乐URL（如果需要）
+      String playUrl = item.url;
+      if (playUrl.isEmpty) {
+        // 需要解析直链
+        debugPrint('[DirectMode] 🔍 需要解析直链');
+        playUrl = await _resolveWithQualityFallback(item, '320k') ?? '';
+      }
+
+      if (playUrl.isEmpty) {
+        if (mounted) {
+          AppSnackBar.show(
+            context,
+            const SnackBar(
+              content: Text('❌ 无法解析播放链接'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+        return;
+      }
+
+      debugPrint('[DirectMode] ✅ 播放链接已准备: ${playUrl.substring(0, playUrl.length > 100 ? 100 : playUrl.length)}...');
+
+      // 4. 创建直连播放策略
+      final strategy = MiIoTDirectPlaybackStrategy(
+        miService: directState.miService,
+        deviceId: device.deviceId,
+        deviceName: device.name,
+      );
+
+      // 5. 显示播放提示
+      if (mounted) {
+        AppSnackBar.show(
+          context,
+          SnackBar(
+            content: Text('🎵 正在播放: ${item.title}'),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+
+      // 6. 执行播放
+      await strategy.playMusic(
+        musicName: '${item.title} - ${item.author}',
+        url: playUrl,
+        platform: item.platform ?? 'qq',
+        songId: item.songId ?? '',
+      );
+
+      debugPrint('[DirectMode] ✅ 播放请求已发送到小米设备');
+    } catch (e, stackTrace) {
+      debugPrint('[DirectMode] ❌ 播放失败: $e');
+      debugPrint('[DirectMode] 堆栈: ${stackTrace.toString().split('\n').take(5).join('\n')}');
+
+      if (mounted) {
+        AppSnackBar.show(
+          context,
+          SnackBar(
+            content: Text('❌ 播放失败: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      }
+    }
+  }
+
   Future<void> _playViaResolver(OnlineMusicResult item) async {
+    // 🆕 检查播放模式,优先使用直连模式
+    final playbackMode = ref.read(playbackModeProvider);
+
+    if (playbackMode == PlaybackMode.miIoTDirect) {
+      // 🎵 直连模式播放
+      await _playViaDirectMode(item);
+      return;
+    }
+
+    // 🎵 xiaomusic 模式播放 (原有逻辑)
     final platform = (item.platform ?? 'qq');
     final id = item.songId ?? '';
 

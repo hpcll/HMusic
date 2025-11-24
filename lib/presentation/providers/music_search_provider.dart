@@ -152,19 +152,52 @@ class MusicSearchNotifier extends StateNotifier<MusicSearchState> {
         final selectedScript = scriptManager.selectedScript;
         final jsState = ref.read(jsProxyProvider);
 
+        // 🎯 智能等待JS脚本管理器加载完成
+        int waitCount = 0;
+        const maxWait = 20; // 最多等待2秒
+        while (scripts.isEmpty && waitCount < maxWait) {
+          await Future.delayed(const Duration(milliseconds: 100));
+          waitCount++;
+          // 重新读取脚本列表
+          final currentScripts = ref.read(jsScriptManagerProvider);
+          if (currentScripts.isNotEmpty) break;
+        }
+
         if (scripts.isEmpty) {
           throw Exception('未导入JS脚本\n请先在设置中导入JS脚本才能使用JS音源搜索');
         }
         if (selectedScript == null) {
           throw Exception('未选择JS脚本\n已导入${scripts.length}个脚本，请在设置中选择一个使用');
         }
+
+        // 🎯 智能等待JS代理初始化完成
         if (!jsState.isInitialized) {
-          throw Exception('JS运行时未初始化\n请稍候或重启应用');
+          print('[XMC] ⚠️ JS代理未初始化，等待初始化...');
+          int jsWaitCount = 0;
+          const maxJsWait = 30; // 最多等待3秒
+          while (!jsState.isInitialized && jsWaitCount < maxJsWait) {
+            await Future.delayed(const Duration(milliseconds: 100));
+            jsWaitCount++;
+            final currentJsState = ref.read(jsProxyProvider);
+            if (currentJsState.isInitialized) break;
+          }
+          if (!jsState.isInitialized) {
+            throw Exception('JS运行时未初始化\n请稍候或重启应用');
+          }
         }
+
         if (jsState.currentScript == null) {
           print('[XMC] ⚠️ JS脚本未加载，尝试自动加载(EnhancedJSProxy)');
-          final ok = await ref.read(jsProxyProvider.notifier).loadScriptByScript(selectedScript);
-          if (!ok) throw Exception('JS脚本加载失败\n请检查脚本内容或网络');
+          // 🎯 增加重试机制，最多尝试3次
+          bool loadSuccess = false;
+          for (int retry = 0; retry < 3 && !loadSuccess; retry++) {
+            if (retry > 0) {
+              print('[XMC] 🔄 第${retry + 1}次重试加载JS脚本...');
+              await Future.delayed(const Duration(milliseconds: 500));
+            }
+            loadSuccess = await ref.read(jsProxyProvider.notifier).loadScriptByScript(selectedScript);
+          }
+          if (!loadSuccess) throw Exception('JS脚本加载失败\n请检查脚本内容或网络');
           print('[XMC] ✅ JS脚本自动加载成功');
         }
       }

@@ -10,6 +10,7 @@ import '../providers/music_library_provider.dart';
 import '../providers/playlist_provider.dart';
 import '../providers/source_settings_provider.dart';
 import '../widgets/app_snackbar.dart';
+import '../providers/direct_mode_provider.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
@@ -91,6 +92,17 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 onTap: () => context.push('/settings/tts'),
                 onSurface: onSurface,
               ),
+            ],
+          ),
+
+          const SizedBox(height: 24),
+
+          // 播放模式分组
+          _buildSettingsGroup(
+            context,
+            title: '播放模式',
+            children: [
+              _buildPlaybackModeItem(context, onSurface),
             ],
           ),
 
@@ -333,6 +345,209 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
       onTap: onTap,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    );
+  }
+
+  /// 播放模式切换项
+  Widget _buildPlaybackModeItem(BuildContext context, Color onSurface) {
+    final playbackMode = ref.watch(playbackModeProvider);
+    final directModeState = ref.watch(directModeProvider);
+
+    // 确定当前模式的显示文本和状态
+    String modeText;
+    String statusText;
+    IconData modeIcon;
+    Color iconColor;
+
+    if (playbackMode == PlaybackMode.xiaomusic) {
+      modeText = 'xiaomusic 模式';
+      statusText = '通过服务器控制小爱音箱';
+      modeIcon = Icons.dns;
+      iconColor = const Color(0xFF21B0A5);
+    } else {
+      modeText = '直连模式';
+      if (directModeState is DirectModeAuthenticated) {
+        statusText = '已登录 · ${directModeState.devices.length} 个设备';
+        iconColor = const Color(0xFF007AFF);
+      } else {
+        statusText = '未登录';
+        iconColor = Colors.grey;
+      }
+      modeIcon = Icons.phone_android;
+    }
+
+    return ListTile(
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: iconColor.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(
+          modeIcon,
+          color: iconColor.withOpacity(0.8),
+          size: 20,
+        ),
+      ),
+      title: Text(
+        modeText,
+        style: TextStyle(
+          color: onSurface.withOpacity(0.9),
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      subtitle: Text(
+        statusText,
+        style: TextStyle(color: onSurface.withOpacity(0.6), fontSize: 12),
+      ),
+      trailing: Icon(
+        Icons.chevron_right_rounded,
+        color: onSurface.withOpacity(0.4),
+        size: 20,
+      ),
+      onTap: () => _showPlaybackModeSwitchDialog(context),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    );
+  }
+
+  /// 显示播放模式切换对话框
+  Future<void> _showPlaybackModeSwitchDialog(BuildContext context) async {
+    final playbackMode = ref.read(playbackModeProvider);
+
+    final result = await showDialog<PlaybackMode>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('切换播放模式'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildModeOption(
+              context: context,
+              mode: PlaybackMode.xiaomusic,
+              title: 'xiaomusic 模式',
+              subtitle: '通过服务器控制，功能完整',
+              icon: Icons.dns,
+              color: const Color(0xFF21B0A5),
+              isSelected: playbackMode == PlaybackMode.xiaomusic,
+            ),
+            const SizedBox(height: 12),
+            _buildModeOption(
+              context: context,
+              mode: PlaybackMode.miIoTDirect,
+              title: '直连模式',
+              subtitle: '直接控制，无需服务器',
+              icon: Icons.phone_android,
+              color: const Color(0xFF007AFF),
+              isSelected: playbackMode == PlaybackMode.miIoTDirect,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('取消'),
+          ),
+        ],
+      ),
+    );
+
+    if (result != null && result != playbackMode) {
+      // 切换模式
+      ref.read(playbackModeProvider.notifier).setMode(result);
+
+      if (mounted) {
+        AppSnackBar.show(
+          context,
+          SnackBar(
+            content: Text(
+              result == PlaybackMode.xiaomusic
+                  ? '已切换到 xiaomusic 模式，请重新登录'
+                  : '已切换到直连模式，请重新登录',
+            ),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        // 退出登录并跳转
+        await ref.read(authProvider.notifier).logout();
+
+        if (mounted) {
+          if (result == PlaybackMode.xiaomusic) {
+            context.go('/login');
+          } else {
+            context.go('/direct_login');
+          }
+        }
+      }
+    }
+  }
+
+  /// 构建模式选项
+  Widget _buildModeOption({
+    required BuildContext context,
+    required PlaybackMode mode,
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required Color color,
+    required bool isSelected,
+  }) {
+    return InkWell(
+      onTap: () => Navigator.of(context).pop(mode),
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: isSelected ? color : Colors.grey.withOpacity(0.3),
+            width: isSelected ? 2 : 1,
+          ),
+          borderRadius: BorderRadius.circular(12),
+          color: isSelected ? color.withOpacity(0.05) : null,
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(icon, color: color, size: 24),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (isSelected)
+              Icon(
+                Icons.check_circle,
+                color: color,
+                size: 24,
+              ),
+          ],
+        ),
+      ),
     );
   }
 

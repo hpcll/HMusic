@@ -14,6 +14,7 @@ import '../providers/update_provider.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/update_provider.dart';
 import 'package:go_router/go_router.dart';
+import '../providers/direct_mode_provider.dart';
 
 class AuthWrapper extends ConsumerStatefulWidget {
   const AuthWrapper({super.key});
@@ -231,7 +232,46 @@ class _AuthWrapperState extends ConsumerState<AuthWrapper> {
 
     return switch (authState) {
       AuthAuthenticated() => const MainPage(),
-      _ => const LoginPage(), // 其他所有状态都显示登录页
+      _ => _buildLoginOrModeSelection(), // 未登录时检查是否需要显示模式选择
     };
+  }
+
+  /// 构建登录页或模式选择页
+  Widget _buildLoginOrModeSelection() {
+    // 检查是否是首次启动（没有选择过模式）
+    final playbackMode = ref.watch(playbackModeProvider);
+    final directModeState = ref.watch(directModeProvider);
+
+    debugPrint('[AuthWrapper] 🎯 playbackMode: $playbackMode');
+    debugPrint('[AuthWrapper] 🎯 directModeState: ${directModeState.runtimeType}');
+
+    // 如果用户已经选择过模式,直接显示对应的登录页
+    if (playbackMode == PlaybackMode.xiaomusic) {
+      // xiaomusic 模式，显示 xiaomusic 登录页
+      return const LoginPage();
+    } else if (playbackMode == PlaybackMode.miIoTDirect) {
+      // 直连模式
+      if (directModeState is DirectModeAuthenticated) {
+        // 已登录，显示主页
+        return const MainPage();
+      } else {
+        // 未登录，显示登录页（但不重定向，让用户留在当前路由）
+        return const LoginPage(); // 实际上会被路由拦截到 /direct_login
+      }
+    }
+
+    // 首次启动，没有选择模式，显示模式选择页
+    // 通过路由跳转而不是直接返回组件
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.go('/mode_selection');
+      }
+    });
+
+    return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
   }
 }

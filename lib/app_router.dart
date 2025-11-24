@@ -13,6 +13,8 @@ import 'presentation/pages/settings/sponsor_page.dart';
 import 'presentation/pages/now_playing_page.dart';
 import 'presentation/pages/js_proxy_test_page.dart';
 import 'presentation/pages/update_page.dart';
+import 'presentation/pages/playback_mode_selection_page.dart';
+import 'presentation/pages/direct_mode_login_page.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   // 直接从根路由开始，不使用额外的 Splash 页面
@@ -88,6 +90,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             targetVersion: targetVersion,
           );
         },
+      ),
+      GoRoute(
+        path: '/mode_selection',
+        name: 'mode_selection',
+        builder: (context, state) => const PlaybackModeSelectionPage(),
+      ),
+      GoRoute(
+        path: '/direct_login',
+        name: 'direct_login',
+        builder: (context, state) => const DirectModeLoginPage(),
       ),
     ],
     debugLogDiagnostics: false,

@@ -8,6 +8,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app_router.dart';
 import 'presentation/providers/js_proxy_provider.dart';
 import 'presentation/providers/usage_stats_provider.dart';
+import 'presentation/providers/audio_proxy_provider.dart';
+import 'data/services/audio_proxy_server.dart';
+
+// 🎯 全局代理服务器实例
+AudioProxyServer? _globalProxyServer;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +22,9 @@ void main() async {
     // ignore: unnecessary_statements
     DefaultCacheManager();
   } catch (_) {}
+
+  // 🎯 启动代理服务器（用于音频流转发）
+  await _startProxyServer();
 
   // 初始化SharedPreferences
   final prefs = await SharedPreferences.getInstance();
@@ -74,10 +82,33 @@ void main() async {
     ProviderScope(
       overrides: [
         usageStatsProvider.overrideWith((ref) => UsageStatsNotifier(prefs)),
+        // 🎯 提供全局代理服务器实例
+        audioProxyServerProvider.overrideWithValue(_globalProxyServer),
       ],
       child: const MyApp(),
     ),
   );
+}
+
+/// 🎯 启动代理服务器
+/// 用于转发音频流，解决小爱音箱无法直接访问某些CDN的问题
+Future<void> _startProxyServer() async {
+  try {
+    debugPrint('🚀 [ProxyServer] 正在启动代理服务器...');
+
+    _globalProxyServer = AudioProxyServer();
+    final success = await _globalProxyServer!.start(port: 8090);
+
+    if (success) {
+      debugPrint('✅ [ProxyServer] 代理服务器启动成功: ${_globalProxyServer!.serverUrl}');
+    } else {
+      debugPrint('❌ [ProxyServer] 代理服务器启动失败');
+      _globalProxyServer = null;
+    }
+  } catch (e) {
+    debugPrint('❌ [ProxyServer] 代理服务器启动异常: $e');
+    _globalProxyServer = null;
+  }
 }
 
 class MyApp extends ConsumerWidget {

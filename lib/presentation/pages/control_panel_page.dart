@@ -10,6 +10,7 @@ import '../providers/lyric_provider.dart';
 import '../../data/models/device.dart';
 import '../widgets/app_layout.dart';
 import 'lyrics_page.dart';
+import '../providers/direct_mode_provider.dart';
 
 class ControlPanelPage extends ConsumerStatefulWidget {
   final bool showAppBar;
@@ -48,8 +49,14 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
       if (mounted) {
         try {
           final authState = ref.read(authProvider);
+          final playbackMode = ref.read(playbackModeProvider);
+
           if (authState is AuthAuthenticated) {
-            ref.read(deviceProvider.notifier).loadDevices();
+            // 🎯 根据播放模式加载对应的设备
+            if (playbackMode == PlaybackMode.xiaomusic) {
+              ref.read(deviceProvider.notifier).loadDevices();
+            }
+            // 直连模式的设备由 DirectModeProvider 自动加载
             ref.read(playbackProvider.notifier).ensureInitialized();
           } else {
             debugPrint('ControlPanel: 用户未登录，跳过自动加载设备');
@@ -59,6 +66,44 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
         }
       }
     });
+  }
+
+  /// 根据当前播放模式获取设备列表状态
+  DeviceState _getDeviceStateByMode(
+    PlaybackMode mode,
+    DeviceState xiaoMusicState,
+    DirectModeState directState,
+  ) {
+    if (mode == PlaybackMode.miIoTDirect) {
+      // 直连模式：从 DirectModeProvider 获取设备列表
+      if (directState is DirectModeAuthenticated) {
+        // 将 MiDevice 转换为 Device 格式
+        final miDevices = directState.devices.map((miDevice) {
+          return Device(
+            id: miDevice.deviceId,
+            name: miDevice.name,
+            isOnline: true, // 假设直连设备都是在线的
+            type: miDevice.hardware, // 将 hardware 映射到 type 字段
+          );
+        }).toList();
+
+        return DeviceState(
+          devices: miDevices,
+          selectedDeviceId: directState.selectedDeviceId, // 使用直连模式的选中设备ID
+          isLoading: false,
+        );
+      } else {
+        // 未登录或未找到设备
+        return const DeviceState(
+          devices: [],
+          selectedDeviceId: null,
+          isLoading: false,
+        );
+      }
+    } else {
+      // xiaomusic 模式：使用原有的设备列表
+      return xiaoMusicState;
+    }
   }
 
   @override
@@ -72,7 +117,16 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
   Widget build(BuildContext context) {
     final playbackState = ref.watch(playbackProvider);
     final authState = ref.watch(authProvider);
-    final deviceState = ref.watch(deviceProvider);
+    final xiaoMusicDeviceState = ref.watch(deviceProvider); // xiaomusic模式的设备列表
+    final directModeState = ref.watch(directModeProvider); // 直连模式的状态
+    final playbackMode = ref.watch(playbackModeProvider); // 当前播放模式
+
+    // 🎯 根据当前模式选择正确的设备列表
+    final deviceState = _getDeviceStateByMode(
+      playbackMode,
+      xiaoMusicDeviceState,
+      directModeState,
+    );
 
     // 🎨 检测封面 URL 变化并清除旧颜色 (颜色提取由 CachedNetworkImage.imageBuilder 处理)
     final coverUrl = playbackState.albumCoverUrl;
@@ -113,6 +167,7 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
                     playbackState,
                     deviceState,
                     authState,
+                    playbackMode,
                   ),
                   const SizedBox(height: 12),
                   // 🎵 显示当前播放列表
@@ -162,7 +217,13 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
         IconButton(
           onPressed: () async {
             try {
-              await ref.read(deviceProvider.notifier).loadDevices();
+              // 🎯 根据播放模式刷新对应的设备列表
+              final playbackMode = ref.read(playbackModeProvider);
+              if (playbackMode == PlaybackMode.miIoTDirect) {
+                await ref.read(directModeProvider.notifier).refreshDevices();
+              } else {
+                await ref.read(deviceProvider.notifier).loadDevices();
+              }
               await ref.read(playbackProvider.notifier).refreshStatus();
             } catch (e) {
               // Ignore refresh errors
@@ -178,6 +239,7 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
     PlaybackState playbackState,
     DeviceState deviceState,
     AuthState authState,
+    PlaybackMode playbackMode,
   ) {
     final isLight = Theme.of(context).brightness == Brightness.light;
     final currentMusic = playbackState.currentMusic;
@@ -204,7 +266,7 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
       child: Column(
         children: [
           // 🎯 始终显示设备区域，避免布局跳动
-          _buildDeviceArea(deviceState),
+          _buildDeviceArea(deviceState, playbackMode),
           const SizedBox(height: 12),
           _buildAlbumArtwork(currentMusic, currentMusic?.isPlaying ?? false),
           const SizedBox(height: 12),
@@ -226,16 +288,16 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
   }
 
   /// 🎯 设备区域：始终显示固定高度，避免布局跳动
-  Widget _buildDeviceArea(DeviceState deviceState) {
+  Widget _buildDeviceArea(DeviceState deviceState, PlaybackMode playbackMode) {
     if (deviceState.isLoading && deviceState.devices.isEmpty) {
       // 加载中且没有设备：显示加载占位符
       return _buildDeviceLoadingPlaceholder();
     } else if (deviceState.devices.isNotEmpty) {
       // 有设备：显示设备选择器
-      return _buildDeviceSelector(deviceState);
+      return _buildDeviceSelector(deviceState, playbackMode);
     } else {
       // 加载完成但没有设备：显示提示
-      return _buildNoDeviceHint();
+      return _buildNoDeviceHint(playbackMode);
     }
   }
 
@@ -316,7 +378,7 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
     return base + 6;
   }
 
-  Widget _buildDeviceSelector(DeviceState state) {
+  Widget _buildDeviceSelector(DeviceState state, PlaybackMode playbackMode) {
     final selectedDevice = state.devices.firstWhere(
       (d) => d.id == state.selectedDeviceId,
       orElse: () => Device(id: '', name: '选择一个设备', isOnline: false),
@@ -324,7 +386,7 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
     final onSurface = Theme.of(context).colorScheme.onSurface;
 
     return GestureDetector(
-      onTap: () => _showDeviceSelectionSheet(context, state),
+      onTap: () => _showDeviceSelectionSheet(context, state, playbackMode),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
@@ -378,7 +440,7 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
   }
 
   /// 🎯 没有找到设备时的提示
-  Widget _buildNoDeviceHint() {
+  Widget _buildNoDeviceHint(PlaybackMode playbackMode) {
     final onSurface = Theme.of(context).colorScheme.onSurface;
 
     return Container(
@@ -420,7 +482,12 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
             ),
             onPressed: () async {
               try {
-                await ref.read(deviceProvider.notifier).loadDevices();
+                // 🎯 根据播放模式刷新对应的设备列表
+                if (playbackMode == PlaybackMode.miIoTDirect) {
+                  await ref.read(directModeProvider.notifier).refreshDevices();
+                } else {
+                  await ref.read(deviceProvider.notifier).loadDevices();
+                }
               } catch (e) {
                 // ignore
               }
@@ -433,7 +500,11 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
     );
   }
 
-  void _showDeviceSelectionSheet(BuildContext context, DeviceState state) {
+  void _showDeviceSelectionSheet(
+    BuildContext context,
+    DeviceState state,
+    PlaybackMode playbackMode,
+  ) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -477,7 +548,12 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
                     IconButton(
                       onPressed: () async {
                         try {
-                          await ref.read(deviceProvider.notifier).loadDevices();
+                          // 🎯 根据播放模式刷新对应的设备列表
+                          if (playbackMode == PlaybackMode.miIoTDirect) {
+                            await ref.read(directModeProvider.notifier).refreshDevices();
+                          } else {
+                            await ref.read(deviceProvider.notifier).loadDevices();
+                          }
                         } catch (e) {
                           // ignore
                         }
@@ -534,9 +610,18 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
                                 )
                                 : null,
                         onTap: () {
-                          ref
-                              .read(deviceProvider.notifier)
-                              .selectDevice(device.id);
+                          // 🎯 根据播放模式选择对应的Provider
+                          if (playbackMode == PlaybackMode.miIoTDirect) {
+                            // 直连模式：使用 DirectModeProvider
+                            ref
+                                .read(directModeProvider.notifier)
+                                .selectDevice(device.id);
+                          } else {
+                            // xiaomusic模式：使用 DeviceProvider
+                            ref
+                                .read(deviceProvider.notifier)
+                                .selectDevice(device.id);
+                          }
                           Navigator.pop(context);
                         },
                       );
@@ -855,8 +940,17 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
   }
 
   Widget _buildPlaybackControls(PlaybackState state) {
-    final enabled =
-        ref.read(deviceProvider).selectedDeviceId != null && !state.isLoading;
+    // 🎯 根据播放模式检查对应的设备选择状态
+    final playbackMode = ref.read(playbackModeProvider);
+    final bool hasSelectedDevice;
+    if (playbackMode == PlaybackMode.miIoTDirect) {
+      final directState = ref.read(directModeProvider);
+      hasSelectedDevice = directState is DirectModeAuthenticated &&
+          directState.selectedDeviceId != null;
+    } else {
+      hasSelectedDevice = ref.read(deviceProvider).selectedDeviceId != null;
+    }
+    final enabled = hasSelectedDevice && !state.isLoading;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -1045,7 +1139,17 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
   /// 🎵 快捷操作按钮（播放模式切换 + 定时关机 + 加入收藏）
   Widget _buildQuickActions(PlaybackState state) {
     final onSurface = Theme.of(context).colorScheme.onSurface;
-    final enabled = ref.read(deviceProvider).selectedDeviceId != null;
+    // 🎯 根据播放模式检查对应的设备选择状态
+    final playbackMode = ref.read(playbackModeProvider);
+    final bool hasSelectedDevice;
+    if (playbackMode == PlaybackMode.miIoTDirect) {
+      final directState = ref.read(directModeProvider);
+      hasSelectedDevice = directState is DirectModeAuthenticated &&
+          directState.selectedDeviceId != null;
+    } else {
+      hasSelectedDevice = ref.read(deviceProvider).selectedDeviceId != null;
+    }
+    final enabled = hasSelectedDevice;
     final favoriteEnabled = enabled && state.currentMusic != null;
 
     return Row(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import '../providers/auth_provider.dart';
 import '../../core/constants/app_constants.dart';
 
@@ -322,6 +323,26 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             onPressed:
                                 authState is AuthLoading ? null : _handleLogin,
                             isLoading: authState is AuthLoading,
+                          ),
+
+                          const SizedBox(height: 16),
+
+                          // 模式选择入口
+                          TextButton(
+                            onPressed: () {
+                              context.go('/mode_selection');
+                            },
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                            ),
+                            child: Text(
+                              '选择其他登录方式',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ),
                         ],
                       ),
