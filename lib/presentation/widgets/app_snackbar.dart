@@ -67,4 +67,76 @@ class AppSnackBar {
       ),
     );
   }
+
+  /// 🎯 显示成功提示（绿色）
+  static void showSuccess(
+    BuildContext context,
+    String message, {
+    Duration duration = const Duration(seconds: 2),
+    SnackBarAction? action,
+  }) {
+    show(
+      context,
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.green,
+        duration: duration,
+        action: action,
+      ),
+    );
+  }
+
+  /// 🎯 显示错误提示（红色）
+  static void showError(
+    BuildContext context,
+    String message, {
+    Duration duration = const Duration(seconds: 3),
+    SnackBarAction? action,
+  }) {
+    show(
+      context,
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        duration: duration,
+        action: action,
+      ),
+    );
+  }
+
+  /// 🎯 显示警告提示（橙色）
+  static void showWarning(
+    BuildContext context,
+    String message, {
+    Duration duration = const Duration(seconds: 2),
+    SnackBarAction? action,
+  }) {
+    show(
+      context,
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.orange,
+        duration: duration,
+        action: action,
+      ),
+    );
+  }
+
+  /// 🎯 显示信息提示（蓝色）
+  static void showInfo(
+    BuildContext context,
+    String message, {
+    Duration duration = const Duration(seconds: 2),
+    SnackBarAction? action,
+  }) {
+    show(
+      context,
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.blue,
+        duration: duration,
+        action: action,
+      ),
+    );
+  }
 }

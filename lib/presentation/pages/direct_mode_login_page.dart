@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/direct_mode_provider.dart';
+import '../widgets/app_snackbar.dart';
 
 /// 直连模式登录页面
 /// 用户输入小米账号密码，无需xiaomusic服务端
@@ -47,18 +48,19 @@ class _DirectModeLoginPageState extends ConsumerState<DirectModeLoginPage> {
     // 登录成功后跳转
     ref.listen<DirectModeState>(directModeProvider, (previous, next) {
       if (next is DirectModeAuthenticated) {
-        // 登录成功，跳转到主页
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('登录成功！找到 ${next.devices.length} 个设备'),
-          ),
+        // 登录成功，直接跳转到主页（用户可以在播放页面顶部选择设备）
+        AppSnackBar.showSuccess(
+          context,
+          '登录成功！找到 ${next.devices.length} 个设备',
         );
-        // 使用GoRouter导航
+
+        // 直接跳转到主页，不显示设备选择对话框
         context.go('/');
       } else if (next is DirectModeError) {
         // 登录失败，显示错误
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.message)),
+        AppSnackBar.showError(
+          context,
+          next.message,
         );
       }
     });
@@ -237,11 +239,12 @@ class _DirectModeLoginPageState extends ConsumerState<DirectModeLoginPage> {
                 onPressed: isLoading
                     ? null
                     : () {
-                        // 切换回xiaomusic模式
+                        // 🎯 切换回xiaomusic模式
                         ref
                             .read(playbackModeProvider.notifier)
                             .setMode(PlaybackMode.xiaomusic);
-                        context.go('/login');
+                        // 让 AuthWrapper 自动决定跳转到登录页还是主页
+                        context.go('/');
                       },
                 child: const Text('切换到 xiaomusic 模式 →'),
               ),

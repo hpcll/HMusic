@@ -44,12 +44,12 @@ class PlaybackModeSelectionPage extends ConsumerWidget {
                 '⚠️ 需要部署xiaomusic服务端',
               ],
               onTap: () {
-                // 切换到xiaomusic模式
+                // 🎯 切换到xiaomusic模式
                 ref
                     .read(playbackModeProvider.notifier)
                     .setMode(PlaybackMode.xiaomusic);
-                // 跳转到xiaomusic登录页
-                context.go('/login');
+                // 让 AuthWrapper 自动决定跳转到登录页还是主页
+                context.go('/');
               },
             ),
 
@@ -68,12 +68,12 @@ class PlaybackModeSelectionPage extends ConsumerWidget {
                 '⚠️ 功能相对简单',
               ],
               onTap: () {
-                // 切换到直连模式
+                // 🎯 切换到直连模式
                 ref
                     .read(playbackModeProvider.notifier)
                     .setMode(PlaybackMode.miIoTDirect);
-                // 跳转到直连登录页
-                context.go('/direct_login');
+                // 让 AuthWrapper 自动决定跳转到登录页还是主页
+                context.go('/');
               },
             ),
 

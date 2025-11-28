@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../providers/auth_provider.dart';
+import '../../widgets/app_snackbar.dart';
 
 class ServerSettingsPage extends ConsumerStatefulWidget {
   const ServerSettingsPage({super.key});
@@ -38,11 +39,9 @@ class _ServerSettingsPageState extends ConsumerState<ServerSettingsPage> {
     await prefs.setString(AppConstants.prefsUsername, _userCtrl.text.trim());
     await prefs.setString(AppConstants.prefsPassword, _passCtrl.text);
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('服务器账号设置已保存'),
-        backgroundColor: Colors.green,
-      ),
+    AppSnackBar.showSuccess(
+      context,
+      '服务器账号设置已保存',
     );
   }
 
@@ -127,8 +126,9 @@ class _ServerSettingsPageState extends ConsumerState<ServerSettingsPage> {
                     saveCredentials: true,
                   );
               if (!mounted) return;
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('已尝试登录（如失败请检查服务器可达性）')),
+              AppSnackBar.showInfo(
+                context,
+                '已尝试登录（如失败请检查服务器可达性）',
               );
             },
             icon: const Icon(Icons.login),

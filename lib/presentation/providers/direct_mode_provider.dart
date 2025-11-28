@@ -54,13 +54,15 @@ class DirectModeAuthenticated extends DirectModeState {
   final MiIoTService miService;
   final String account;
   final List<MiDevice> devices;
-  final String? selectedDeviceId; // 🎯 新增：当前选中的设备ID
+  final String? selectedDeviceId; // 🎯 当前选中的小爱音箱设备ID（用于获取设备列表）
+  final String playbackDeviceType; // 🎵 播放设备类型：'local' 表示本地播放，其他值表示小爱音箱的 deviceId
 
   const DirectModeAuthenticated({
     required this.miService,
     required this.account,
     required this.devices,
     this.selectedDeviceId,
+    this.playbackDeviceType = 'local', // 🎵 默认本地播放
   });
 
   /// 复制并更新状态
@@ -69,12 +71,14 @@ class DirectModeAuthenticated extends DirectModeState {
     String? account,
     List<MiDevice>? devices,
     String? selectedDeviceId,
+    String? playbackDeviceType,
   }) {
     return DirectModeAuthenticated(
       miService: miService ?? this.miService,
       account: account ?? this.account,
       devices: devices ?? this.devices,
       selectedDeviceId: selectedDeviceId ?? this.selectedDeviceId,
+      playbackDeviceType: playbackDeviceType ?? this.playbackDeviceType,
     );
   }
 }
@@ -96,6 +100,7 @@ class DirectModeNotifier extends StateNotifier<DirectModeState> {
   static const String _keyAccount = 'direct_mode_account';
   static const String _keyPassword = 'direct_mode_password';
   static const String _keySelectedDeviceId = 'direct_mode_selected_device_id'; // 🎯 新增：保存选中的设备ID
+  static const String _keyPlaybackDeviceType = 'direct_mode_playback_device_type'; // 🎵 新增：保存播放设备类型
 
   /// 自动加载保存的凭证
   Future<void> _loadSavedCredentials() async {
@@ -137,15 +142,17 @@ class DirectModeNotifier extends StateNotifier<DirectModeState> {
         debugPrint('⚠️ [DirectMode] 未找到设备');
       }
 
-      // 🎯 加载保存的选中设备ID
+      // 🎯 加载保存的选中设备ID和播放设备类型
       final prefs = await SharedPreferences.getInstance();
       final savedDeviceId = prefs.getString(_keySelectedDeviceId);
+      final savedPlaybackDeviceType = prefs.getString(_keyPlaybackDeviceType) ?? 'local'; // 默认本地播放
 
       state = DirectModeAuthenticated(
         miService: miService,
         account: account,
         devices: devices,
         selectedDeviceId: savedDeviceId, // 恢复选中的设备
+        playbackDeviceType: savedPlaybackDeviceType, // 🎵 恢复播放设备类型
       );
 
       // 🎯 自动设置代理服务器
@@ -155,6 +162,7 @@ class DirectModeNotifier extends StateNotifier<DirectModeState> {
       if (savedDeviceId != null) {
         debugPrint('✅ [DirectMode] 已恢复选中的设备: $savedDeviceId');
       }
+      debugPrint('✅ [DirectMode] 已恢复播放设备类型: $savedPlaybackDeviceType');
     } catch (e) {
       debugPrint('❌ [DirectMode] 静默登录异常: $e');
       state = const DirectModeInitial();
@@ -258,6 +266,36 @@ class DirectModeNotifier extends StateNotifier<DirectModeState> {
     await prefs.setString(_keySelectedDeviceId, deviceId);
 
     debugPrint('✅ [DirectMode] 已选择设备: ${device.name} ($deviceId)');
+  }
+
+  /// 🎵 选择播放设备类型（本地播放 or 小爱音箱）
+  /// [deviceType] 可以是 'local' 表示本地播放，或者小爱音箱的 deviceId
+  Future<void> selectPlaybackDevice(String deviceType) async {
+    final currentState = state;
+    if (currentState is! DirectModeAuthenticated) {
+      debugPrint('⚠️ [DirectMode] 未登录，无法选择播放设备');
+      return;
+    }
+
+    // 如果选择的是小爱音箱，验证设备是否存在
+    if (deviceType != 'local') {
+      final exists = currentState.devices.any((d) => d.deviceId == deviceType);
+      if (!exists) {
+        debugPrint('⚠️ [DirectMode] 设备不存在: $deviceType');
+        return;
+      }
+    }
+
+    state = currentState.copyWith(playbackDeviceType: deviceType);
+
+    // 🎯 保存播放设备类型
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyPlaybackDeviceType, deviceType);
+
+    final deviceName = deviceType == 'local'
+        ? '本地播放'
+        : currentState.devices.firstWhere((d) => d.deviceId == deviceType).name;
+    debugPrint('✅ [DirectMode] 已选择播放设备: $deviceName ($deviceType)');
   }
 
   /// 登出

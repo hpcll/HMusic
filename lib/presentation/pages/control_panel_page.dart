@@ -9,6 +9,7 @@ import '../providers/device_provider.dart';
 import '../providers/lyric_provider.dart';
 import '../../data/models/device.dart';
 import '../widgets/app_layout.dart';
+import '../widgets/app_snackbar.dart';
 import 'lyrics_page.dart';
 import '../providers/direct_mode_provider.dart';
 
@@ -89,7 +90,7 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
 
         return DeviceState(
           devices: miDevices,
-          selectedDeviceId: directState.selectedDeviceId, // 使用直连模式的选中设备ID
+          selectedDeviceId: directState.playbackDeviceType, // 🔧 修复：使用 playbackDeviceType
           isLoading: false,
         );
       } else {
@@ -379,10 +380,46 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
   }
 
   Widget _buildDeviceSelector(DeviceState state, PlaybackMode playbackMode) {
-    final selectedDevice = state.devices.firstWhere(
-      (d) => d.id == state.selectedDeviceId,
-      orElse: () => Device(id: '', name: '选择一个设备', isOnline: false),
-    );
+    // 🎯 根据播放模式获取选中的设备信息
+    final Device selectedDevice;
+    final bool isOnline;
+
+    if (playbackMode == PlaybackMode.miIoTDirect) {
+      // 直连模式：根据 playbackDeviceType 判断
+      final directState = ref.watch(directModeProvider);
+
+      if (directState is DirectModeAuthenticated) {
+        final playbackDeviceType = directState.playbackDeviceType;
+
+        if (playbackDeviceType == 'local') {
+          // 本地播放
+          selectedDevice = Device(
+            id: 'local',
+            name: '本地播放',
+            isOnline: true,
+          );
+          isOnline = true;
+        } else {
+          // 小爱音箱
+          selectedDevice = state.devices.firstWhere(
+            (d) => d.id == playbackDeviceType,
+            orElse: () => Device(id: '', name: '选择播放设备', isOnline: false),
+          );
+          isOnline = selectedDevice.isOnline ?? false;
+        }
+      } else {
+        selectedDevice = Device(id: '', name: '选择播放设备', isOnline: false);
+        isOnline = false;
+      }
+    } else {
+      // xiaomusic 模式：使用原有逻辑
+      selectedDevice = state.devices.firstWhere(
+        (d) => d.id == state.selectedDeviceId,
+        orElse: () => Device(id: '', name: '选择一个设备', isOnline: false),
+      );
+      isOnline = selectedDevice.isOnline ?? false;
+    }
+
     final onSurface = Theme.of(context).colorScheme.onSurface;
 
     return GestureDetector(
@@ -400,16 +437,11 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
               width: 6,
               height: 6,
               decoration: BoxDecoration(
-                color:
-                    (selectedDevice.isOnline ?? false)
-                        ? Colors.greenAccent
-                        : Colors.redAccent,
+                color: isOnline ? Colors.greenAccent : Colors.redAccent,
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: ((selectedDevice.isOnline ?? false)
-                            ? Colors.greenAccent
-                            : Colors.redAccent)
+                    color: (isOnline ? Colors.greenAccent : Colors.redAccent)
                         .withOpacity(0.5),
                     blurRadius: 8,
                   ),
@@ -580,52 +612,57 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
                 )
               else
                 Flexible(
-                  child: ListView.builder(
+                  child: ListView(
                     shrinkWrap: true,
-                    itemCount: state.devices.length,
-                    itemBuilder: (context, index) {
-                      final device = state.devices[index];
-                      final isSelected = state.selectedDeviceId == device.id;
-                      return ListTile(
-                        leading: Icon(
-                          // 🎯 根据设备类型显示不同图标
-                          device.isLocalDevice
-                              ? Icons
-                                  .phone_android_rounded // 本机设备
-                              : Icons.speaker_group_rounded, // 播放设备
-                          color:
-                              (device.isOnline ?? false)
-                                  ? Colors.greenAccent
-                                  : onSurfaceColor.withOpacity(0.4),
-                        ),
-                        title: Text(
-                          device.name,
-                          style: TextStyle(color: onSurfaceColor),
-                        ),
-                        trailing:
-                            isSelected
-                                ? Icon(
+                    children: [
+                      // 🎵 直连模式：在设备列表顶部添加本地播放���项
+                      if (playbackMode == PlaybackMode.miIoTDirect)
+                        _buildLocalPlaybackOption(context, onSurfaceColor),
+
+                      // 🎯 设备列表
+                      ...state.devices.map((device) {
+                        final isSelected = playbackMode == PlaybackMode.miIoTDirect
+                            ? _isDeviceSelectedInDirectMode(device.id)
+                            : state.selectedDeviceId == device.id;
+
+                        return ListTile(
+                          leading: Icon(
+                            // 🎯 根据设备类型显示不同图标
+                            device.isLocalDevice
+                                ? Icons.phone_android_rounded // 本机设备
+                                : Icons.speaker_group_rounded, // 播放设备
+                            color: (device.isOnline ?? false)
+                                ? Colors.greenAccent
+                                : onSurfaceColor.withOpacity(0.4),
+                          ),
+                          title: Text(
+                            device.name,
+                            style: TextStyle(color: onSurfaceColor),
+                          ),
+                          trailing: isSelected
+                              ? Icon(
                                   Icons.check_circle_rounded,
                                   color: Theme.of(context).colorScheme.primary,
                                 )
-                                : null,
-                        onTap: () {
-                          // 🎯 根据播放模式选择对应的Provider
-                          if (playbackMode == PlaybackMode.miIoTDirect) {
-                            // 直连模式：使用 DirectModeProvider
-                            ref
-                                .read(directModeProvider.notifier)
-                                .selectDevice(device.id);
-                          } else {
-                            // xiaomusic模式：使用 DeviceProvider
-                            ref
-                                .read(deviceProvider.notifier)
-                                .selectDevice(device.id);
-                          }
-                          Navigator.pop(context);
-                        },
-                      );
-                    },
+                              : null,
+                          onTap: () {
+                            // 🎯 根据播放模式选择对应的Provider
+                            if (playbackMode == PlaybackMode.miIoTDirect) {
+                              // 直连模式：设置播放设备为小爱音箱
+                              ref
+                                  .read(directModeProvider.notifier)
+                                  .selectPlaybackDevice(device.id);
+                            } else {
+                              // xiaomusic模式：使用 DeviceProvider
+                              ref
+                                  .read(deviceProvider.notifier)
+                                  .selectDevice(device.id);
+                            }
+                            Navigator.pop(context);
+                          },
+                        );
+                      }),
+                    ],
                   ),
                 ),
               SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
@@ -634,6 +671,61 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
         );
       },
     );
+  }
+
+  /// 🎵 构建本地播放选项（仅直连模式）
+  Widget _buildLocalPlaybackOption(BuildContext context, Color onSurfaceColor) {
+    final directState = ref.watch(directModeProvider);
+
+    // 检查本地播放是否被选中
+    final isSelected = directState is DirectModeAuthenticated &&
+                       directState.playbackDeviceType == 'local';
+
+    return ListTile(
+      leading: Icon(
+        Icons.smartphone_rounded,
+        color: isSelected
+            ? Theme.of(context).colorScheme.primary
+            : onSurfaceColor.withOpacity(0.8),
+      ),
+      title: Text(
+        '本地播放',
+        style: TextStyle(
+          color: onSurfaceColor,
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      subtitle: Text(
+        '在手机上播放音乐',
+        style: TextStyle(
+          color: onSurfaceColor.withOpacity(0.6),
+          fontSize: 12,
+        ),
+      ),
+      trailing: isSelected
+          ? Icon(
+              Icons.check_circle_rounded,
+              color: Theme.of(context).colorScheme.primary,
+            )
+          : null,
+      onTap: () {
+        // 设置播放设备为本地播放
+        ref.read(directModeProvider.notifier).selectPlaybackDevice('local');
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  /// 🎯 检查设备是否在直连模式下被选中
+  bool _isDeviceSelectedInDirectMode(String deviceId) {
+    final directState = ref.read(directModeProvider);
+
+    if (directState is DirectModeAuthenticated) {
+      // 播放设备类型如果等于设备ID，说明这个设备被选中
+      return directState.playbackDeviceType == deviceId;
+    }
+
+    return false;
   }
 
   Widget _buildAlbumArtwork(dynamic currentMusic, bool isPlaying) {
@@ -721,11 +813,9 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
     if (current == null || current.curMusic.isEmpty) {
       debugPrint('⚠️ [打开歌词] 当前没有播放歌曲,不打开歌词页面');
       // 显示提示
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('当前没有播放歌曲'),
-          duration: Duration(seconds: 2),
-        ),
+      AppSnackBar.showWarning(
+        context,
+        '当前没有播放歌曲',
       );
       return;
     }
@@ -946,7 +1036,7 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
     if (playbackMode == PlaybackMode.miIoTDirect) {
       final directState = ref.read(directModeProvider);
       hasSelectedDevice = directState is DirectModeAuthenticated &&
-          directState.selectedDeviceId != null;
+          directState.playbackDeviceType.isNotEmpty; // 🔧 修复：检查 playbackDeviceType
     } else {
       hasSelectedDevice = ref.read(deviceProvider).selectedDeviceId != null;
     }
@@ -1145,7 +1235,7 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
     if (playbackMode == PlaybackMode.miIoTDirect) {
       final directState = ref.read(directModeProvider);
       hasSelectedDevice = directState is DirectModeAuthenticated &&
-          directState.selectedDeviceId != null;
+          directState.playbackDeviceType.isNotEmpty; // 🔧 修复：检查 playbackDeviceType
     } else {
       hasSelectedDevice = ref.read(deviceProvider).selectedDeviceId != null;
     }

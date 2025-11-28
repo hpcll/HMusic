@@ -85,7 +85,7 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
     final selectedDid = ref.read(deviceProvider).selectedDeviceId;
     if (selectedDid == null) {
       if (mounted) {
-        AppSnackBar.showText(context, '请先在设置中配置 NAS 服务器');
+        AppSnackBar.showWarning(context, '请先在设置中配置 NAS 服务器');
       }
       return;
     }
@@ -104,22 +104,16 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
           );
 
       if (mounted) {
-        AppSnackBar.show(
+        AppSnackBar.showSuccess(
           context,
-          SnackBar(
-            content: Text('正在播放: $musicName'),
-            backgroundColor: Colors.green,
-          ),
+          '正在播放: $musicName',
         );
       }
     } catch (e) {
       if (mounted) {
-        AppSnackBar.show(
+        AppSnackBar.showError(
           context,
-          SnackBar(
-            content: Text('播放失败: $e'),
-            backgroundColor: Colors.redAccent,
-          ),
+          '播放失败: $e',
         );
       }
     }
@@ -832,12 +826,9 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
               Navigator.pop(context);
               await ref.read(musicLibraryProvider.notifier).deleteSelectedMusic();
               if (mounted) {
-                AppSnackBar.show(
+                AppSnackBar.showSuccess(
                   context,
-                  SnackBar(
-                    content: Text('已删除 ${libraryState.selectedMusicNames.length} 首音乐'),
-                    backgroundColor: Colors.green,
-                  ),
+                  '已删除 ${libraryState.selectedMusicNames.length} 首音乐',
                 );
               }
             },
@@ -879,7 +870,7 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
 
     if (availablePlaylists.isEmpty) {
       if (mounted) {
-        AppSnackBar.showText(context, '没有可用的歌单,请先创建一个歌单');
+        AppSnackBar.showWarning(context, '没有可用的歌单,请先创建一个歌单');
       }
       return;
     }
@@ -932,15 +923,14 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
             playlistName: selectedPlaylist,
           );
       if (mounted) {
-        AppSnackBar.showText(
+        AppSnackBar.showSuccess(
           context,
           '已添加到 $selectedPlaylist',
-          backgroundColor: Colors.green,
         );
       }
     } catch (e) {
       if (mounted) {
-        AppSnackBar.showText(context, '添加失败: $e');
+        AppSnackBar.showError(context, '添加失败: $e');
       }
     }
   }

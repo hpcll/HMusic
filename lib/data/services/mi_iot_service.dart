@@ -274,18 +274,53 @@ class MiIoTService {
       return false;
     }
 
-    // 🎯 关键修复：使用代理服务器转发音频流！
-    // 小爱音箱直接访问某些CDN可能失败（User-Agent限制、重定向问题等）
-    // 通过本地代理服务器转发，可以完美解决这些问题
+    // 🎯 关键修复：处理URL重定向！
+    // 小爱音箱不支持HTTP重定向，必须先解析获取最终的真实URL
     String playUrl = musicUrl;
+    bool useProxy = false;
 
+    // 🔧 检查URL是否包含redirect参数（QQ音乐特征）
+    if (musicUrl.contains('redirect=1') || musicUrl.contains('wx.music.tc.qq.com')) {
+      print('🔄 [MiIoT] 检测到重定向URL，先解析真实地址...');
+      try {
+        final response = await _dio.head(
+          musicUrl,
+          options: Options(
+            followRedirects: false, // 不自动跟随重定向
+            validateStatus: (status) => status! < 400, // 接受3xx状态码
+            headers: {
+              'User-Agent': 'Wget/1.21.3',
+            },
+          ),
+        );
+
+        // 从响应头中获取重定向地址
+        final location = response.headers.value('location');
+        if (location != null && location.isNotEmpty) {
+          playUrl = location;
+          print('✅ [MiIoT] 解析到真实URL: ${playUrl.substring(0, playUrl.length > 80 ? 80 : playUrl.length)}...');
+        } else {
+          print('⚠️ [MiIoT] 未找到重定向地址，使用原始URL');
+        }
+      } catch (e) {
+        print('⚠️ [MiIoT] 解析重定向失败，使用原始URL: $e');
+      }
+    }
+
+    // 🎯 使用代理服务器转发音频流（可选）
+    // 小爱音箱直接访问某些CDN可能失败（User-Agent限制等）
+    // 通过本地代理服务器转发，可以完美解决这些问题
     if (_proxyServer != null && _proxyServer!.isRunning) {
       // 使用代理服务器转发
-      playUrl = _proxyServer!.getProxyUrl(musicUrl);
-      print('🔄 [MiIoT] 使用代理URL: ${playUrl.substring(0, playUrl.length > 100 ? 100 : playUrl.length)}...');
+      final originalUrl = playUrl;
+      playUrl = _proxyServer!.getProxyUrl(playUrl);
+      useProxy = true;
+      print('🔄 [MiIoT] 使用代理转发');
+      print('   原始URL: ${originalUrl.substring(0, originalUrl.length > 80 ? 80 : originalUrl.length)}...');
+      print('   代理URL: ${playUrl.substring(0, playUrl.length > 80 ? 80 : playUrl.length)}...');
     } else {
-      print('⚠️ [MiIoT] 代理服务器未运行，使用直接URL（可能不稳定）');
-      print('🔗 [MiIoT] 直接URL: ${playUrl.substring(0, playUrl.length > 80 ? 80 : playUrl.length)}...');
+      print('⚠️ [MiIoT] 直接使用真实URL（无代理）');
+      print('🔗 [MiIoT] 播放URL: ${playUrl.substring(0, playUrl.length > 80 ? 80 : playUrl.length)}...');
     }
 
     // 🔧 调试：记录URL协议
@@ -394,8 +429,9 @@ class MiIoTService {
     print('⏹️ [MiIoT] 停止当前播放...');
     await stop(deviceId);
 
-    // 🎯 等待设备处理停止命令（200ms）
-    await Future.delayed(const Duration(milliseconds: 200));
+    // 🎯 等待设备处理停止命令（500ms）
+    // 🔧 增加延迟时间，让设备有足够时间清空缓冲区
+    await Future.delayed(const Duration(milliseconds: 500));
 
     // 🎯 智能选择播放方案
     List<Map<String, dynamic>> attempts = [];
@@ -459,6 +495,68 @@ class MiIoTService {
             final playSuccess = await resume(deviceId);
             if (playSuccess) {
               print('✅ [MiIoT] 播放命令发送成功!');
+
+              // 🔧 等待音箱缓冲和开始播放（3秒）
+              print('⏳ [MiIoT] 等待音箱缓冲（3秒）...');
+              await Future.delayed(const Duration(seconds: 3));
+
+              // 🎯 验证播放状态
+              print('🔍 [MiIoT] 检查播放状态...');
+              final status = await getPlayStatus(deviceId);
+              if (status != null) {
+                final playStatus = status['status'];
+                final position = status['play_song_detail']?['position'];
+                print('📊 [MiIoT] 当前状态: status=$playStatus, position=$position');
+
+                // status=1 表示播放中，status=2 表示暂停
+                if (playStatus == 2) {
+                  print('⚠️ [MiIoT] 音箱仍处于暂停状态，尝试重新播放...');
+                  await resume(deviceId);
+                  await Future.delayed(const Duration(milliseconds: 500));
+
+                  // 再次检查
+                  final retryStatus = await getPlayStatus(deviceId);
+                  if (retryStatus != null) {
+                    final retryPlayStatus = retryStatus['status'];
+                    print('📊 [MiIoT] 重试后状态: status=$retryPlayStatus');
+                    if (retryPlayStatus == 1) {
+                      print('✅ [MiIoT] 重试成功，音箱已开始播放');
+                      return true;
+                    } else if (useProxy) {
+                      // 🔄 如果使用了代理但仍然失败，尝试使用直接URL
+                      print('⚠️ [MiIoT] 代理播放失败，尝试直接播放原始URL...');
+                      print('💡 [MiIoT] 可能原因：音箱无法访问手机的代理服务器（网络隔离/防火墙）');
+
+                      // 递归调用，但不使用代理
+                      print('🔄 [MiIoT] Fallback: 使用原始URL重试...');
+                      final originalProxyServer = _proxyServer;
+                      _proxyServer = null; // 临时禁用代理
+
+                      final directPlaySuccess = await playMusic(
+                        deviceId: deviceId,
+                        musicUrl: musicUrl,
+                        compatMode: compatMode,
+                        musicName: musicName,
+                      );
+
+                      _proxyServer = originalProxyServer; // 恢复代理设置
+
+                      if (directPlaySuccess) {
+                        print('✅ [MiIoT] 直接播放成功！');
+                      } else {
+                        print('❌ [MiIoT] 直接播放也失败了');
+                      }
+                      return directPlaySuccess;
+                    } else {
+                      print('⚠️ [MiIoT] 播放失败，音箱可能无法访问播放URL');
+                      print('💡 [MiIoT] 建议检查: 1) 音箱和手机是否在同一网络 2) URL是否有效');
+                    }
+                  }
+                } else {
+                  print('✅ [MiIoT] 音箱正在播放');
+                }
+              }
+
               return true;
             } else {
               print('⚠️ [MiIoT] 播放命令发送失败，但音乐已设置');

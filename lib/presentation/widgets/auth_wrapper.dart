@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../pages/login_page.dart';
+import '../pages/direct_mode_login_page.dart';
 import '../pages/main_page.dart';
 import '../providers/auth_provider.dart';
 import '../providers/js_proxy_provider.dart';
@@ -10,8 +11,6 @@ import '../providers/source_settings_provider.dart';
 import '../providers/js_script_manager_provider.dart';
 import '../providers/initialization_provider.dart';
 import '../pages/update_page.dart';
-import '../providers/update_provider.dart';
-import 'package:go_router/go_router.dart';
 import '../providers/update_provider.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/direct_mode_provider.dart';
@@ -190,8 +189,12 @@ class _AuthWrapperState extends ConsumerState<AuthWrapper> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
     final updState = ref.watch(updateProvider);
+    // 🎯 新增：监听当前播放模式和直连模式状态
+    final playbackMode = ref.watch(playbackModeProvider);
+    final directModeState = ref.watch(directModeProvider);
 
     print('[AuthWrapper] 🎨 build - _updateChecked: $_updateChecked, needsUpdate: ${updState.needsUpdate}');
+    print('[AuthWrapper] 🎯 当前模式: $playbackMode, authState: ${authState.runtimeType}, directState: ${directModeState.runtimeType}');
 
     // 等待更新检查完成后再决定显示什么
     // 如果还在检查中，显示空白页面或加载指示器
@@ -230,10 +233,17 @@ class _AuthWrapperState extends ConsumerState<AuthWrapper> {
       }
     });
 
-    return switch (authState) {
-      AuthAuthenticated() => const MainPage(),
-      _ => _buildLoginOrModeSelection(), // 未登录时检查是否需要显示模式选择
-    };
+    // 🎯 关键修复：根据当前播放模式检查对应的登录状态
+    // 避免切换模式时登录状态混淆导致"掉登录"问题
+    if (playbackMode == PlaybackMode.xiaomusic) {
+      // xiaomusic 模式：检查 authProvider 的登录状态
+      return authState is AuthAuthenticated ? const MainPage() : const LoginPage();
+    } else {
+      // 直连模式：检查 directModeProvider 的登录状态
+      return directModeState is DirectModeAuthenticated
+          ? const MainPage()
+          : const DirectModeLoginPage();
+    }
   }
 
   /// 构建登录页或模式选择页
@@ -255,8 +265,8 @@ class _AuthWrapperState extends ConsumerState<AuthWrapper> {
         // 已登录，显示主页
         return const MainPage();
       } else {
-        // 未登录，显示登录页（但不重定向，让用户留在当前路由）
-        return const LoginPage(); // 实际上会被路由拦截到 /direct_login
+        // 🎯 未登录，显示直连模式登录页
+        return const DirectModeLoginPage();
       }
     }
 

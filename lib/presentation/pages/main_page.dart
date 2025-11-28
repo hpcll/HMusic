@@ -641,9 +641,9 @@ class _MainPageState extends ConsumerState<MainPage> with SingleTickerProviderSt
       }
     } catch (e) {
       if (mounted) {
-        AppSnackBar.show(
+        AppSnackBar.showError(
           context,
-          SnackBar(content: Text('选择文件失败：$e'), backgroundColor: Colors.red),
+          '选择文件失败：$e',
         );
       }
     }
@@ -717,21 +717,18 @@ class _MainPageState extends ConsumerState<MainPage> with SingleTickerProviderSt
       if (mounted) {
         Navigator.pop(context); // Close progress dialog
         if (ok) {
-          AppSnackBar.show(
+          AppSnackBar.showSuccess(
             context,
-            SnackBar(
-              content: Text('$mode 上传成功：${files.length} 个文件'),
-              backgroundColor: Colors.green,
-            ),
+            '$mode 上传成功：${files.length} 个文件',
           );
         }
       }
     } catch (e) {
       if (mounted) {
         Navigator.pop(context); // Close progress dialog
-        AppSnackBar.show(
+        AppSnackBar.showError(
           context,
-          SnackBar(content: Text('上传失败：$e'), backgroundColor: Colors.red),
+          '上传失败：$e',
         );
       }
     }

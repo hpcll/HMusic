@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gal/gal.dart';
+import '../../widgets/app_snackbar.dart';
 
 class SponsorPage extends StatelessWidget {
   const SponsorPage({super.key});
@@ -355,9 +356,10 @@ class SponsorPage extends StatelessWidget {
                   Navigator.of(context).pop();
                   // 复制公众号名称
                   Clipboard.setData(const ClipboardData(text: '老婆饼里没有饼'));
-                  ScaffoldMessenger.of(
+                  AppSnackBar.showSuccess(
                     context,
-                  ).showSnackBar(const SnackBar(content: Text('公众号名称已复制到剪贴板')));
+                    '公众号名称已复制到剪贴板',
+                  );
                 },
                 child: const Text('复制公众号名称'),
               ),
@@ -390,9 +392,10 @@ class SponsorPage extends StatelessWidget {
                           '推荐一个好用的音乐控制应用：HMusic！功能强大，完全免费 🎵\n\n想了解更多可以关注公众号"老婆饼里没有饼"'
                     ),
                   );
-                  ScaffoldMessenger.of(
+                  AppSnackBar.showSuccess(
                     context,
-                  ).showSnackBar(const SnackBar(content: Text('分享文案已复制到剪贴板')));
+                    '分享文案已复制到剪贴板',
+                  );
                 },
                 child: const Text('复制分享文案'),
               ),
@@ -484,14 +487,14 @@ class SponsorPage extends StatelessWidget {
   Future<void> _saveQRCode(BuildContext context) async {
     try {
       // 显示加载提示
-      _showLoadingSnackBar(context, '正在保存图片...');
+      AppSnackBar.showInfo(context, '正在保存图片...');
 
       // 检查权限并请求
       final hasAccess = await Gal.hasAccess();
       if (!hasAccess) {
         final requestGranted = await Gal.requestAccess();
         if (!requestGranted) {
-          _showErrorSnackBar(context, '需要相册访问权限才能保存图片');
+          AppSnackBar.showError(context, '需要相册访问权限才能保存图片');
           return;
         }
       }
@@ -509,74 +512,16 @@ class SponsorPage extends StatelessWidget {
             'xiaoai_music_sponsor_qr_${DateTime.now().millisecondsSinceEpoch}',
       );
 
-      _showSuccessSnackBar(context, '赞赏码已保存到相册 📱');
+      AppSnackBar.showSuccess(context, '赞赏码已保存到相册 📱');
     } catch (e) {
       print('保存赞赏码失败: $e');
       if (e.toString().contains('Unable to load asset')) {
-        _showErrorSnackBar(context, '请先添加赞赏码图片');
+        AppSnackBar.showError(context, '请先添加赞赏码图片');
       } else if (e.toString().contains('GalException')) {
-        _showErrorSnackBar(context, '保存失败，请检查相册权限');
+        AppSnackBar.showError(context, '保存失败，请检查相册权限');
       } else {
-        _showErrorSnackBar(context, '保存失败: ${e.toString()}');
+        AppSnackBar.showError(context, '保存失败: ${e.toString()}');
       }
     }
-  }
-
-  void _showLoadingSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            ),
-            const SizedBox(width: 12),
-            Text(message),
-          ],
-        ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
-
-  void _showSuccessSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(Icons.check_circle, color: Colors.white, size: 20),
-            const SizedBox(width: 12),
-            Text(message),
-          ],
-        ),
-        backgroundColor: Colors.green,
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 3),
-      ),
-    );
-  }
-
-  void _showErrorSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(Icons.error, color: Colors.white, size: 20),
-            const SizedBox(width: 12),
-            Expanded(child: Text(message)),
-          ],
-        ),
-        backgroundColor: Colors.red,
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 4),
-      ),
-    );
   }
 }

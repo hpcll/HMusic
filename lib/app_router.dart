@@ -14,6 +14,7 @@ import 'presentation/pages/now_playing_page.dart';
 import 'presentation/pages/js_proxy_test_page.dart';
 import 'presentation/pages/update_page.dart';
 import 'presentation/pages/playback_mode_selection_page.dart';
+import 'presentation/pages/login_page.dart';
 import 'presentation/pages/direct_mode_login_page.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -95,6 +96,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/mode_selection',
         name: 'mode_selection',
         builder: (context, state) => const PlaybackModeSelectionPage(),
+      ),
+      GoRoute(
+        path: '/login',
+        name: 'login',
+        builder: (context, state) => const LoginPage(),
       ),
       GoRoute(
         path: '/direct_login',

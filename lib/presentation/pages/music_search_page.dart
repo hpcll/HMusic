@@ -319,12 +319,9 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
 
       if (url.isEmpty) {
         if (mounted) {
-          AppSnackBar.show(
+          AppSnackBar.showError(
             context,
-            const SnackBar(
-              content: Text('❌ 无法解析直链，下载失败'),
-              backgroundColor: Colors.red,
-            ),
+            '❌ 无法解析直链，下载失败',
           );
         }
         return;
@@ -340,19 +337,16 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
           .read(musicLibraryProvider.notifier)
           .downloadOneMusic(serverName, url: url);
       if (mounted) {
-        AppSnackBar.show(
+        AppSnackBar.showSuccess(
           context,
-          SnackBar(
-            content: Text('已提交下载任务：${item.title}'),
-            backgroundColor: Colors.green,
-          ),
+          '已提交下载任务：${item.title}',
         );
       }
     } catch (e) {
       if (mounted) {
-        AppSnackBar.show(
+        AppSnackBar.showError(
           context,
-          SnackBar(content: Text('下载失败：$e'), backgroundColor: Colors.red),
+          '下载失败：$e',
         );
       }
     }
@@ -372,12 +366,9 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
 
       if (url.isEmpty) {
         if (mounted) {
-          AppSnackBar.show(
+          AppSnackBar.showError(
             context,
-            const SnackBar(
-              content: Text('❌ 无法解析直链，无法下载'),
-              backgroundColor: Colors.red,
-            ),
+            '❌ 无法解析直链，无法下载',
           );
         }
         return;
@@ -411,12 +402,9 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
 
         if (!hasPermission) {
           if (mounted) {
-            AppSnackBar.show(
+            AppSnackBar.showError(
               context,
-              const SnackBar(
-                content: Text('❌ 需要存储权限才能下载到本地'),
-                backgroundColor: Colors.red,
-              ),
+              '❌ 需要存储权限才能下载到本地',
             );
           }
           return;
@@ -450,24 +438,21 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
       );
 
       if (mounted) {
-        AppSnackBar.show(
+        AppSnackBar.showSuccess(
           context,
-          SnackBar(
-            content: Text('已保存到本地: ${p.basename(filePath)}'),
-            backgroundColor: Colors.green,
-            action: SnackBarAction(
-              label: '打开',
-              textColor: Colors.white,
-              onPressed: () => OpenFilex.open(filePath),
-            ),
+          '已保存到本地: ${p.basename(filePath)}',
+          action: SnackBarAction(
+            label: '打开',
+            textColor: Colors.white,
+            onPressed: () => OpenFilex.open(filePath),
           ),
         );
       }
     } catch (e) {
       if (mounted) {
-        AppSnackBar.show(
+        AppSnackBar.showError(
           context,
-          SnackBar(content: Text('本地下载失败：$e'), backgroundColor: Colors.red),
+          '本地下载失败：$e',
         );
       }
     }
@@ -594,13 +579,10 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
       // 只在直连模式下支持队列功能
       if (playbackMode != PlaybackMode.miIoTDirect) {
         if (mounted) {
-          AppSnackBar.show(
+          AppSnackBar.showWarning(
             context,
-            const SnackBar(
-              content: Text('⚠️ 播放队列功能仅在直连模式下可用'),
-              backgroundColor: Colors.orange,
-              duration: Duration(seconds: 3),
-            ),
+            '⚠️ 播放队列功能仅在直连模式下可用',
+            duration: const Duration(seconds: 3),
           );
         }
         return;
@@ -625,25 +607,19 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
         final queueState = ref.read(playbackQueueProvider);
         final queueLength = queueState.queue?.items.length ?? 1;
 
-        AppSnackBar.show(
+        AppSnackBar.showSuccess(
           context,
-          SnackBar(
-            content: Text('✅ 已加入播放队列: ${item.title}\n当前队列: $queueLength 首歌'),
-            backgroundColor: Colors.green,
-            duration: const Duration(seconds: 2),
-          ),
+          '✅ 已加入播放队列: ${item.title}\n当前队列: $queueLength 首歌',
+          duration: const Duration(seconds: 2),
         );
       }
     } catch (e) {
       debugPrint('❌ [MusicSearch] 添加到队列失败: $e');
       if (mounted) {
-        AppSnackBar.show(
+        AppSnackBar.showError(
           context,
-          SnackBar(
-            content: Text('❌ 添加失败: $e'),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 3),
-          ),
+          '❌ 添加失败: $e',
+          duration: const Duration(seconds: 3),
         );
       }
     }
@@ -751,20 +727,17 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
           }
 
           if (mounted) {
-            AppSnackBar.show(
+            AppSnackBar.showSuccess(
               context,
-              SnackBar(
-                content: Text('✅ 已添加到 "$selectedPlaylist"'),
-                backgroundColor: Colors.green,
-                duration: const Duration(seconds: 3),
-                action: SnackBarAction(
-                  label: '查看',
-                  textColor: Colors.white,
-                  onPressed: () {
-                    // 跳转到歌单页面
-                    context.push('/playlist');
-                  },
-                ),
+              '✅ 已添加到 "$selectedPlaylist"',
+              duration: const Duration(seconds: 3),
+              action: SnackBarAction(
+                label: '查看',
+                textColor: Colors.white,
+                onPressed: () {
+                  // 跳转到歌单页面
+                  context.push('/playlist');
+                },
               ),
             );
           }
@@ -773,13 +746,10 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
     } catch (e) {
       debugPrint('❌ [MusicSearch] 添加到歌单失败: $e');
       if (mounted) {
-        AppSnackBar.show(
+        AppSnackBar.showError(
           context,
-          SnackBar(
-            content: Text('❌ 添加失败: $e'),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 3),
-          ),
+          '❌ 添加失败: $e',
+          duration: const Duration(seconds: 3),
         );
       }
     }
@@ -795,12 +765,9 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
 
       if (directState is! DirectModeAuthenticated) {
         if (mounted) {
-          AppSnackBar.show(
+          AppSnackBar.showError(
             context,
-            const SnackBar(
-              content: Text('❌ 直连模式未登录，请先登录'),
-              backgroundColor: Colors.red,
-            ),
+            '❌ 直连模式未登录，请先登录',
           );
         }
         return;
@@ -808,12 +775,9 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
 
       if (directState.devices.isEmpty) {
         if (mounted) {
-          AppSnackBar.show(
+          AppSnackBar.showWarning(
             context,
-            const SnackBar(
-              content: Text('❌ 没有可用的小米设备'),
-              backgroundColor: Colors.orange,
-            ),
+            '❌ 没有可用的小米设备',
           );
         }
         return;
@@ -833,12 +797,9 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
 
       if (playUrl.isEmpty) {
         if (mounted) {
-          AppSnackBar.show(
+          AppSnackBar.showError(
             context,
-            const SnackBar(
-              content: Text('❌ 无法解析播放链接'),
-              backgroundColor: Colors.red,
-            ),
+            '❌ 无法解析播放链接',
           );
         }
         return;
@@ -882,13 +843,10 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
 
       // 4. 显示播放提示
       if (mounted) {
-        AppSnackBar.show(
+        AppSnackBar.showSuccess(
           context,
-          SnackBar(
-            content: Text('🎵 正在播放: ${item.title}'),
-            backgroundColor: Colors.green,
-            duration: const Duration(seconds: 2),
-          ),
+          '🎵 正在播放: ${item.title}',
+          duration: const Duration(seconds: 2),
         );
       }
 
@@ -911,13 +869,10 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
       debugPrint('[DirectMode] 堆栈: ${stackTrace.toString().split('\n').take(5).join('\n')}');
 
       if (mounted) {
-        AppSnackBar.show(
+        AppSnackBar.showError(
           context,
-          SnackBar(
-            content: Text('❌ 播放失败: ${e.toString()}'),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 4),
-          ),
+          '❌ 播放失败: ${e.toString()}',
+          duration: const Duration(seconds: 4),
         );
       }
     }
@@ -939,12 +894,9 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
 
     if (id.isEmpty) {
       if (mounted) {
-        AppSnackBar.show(
+        AppSnackBar.showError(
           context,
-          const SnackBar(
-            content: Text('❌ 缺少歌曲标识，无法播放'),
-            backgroundColor: Colors.red,
-          ),
+          '❌ 缺少歌曲标识，无法播放',
         );
       }
       return;
@@ -961,20 +913,17 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
         if (scripts.isEmpty) {
           // 用户选择了JS音源但没有导入任何脚本
           if (mounted) {
-            AppSnackBar.show(
+            AppSnackBar.showWarning(
               context,
-              SnackBar(
-                content: const Text('❌ 未导入JS脚本\n请先在设置中导入JS脚本才能播放音乐'),
-                backgroundColor: Colors.orange,
-                duration: const Duration(seconds: 5),
-                action: SnackBarAction(
-                  label: '去导入',
-                  textColor: Colors.white,
-                  onPressed: () {
-                    // 导航到音源设置页面
-                    context.push('/settings/source');
-                  },
-                ),
+              '❌ 未导入JS脚本\n请先在设置中导入JS脚本才能播放音乐',
+              duration: const Duration(seconds: 5),
+              action: SnackBarAction(
+                label: '去导入',
+                textColor: Colors.white,
+                onPressed: () {
+                  // 导航到音源设置页面
+                  context.push('/settings/source');
+                },
               ),
             );
           }
@@ -982,19 +931,16 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
         } else if (selectedScript == null) {
           // 有脚本但没有选中任何脚本
           if (mounted) {
-            AppSnackBar.show(
+            AppSnackBar.showWarning(
               context,
-              SnackBar(
-                content: Text('❌ 未选择JS脚本\n已导入${scripts.length}个脚本，请选择一个使用'),
-                backgroundColor: Colors.orange,
-                duration: const Duration(seconds: 5),
-                action: SnackBarAction(
-                  label: '去选择',
-                  textColor: Colors.white,
-                  onPressed: () {
-                    context.push('/settings/source');
-                  },
-                ),
+              '❌ 未选择JS脚本\n已导入${scripts.length}个脚本，请选择一个使用',
+              duration: const Duration(seconds: 5),
+              action: SnackBarAction(
+                label: '去选择',
+                textColor: Colors.white,
+                onPressed: () {
+                  context.push('/settings/source');
+                },
               ),
             );
           }
@@ -1054,12 +1000,9 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
             // 远程播放模式需要检查设备列表
             if (deviceState.devices.isEmpty) {
               if (mounted) {
-                AppSnackBar.show(
+                AppSnackBar.showWarning(
                   context,
-                  const SnackBar(
-                    content: Text('未找到可用设备，请先在控制页检查设备连接'),
-                    backgroundColor: Colors.orange,
-                  ),
+                  '未找到可用设备，请先在控制页检查设备连接',
                 );
               }
               return;
@@ -1165,13 +1108,10 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
 
           // 调用播放
           if (mounted) {
-            AppSnackBar.show(
+            AppSnackBar.showSuccess(
               context,
-              SnackBar(
-                content: Text('🎵 正在播放: ${item.title}'),
-                backgroundColor: Colors.green,
-                duration: const Duration(seconds: 3),
-              ),
+              '🎵 正在播放: ${item.title}',
+              duration: const Duration(seconds: 3),
             );
           }
 
@@ -1200,13 +1140,10 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
             // 🚫 JS 音源解析失败：不再回退到统一API
             print('[XMC] ❌ [Play] JS解析失败，无法获取播放链接');
             if (mounted) {
-              AppSnackBar.show(
+              AppSnackBar.showError(
                 context,
-                SnackBar(
-                  content: Text('播放失败: JS脚本无法解析该歌曲\n请尝试其他歌曲或重新加载脚本'),
-                  backgroundColor: Colors.red,
-                  duration: const Duration(seconds: 4),
-                ),
+                '播放失败: JS脚本无法解析该歌曲\n请尝试其他歌曲或重新加载脚本',
+                duration: const Duration(seconds: 4),
               );
             }
             return; // 直接返回，不继续执行
@@ -1230,13 +1167,10 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
         } catch (e) {
           print('[XMC] ❌ [Play] JS源播放失败: $e');
           if (mounted) {
-            AppSnackBar.show(
+            AppSnackBar.showError(
               context,
-              SnackBar(
-                content: Text('JS源播放失败: $e'),
-                backgroundColor: Colors.red,
-                duration: const Duration(seconds: 5),
-              ),
+              'JS源播放失败: $e',
+              duration: const Duration(seconds: 5),
             );
           }
           return;
@@ -1376,12 +1310,9 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
       final deviceState = ref.read(deviceProvider);
       if (deviceState.devices.isEmpty) {
         if (mounted) {
-          AppSnackBar.show(
+          AppSnackBar.showWarning(
             context,
-            const SnackBar(
-              content: Text('未找到可用设备，请先在控制页检查设备连接'),
-              backgroundColor: Colors.orange,
-            ),
+            '未找到可用设备，请先在控制页检查设备连接',
           );
         }
         return;
@@ -1400,12 +1331,9 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
       final selectedDeviceId = deviceState.selectedDeviceId;
       if (selectedDeviceId == null) {
         if (mounted) {
-          AppSnackBar.show(
+          AppSnackBar.showWarning(
             context,
-            const SnackBar(
-              content: Text('请先选择播放设备'),
-              backgroundColor: Colors.orange,
-            ),
+            '请先选择播放设备',
           );
         }
         return;
@@ -1418,13 +1346,10 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
 
       // 🎯 显示播放中提示
       if (mounted) {
-        AppSnackBar.show(
+        AppSnackBar.showSuccess(
           context,
-          SnackBar(
-            content: Text('🎵 正在播放: ${item.title}'),
-            backgroundColor: Colors.green,
-            duration: const Duration(seconds: 3),
-          ),
+          '🎵 正在播放: ${item.title}',
+          duration: const Duration(seconds: 3),
         );
       }
 
@@ -1456,13 +1381,10 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
     } catch (e) {
       print('[XMC] ❌ [Play] 播放失败: $e');
       if (mounted) {
-        AppSnackBar.show(
+        AppSnackBar.showError(
           context,
-          SnackBar(
-            content: Text('❌ 播放失败：$e'),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 5),
-          ),
+          '❌ 播放失败：$e',
+          duration: const Duration(seconds: 5),
         );
       }
     }

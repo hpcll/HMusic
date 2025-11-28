@@ -156,12 +156,9 @@ class _TtsSettingsPageState extends ConsumerState<TtsSettingsPage> {
   Future<void> _testTts() async {
     if (_ttsTestText.trim().isEmpty) {
       if (mounted) {
-        AppSnackBar.show(
+        AppSnackBar.showWarning(
           context,
-          const SnackBar(
-            content: Text('请输入要测试的文字'),
-            backgroundColor: Colors.orange,
-          ),
+          '请输入要测试的文字',
         );
       }
       return;
@@ -172,12 +169,9 @@ class _TtsSettingsPageState extends ConsumerState<TtsSettingsPage> {
       final deviceState = ref.read(deviceProvider);
       if (deviceState.devices.isEmpty) {
         if (mounted) {
-          AppSnackBar.show(
+          AppSnackBar.showWarning(
             context,
-            const SnackBar(
-              content: Text('未找到可用设备，请先在控制页检查设备连接'),
-              backgroundColor: Colors.orange,
-            ),
+            '未找到可用设备，请先在控制页检查设备连接',
           );
         }
         return;
@@ -196,12 +190,9 @@ class _TtsSettingsPageState extends ConsumerState<TtsSettingsPage> {
       final selectedDeviceId = deviceState.selectedDeviceId;
       if (selectedDeviceId == null) {
         if (mounted) {
-          AppSnackBar.show(
+          AppSnackBar.showWarning(
             context,
-            const SnackBar(
-              content: Text('请先选择播放设备'),
-              backgroundColor: Colors.orange,
-            ),
+            '请先选择播放设备',
           );
         }
         return;
@@ -209,12 +200,9 @@ class _TtsSettingsPageState extends ConsumerState<TtsSettingsPage> {
 
       // 显示测试状态
       if (mounted) {
-        AppSnackBar.show(
+        AppSnackBar.showInfo(
           context,
-          SnackBar(
-            content: Text('正在播放TTS: "$_ttsTestText"'),
-            backgroundColor: Colors.blue,
-          ),
+          '正在播放TTS: "$_ttsTestText"',
         );
       }
 
@@ -227,12 +215,9 @@ class _TtsSettingsPageState extends ConsumerState<TtsSettingsPage> {
         );
 
         if (mounted) {
-          AppSnackBar.show(
+          AppSnackBar.showSuccess(
             context,
-            SnackBar(
-              content: Text('TTS播放成功: "$_ttsTestText"'),
-              backgroundColor: Colors.green,
-            ),
+            'TTS播放成功: "$_ttsTestText"',
           );
         }
 
@@ -246,12 +231,9 @@ class _TtsSettingsPageState extends ConsumerState<TtsSettingsPage> {
           print('🎵 音乐播放已恢复');
 
           if (mounted) {
-            AppSnackBar.show(
+            AppSnackBar.showInfo(
               context,
-              const SnackBar(
-                content: Text('TTS播放完成，音乐已恢复播放'),
-                backgroundColor: Colors.blue,
-              ),
+              'TTS播放完成，音乐已恢复播放',
             );
           }
         } catch (e) {

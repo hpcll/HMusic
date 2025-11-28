@@ -453,31 +453,43 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     );
 
     if (result != null && result != playbackMode) {
-      // 切换模式
-      ref.read(playbackModeProvider.notifier).setMode(result);
+      // 🎯 切换模式逻辑优化：保留所有模式的登录状态,不互相退出
+      final targetMode = result;
+      final authState = ref.read(authProvider);
+      final directState = ref.read(directModeProvider);
+
+      // 更新播放模式
+      ref.read(playbackModeProvider.notifier).setMode(targetMode);
 
       if (mounted) {
-        AppSnackBar.show(
+        String message;
+
+        if (targetMode == PlaybackMode.xiaomusic) {
+          // 切换到 xiaomusic 模式
+          // 🎯 不退出直连模式登录,保留登录状态以便下次切换回来时使用
+          if (authState is AuthAuthenticated) {
+            message = '已切换到 xiaomusic 模式';
+          } else {
+            message = '已切换到 xiaomusic 模式，请登录';
+          }
+        } else {
+          // 切换到直连模式
+          // 🎯 不退出 xiaomusic 模式登录,保留登录状态以便下次切换回来时使用
+          if (directState is DirectModeAuthenticated) {
+            message = '已切换到直连模式';
+          } else {
+            message = '已切换到直连模式，请登录';
+          }
+        }
+
+        AppSnackBar.showSuccess(
           context,
-          SnackBar(
-            content: Text(
-              result == PlaybackMode.xiaomusic
-                  ? '已切换到 xiaomusic 模式，请重新登录'
-                  : '已切换到直连模式，请重新登录',
-            ),
-            backgroundColor: Colors.green,
-          ),
+          message,
         );
 
-        // 退出登录并跳转
-        await ref.read(authProvider.notifier).logout();
-
+        // 🎯 统一跳转到根路由,让 AuthWrapper 根据模式和登录状态自动决定显示什么页面
         if (mounted) {
-          if (result == PlaybackMode.xiaomusic) {
-            context.go('/login');
-          } else {
-            context.go('/direct_login');
-          }
+          context.go('/');
         }
       }
     }
@@ -677,12 +689,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             .read(musicLibraryProvider.notifier)
             .downloadOneMusic(result['name']!, url: result['url']);
         if (context.mounted) {
-          AppSnackBar.show(
+          AppSnackBar.showSuccess(
             context,
-            const SnackBar(
-              content: Text('已提交单曲下载任务'),
-              backgroundColor: Colors.green,
-            ),
+            '已提交单曲下载任务',
           );
         }
       } else if (result['type'] == 'playlist') {
@@ -690,20 +699,17 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             .read(playlistProvider.notifier)
             .downloadPlaylist(result['name']!, url: result['url']);
         if (context.mounted) {
-          AppSnackBar.show(
+          AppSnackBar.showSuccess(
             context,
-            const SnackBar(
-              content: Text('已提交整表下载任务'),
-              backgroundColor: Colors.green,
-            ),
+            '已提交整表下载任务',
           );
         }
       }
     } catch (e) {
       if (context.mounted) {
-        AppSnackBar.show(
+        AppSnackBar.showError(
           context,
-          SnackBar(content: Text('下载失败：$e'), backgroundColor: Colors.red),
+          '下载失败：$e',
         );
       }
     }
@@ -818,12 +824,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 final actualPath = await _getDownloadPath();
                 await Clipboard.setData(ClipboardData(text: actualPath));
                 if (context.mounted) {
-                  AppSnackBar.show(
+                  AppSnackBar.showSuccess(
                     context,
-                    const SnackBar(
-                      content: Text('已复制到剪贴板'),
-                      backgroundColor: Colors.green,
-                    ),
+                    '已复制到剪贴板',
                   );
                 }
               },

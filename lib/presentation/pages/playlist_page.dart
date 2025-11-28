@@ -312,7 +312,7 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage> {
                                   ref.read(deviceProvider).selectedDeviceId;
                               if (did == null) {
                                 if (mounted) {
-                                  AppSnackBar.showText(context, '请先在设置中配置 NAS 服务器');
+                                  AppSnackBar.showWarning(context, '请先在设置中配置 NAS 服务器');
                                 }
                                 return;
                               }
@@ -376,24 +376,16 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage> {
                                           .deletePlaylist(playlistName);
                                     }
                                     if (mounted) {
-                                      AppSnackBar.show(
+                                      AppSnackBar.showSuccess(
                                         context,
-                                        SnackBar(
-                                          content: Text(
-                                            '已删除歌单：$playlistName',
-                                          ),
-                                          backgroundColor: Colors.green,
-                                        ),
+                                        '已删除歌单：$playlistName',
                                       );
                                     }
                                   } catch (e) {
                                     if (mounted) {
-                                      AppSnackBar.show(
+                                      AppSnackBar.showError(
                                         context,
-                                        SnackBar(
-                                          content: Text('删除失败：$e'),
-                                          backgroundColor: Colors.red,
-                                        ),
+                                        '删除失败：$e',
                                       );
                                     }
                                   }
@@ -566,22 +558,17 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage> {
                                         }
                                         if (mounted) Navigator.pop(context);
                                         if (mounted) {
-                                          AppSnackBar.show(
+                                          AppSnackBar.showSuccess(
                                             context,
-                                            SnackBar(
-                                              content: Text('"$name" 已创建'),
-                                            ),
+                                            '"$name" 已创建',
                                           );
                                         }
                                       } catch (e) {
                                         if (mounted) Navigator.pop(context);
                                         if (mounted) {
-                                          AppSnackBar.show(
+                                          AppSnackBar.showError(
                                             context,
-                                            SnackBar(
-                                              content: Text('创建失败: $e'),
-                                              backgroundColor: Colors.redAccent,
-                                            ),
+                                            '创建失败: $e',
                                           );
                                         }
                                       }

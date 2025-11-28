@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../providers/update_provider.dart';
+import '../widgets/app_snackbar.dart';
 
 class UpdatePage extends ConsumerStatefulWidget {
   final String title;
@@ -44,9 +45,7 @@ class _UpdatePageState extends ConsumerState<UpdatePage> {
   Future<void> _launchDownload(BuildContext context) async {
     if (widget.downloadUrl.isEmpty) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('下载链接不可用')),
-        );
+        AppSnackBar.showWarning(context, '下载链接不可用');
       }
       return;
     }
@@ -57,16 +56,12 @@ class _UpdatePageState extends ConsumerState<UpdatePage> {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
       } else {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('无法打开下载链接')),
-          );
+          AppSnackBar.showError(context, '无法打开下载链接');
         }
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('打开链接失败: $e')),
-        );
+        AppSnackBar.showError(context, '打开链接失败: $e');
       }
     }
   }

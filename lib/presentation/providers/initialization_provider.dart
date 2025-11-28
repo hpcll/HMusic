@@ -55,6 +55,9 @@ class InitializationNotifier extends StateNotifier<InitializationState> {
   // 🎯 代理服务器实例（用于音频流转发）
   AudioProxyServer? _proxyServer;
 
+  // 🎯 标记是否已经初始化过 AudioService（防止重复初始化）
+  static bool _audioServiceInitialized = false;
+
   InitializationNotifier(this.ref)
       : super(const InitializationState(
           progress: 0.0,
@@ -136,6 +139,12 @@ class InitializationNotifier extends StateNotifier<InitializationState> {
 
   /// 初始化音频服务
   Future<void> _initializeAudioService() async {
+    // 🎯 检查是否已经初始化过
+    if (_audioServiceInitialized) {
+      debugPrint('✅ [Initialization] AudioService 已初始化，跳过重复初始化');
+      return;
+    }
+
     try {
       debugPrint('🎵 [Initialization] 开始初始化 AudioService...');
       final player = AudioPlayer();
@@ -152,6 +161,7 @@ class InitializationNotifier extends StateNotifier<InitializationState> {
 
       if (handler is AudioHandlerService) {
         LocalPlaybackStrategy.sharedAudioHandler = handler;
+        _audioServiceInitialized = true; // 🎯 标记为已初始化
         debugPrint('✅ [Initialization] AudioService 初始化成功');
       } else {
         debugPrint(
@@ -160,6 +170,8 @@ class InitializationNotifier extends StateNotifier<InitializationState> {
       }
     } catch (e) {
       debugPrint('❌ [Initialization] AudioService 初始化失败: $e');
+      // 🎯 即使失败也标记为已初始化，避免重复尝试导致更多错误
+      _audioServiceInitialized = true;
       rethrow;
     }
   }

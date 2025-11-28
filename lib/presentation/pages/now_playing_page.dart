@@ -6,6 +6,7 @@ import '../providers/playback_provider.dart';
 import '../providers/device_provider.dart';
 import '../providers/direct_mode_provider.dart'; // 🎯 直连模式Provider
 import '../providers/lyric_provider.dart';
+import '../widgets/app_snackbar.dart';
 import 'lyrics_page.dart';
 
 class NowPlayingPage extends ConsumerStatefulWidget {
@@ -182,11 +183,9 @@ class _NowPlayingPageState extends ConsumerState<NowPlayingPage> {
     if (current == null || current.curMusic.isEmpty) {
       debugPrint('⚠️ [打开歌词] 当前没有播放歌曲,不打开歌词页面');
       // 显示提示
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('当前没有播放歌曲'),
-          duration: Duration(seconds: 2),
-        ),
+      AppSnackBar.showWarning(
+        context,
+        '当前没有播放歌曲',
       );
       return;
     }
@@ -363,10 +362,10 @@ class _Controls extends ConsumerWidget {
     // 🎯 根据播放模式检查设备是否可用
     bool hasDevice = false;
     if (playbackMode == PlaybackMode.miIoTDirect) {
-      // 直连模式：检查是否已登录且选择了设备
+      // 直连模式：检查是否已登录且选择了播放设备
       final directState = ref.watch(directModeProvider);
       hasDevice = directState is DirectModeAuthenticated &&
-          directState.selectedDeviceId != null;
+          directState.playbackDeviceType.isNotEmpty; // 🔧 修复：检查 playbackDeviceType
     } else {
       // xiaomusic 模式：检查是否选择了设备
       hasDevice = ref.read(deviceProvider).selectedDeviceId != null;
