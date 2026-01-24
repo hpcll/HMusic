@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:crypto/crypto.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'dart:math';
 import 'mi_hardware_detector.dart';
@@ -35,6 +36,33 @@ class MiIoTService {
 
   // 登录状态
   bool get isLoggedIn => _serviceToken != null && _userId != null;
+
+  // 🎯 持久化的 deviceId key
+  static const String _keyDeviceId = 'mi_iot_device_id';
+
+  MiIoTService() {
+    _loadPersistedDeviceId();
+  }
+
+  /// 🎯 从 SharedPreferences 加载持久化的 deviceId
+  Future<void> _loadPersistedDeviceId() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      _deviceId = prefs.getString(_keyDeviceId);
+
+      if (_deviceId != null) {
+        print('🔧 [MiIoT] 加载持久化的 deviceId: $_deviceId');
+      } else {
+        // 如果没有保存的 deviceId，生成新的并保存
+        _deviceId = _generateDeviceId();
+        await prefs.setString(_keyDeviceId, _deviceId!);
+        print('✅ [MiIoT] 生成并保存新的 deviceId: $_deviceId');
+      }
+    } catch (e) {
+      print('⚠️ [MiIoT] 加载持久化 deviceId 失败: $e，生成新的');
+      _deviceId = _generateDeviceId();
+    }
+  }
 
   /// 🎯 设置公共音频代理URL（Cloudflare Workers）
   /// 格式: https://your-worker.workers.dev
@@ -88,8 +116,12 @@ class MiIoTService {
         print('🔐 [MiIoT] 使用验证码登录: $captchaCode');
       }
 
-      // 初始化 deviceId
-      _deviceId ??= _generateDeviceId();
+      // 🎯 确保 deviceId 已加载（如果还未加载）
+      if (_deviceId == null) {
+        await _loadPersistedDeviceId();
+      }
+
+      print('🔧 [MiIoT] 使用 deviceId: $_deviceId');
 
       // 设置请求头和Cookie
       final headers = {
@@ -117,9 +149,11 @@ class MiIoTService {
       print('📡 [MiIoT] 响应状态: ${signResponse.statusCode}');
       print('📡 [MiIoT] 响应类型: ${signResponse.data.runtimeType}');
 
-      // 打印响应的前200个字符用于调试
-      final rawData = signResponse.data.toString();
-      print('📡 [MiIoT] 响应内容(前200字符): ${rawData.substring(0, rawData.length > 200 ? 200 : rawData.length)}');
+      // 🎯 打印完整的响应内容（用于诊断）
+      final rawSignData = signResponse.data.toString();
+      print('📡 [MiIoT] ===== 完整的Sign响应 =====');
+      print(rawSignData);
+      print('📡 [MiIoT] ===== Sign响应结束 =====');
 
       final signData = _parseJsonResponse(signResponse.data);
       if (signData == null) {
@@ -161,6 +195,22 @@ class MiIoTService {
         print('📝 [MiIoT] 添加验证码参数: captCode=$captchaCode');
       }
 
+      // 🎯 打印完整的请求参数
+      print('📝 [MiIoT] ===== 登录请求参数 =====');
+      print('📝 [MiIoT] URL: https://account.xiaomi.com/pass/serviceLoginAuth2');
+      print('📝 [MiIoT] 请求头:');
+      print('  User-Agent: ${headers['User-Agent']}');
+      print('  Cookie: sdkVersion=3.9; deviceId=$_deviceId');
+      print('📝 [MiIoT] 请求体 (Form Data):');
+      loginData.forEach((key, value) {
+        if (value.toString().length > 100) {
+          print('  $key: ${value.toString().substring(0, 100)}...');
+        } else {
+          print('  $key: $value');
+        }
+      });
+      print('📝 [MiIoT] ===== 登录请求结束 =====');
+
       final loginResponse = await _dio.post(
         'https://account.xiaomi.com/pass/serviceLoginAuth2',
         data: loginData,
@@ -174,7 +224,17 @@ class MiIoTService {
         ),
       );
 
-      print('📡 [MiIoT] 登录响应内容(前200字符): ${loginResponse.data.toString().substring(0, loginResponse.data.toString().length > 200 ? 200 : loginResponse.data.toString().length)}');
+      // 🎯 打印完整的登录响应内容（用于诊断）
+      final rawLoginData = loginResponse.data.toString();
+      print('📡 [MiIoT] ===== 完整的登录响应 =====');
+      print(rawLoginData);
+      print('📡 [MiIoT] ===== 登录响应结束 =====');
+
+      // 🎯 打印响应头（可能包含重要信息）
+      print('📡 [MiIoT] 登录响应头:');
+      loginResponse.headers.forEach((key, values) {
+        print('  $key: $values');
+      });
 
       final loginResponseData = _parseJsonResponse(loginResponse.data);
       if (loginResponseData == null) {
@@ -183,6 +243,24 @@ class MiIoTService {
       }
 
       print('📝 [MiIoT] 登录响应: code=${loginResponseData['code']}, desc=${loginResponseData['desc']}');
+
+      // 🎯 打印所有响应字段（用于诊断）
+      print('📝 [MiIoT] 登录响应中的所有字段:');
+      loginResponseData.forEach((key, value) {
+        if (value is String && value.length > 100) {
+          print('  $key: ${value.substring(0, 100)}...');
+        } else {
+          print('  $key: $value');
+        }
+      });
+
+      // 🎯 关键字段检查
+      print('📝 [MiIoT] 关键字段检查:');
+      print('  location: ${loginResponseData['location'] ?? "❌ 缺失"}');
+      print('  ssecurity: ${loginResponseData['ssecurity'] ?? "❌ 缺失"}');
+      print('  nonce: ${loginResponseData['nonce'] ?? "❌ 缺失"}');
+      print('  userId: ${loginResponseData['userId'] ?? "❌ 缺失"}');
+      print('  passToken: ${loginResponseData['passToken'] ?? "❌ 缺失"}');
 
       // 🎯 保存登录响应（用于UI层提取验证码URL）
       _lastLoginResponse = loginResponseData;

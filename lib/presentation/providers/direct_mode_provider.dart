@@ -450,6 +450,18 @@ class PlaybackModeNotifier extends StateNotifier<PlaybackMode> {
 
     debugPrint('✅ [PlaybackMode] 模式已切换: ${mode.displayName}');
   }
+
+  /// 清除模式选择（用于切换模式功能）
+  Future<void> clearMode() async {
+    // 清除保存的模式选择
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_keyMode);
+
+    // 重置为默认模式（但不保存，让用户重新选择）
+    state = PlaybackMode.xiaomusic;
+
+    debugPrint('🔄 [PlaybackMode] 模式选择已清除，等待用户重新选择');
+  }
 }
 
 final playbackModeProvider =

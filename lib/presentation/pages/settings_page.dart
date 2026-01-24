@@ -207,6 +207,15 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 onSurface: onSurface,
                 iconColor: Colors.red.withOpacity(0.8),
               ),
+              _buildSettingsItem(
+                context: context,
+                icon: Icons.swap_horiz_rounded,
+                title: '切换模式',
+                subtitle: '切换到其他播放模式',
+                onTap: () => _showSwitchModeDialog(context, ref),
+                onSurface: onSurface,
+                iconColor: Colors.orange.withOpacity(0.8),
+              ),
             ],
           ),
 
@@ -724,32 +733,90 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     }
   }
 
+  /// 退出登录对话框（根据当前模式退出对应的登录）
   void _showLogoutDialog(BuildContext context, WidgetRef ref) {
+    final playbackMode = ref.read(playbackModeProvider);
+    final modeName = playbackMode == PlaybackMode.xiaomusic ? 'xiaomusic' : '直连模式';
+
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('退出登录'),
-            content: const Text('确定要退出登录吗？'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('取消'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  Navigator.of(context).pop();
-                  await ref.read(authProvider.notifier).logout();
-                  if (context.mounted) context.go('/');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
-                ),
-                child: const Text('退出'),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        title: const Text('退出登录'),
+        content: Text('确定要退出 $modeName 的登录吗？\n\n退出后将返回登录页面。'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('取消'),
           ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+
+              // 🎯 根据当前模式退出对应的登录
+              if (playbackMode == PlaybackMode.xiaomusic) {
+                await ref.read(authProvider.notifier).logout();
+              } else {
+                await ref.read(directModeProvider.notifier).logout();
+              }
+
+              // 跳转到根路由，AuthWrapper 会根据 playbackMode 显示对应登录页
+              if (context.mounted) context.go('/');
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('退出'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 切换模式对话框（退出所有登录，清除模式选择）
+  void _showSwitchModeDialog(BuildContext context, WidgetRef ref) {
+    final playbackMode = ref.read(playbackModeProvider);
+    final currentModeName = playbackMode == PlaybackMode.xiaomusic ? 'xiaomusic' : '直连模式';
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('切换模式'),
+        content: Text(
+          '当前模式：$currentModeName\n\n'
+          '切换模式将：\n'
+          '• 退出所有模式的登录\n'
+          '• 返回模式选择页面\n'
+          '• 可以重新选择播放模式\n\n'
+          '确定要继续吗？',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('取消'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+
+              // 🎯 退出所有模式的登录
+              await ref.read(authProvider.notifier).logout();
+              await ref.read(directModeProvider.notifier).logout();
+
+              // 🎯 清除模式选择
+              await ref.read(playbackModeProvider.notifier).clearMode();
+
+              // 跳转到模式选择页
+              if (context.mounted) context.go('/mode_selection');
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('切换'),
+          ),
+        ],
+      ),
     );
   }
 
