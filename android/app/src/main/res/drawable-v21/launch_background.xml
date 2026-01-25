@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- HMusic 启动屏幕 - 纯色背景 + 居中 Logo (Android 5.0+) -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 纯色背景 -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FFFFFF" />
+        </shape>
+    </item>
+
+    <!-- 图标内容，去掉圆角背景，增大尺寸，减少内边距 -->
+    <item
+        android:width="240dp"
+        android:height="240dp"
+        android:gravity="center">
+        <inset
+            android:drawable="@drawable/ic_launcher_foreground"
+            android:inset="10%" />
+    </item>
+</layer-list>

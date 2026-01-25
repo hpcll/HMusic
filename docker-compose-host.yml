@@ -1,0 +1,16 @@
+services:
+  xiaomusic:
+    # Allow overriding tag at deploy time via IMAGE_TAG (defaults to latest).
+    image: hanxi/xiaomusic:${IMAGE_TAG:-latest}
+    container_name: xiaomusic
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./config:/app/conf
+      - ./music:/app/music
+      - ./logs:/app/logs
+      - ./playlists:/app/playlists
+      - ./lyrics:/app/lyrics
+    environment:
+      - TZ=Asia/Shanghai
+      - PYTHONUNBUFFERED=1

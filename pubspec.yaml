@@ -1,0 +1,140 @@
+name: hmusic
+description: "HMusic - 智能音乐控制与播放工具"
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+# In Windows, build-name is used as the major, minor, and patch parts
+# of the product and file versions while build-number is used as the build suffix.
+version: 2.2.0+2026012518
+
+environment:
+  sdk: '>=3.7.2 <4.0.0'
+
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # 状态管理
+  flutter_riverpod: ^2.4.9
+  # HTTP客户端
+  dio: ^5.4.0
+  # HTTP服务器（用于音频代理）
+  shelf: ^1.4.1
+  flutter_js: ^0.8.0
+  webview_flutter: ^4.7.0
+  url_launcher: ^6.3.0
+  path_provider: ^2.1.3
+  path: ^1.9.0
+  open_filex: ^4.5.0
+  file_picker: ^8.0.3
+  dartssh2: ^2.8.2
+  # 加密解密
+  crypto: ^3.0.3
+  # 图片缓存
+  cached_network_image: ^3.3.0
+  # 本地存储
+  shared_preferences: ^2.2.2
+  # UUID生成
+  uuid: ^4.0.0
+  # 路由管理
+  go_router: ^12.1.3
+  # JSON序列化
+  json_annotation: ^4.8.1
+  # UI图标
+  cupertino_icons: ^1.0.8
+  # 图片保存到相册
+  gal: ^2.3.0
+  # 音频播放
+  just_audio: ^0.9.36
+  audio_session: ^0.1.18
+  audio_service: ^0.18.12
+  permission_handler: ^11.3.1
+  flutter_svg: ^2.0.10+1
+  package_info_plus: ^8.0.0
+  palette_generator: ^0.3.3+4
+  # 网络状态检测
+  connectivity_plus: ^6.0.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # 代码生成
+  riverpod_generator: ^2.3.9
+  json_serializable: ^6.7.1
+  build_runner: ^2.4.7
+  # 代码规范
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.4
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/images/
+    - assets/hmusic-logo.svg
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/to/resolution-aware-images
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/to/asset-from-package
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/to/font-from-package
+
+# Flutter Launcher Icons配置
+flutter_launcher_icons:
+  android: "ic_launcher"
+  ios: true
+  image_path: "assets/hmusic-logo.svg"
+  # 自适应图标配置 (Android 8.0+)
+  adaptive_icon_background: "#007AFF"
+  adaptive_icon_foreground: "assets/hmusic-logo.svg"
+  # iOS配置
+  remove_alpha_ios: true
+  # 生成所有尺寸
+  min_sdk_android: 21

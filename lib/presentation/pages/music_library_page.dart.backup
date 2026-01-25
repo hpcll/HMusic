@@ -1,0 +1,602 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/music_library_provider.dart';
+import '../providers/playback_provider.dart';
+import '../widgets/music_list_item.dart';
+
+class MusicLibraryPage extends ConsumerStatefulWidget {
+  const MusicLibraryPage({super.key});
+
+  @override
+  ConsumerState<MusicLibraryPage> createState() => _MusicLibraryPageState();
+}
+
+class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage> {
+  final _searchController = TextEditingController();
+  
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+  
+  void _onSearchChanged(String query) {
+    ref.read(musicLibraryProvider.notifier).filterMusic(query);
+  }
+  
+  void _playMusic(String musicName) async {
+    final playbackState = ref.read(playbackProvider);
+    
+    // 检查是否有可用设备
+    if (playbackState.devices.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('未找到可用设备，请检查设备连接')),
+        );
+      }
+      return;
+    }
+    
+    // 如果没有选择设备，显示设备选择对话框
+    if (playbackState.selectedDeviceId == null) {
+      final selectedDeviceId = await _showDeviceSelectionDialog();
+      if (selectedDeviceId == null) {
+        return; // 用户取消选择
+      }
+      
+      // 选择设备
+      ref.read(playbackProvider.notifier).selectDevice(selectedDeviceId);
+    }
+
+    try {
+      await ref.read(playbackProvider.notifier).playMusic(
+        deviceId: playbackState.selectedDeviceId!,
+        musicName: musicName,
+      );
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('正在播放: $musicName')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('播放失败: $e')),
+        );
+      }
+    }
+  }
+  
+  Future<String?> _showDeviceSelectionDialog() async {
+    final playbackState = ref.read(playbackProvider);
+    
+    return showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF1C1C1E),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: const Text(
+          '选择播放设备',
+          style: TextStyle(color: Colors.white),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: playbackState.devices.map((device) {
+            return ListTile(
+              leading: Icon(
+                Icons.speaker,
+                color: device.isOnline == true ? Colors.green : Colors.grey,
+              ),
+              title: Text(
+                device.name,
+                style: const TextStyle(color: Colors.white),
+              ),
+              subtitle: Text(
+                device.isOnline == true ? '在线' : '离线',
+                style: TextStyle(color: Colors.white.withOpacity(0.6)),
+              ),
+              onTap: () => Navigator.of(context).pop(device.id),
+            );
+          }).toList(),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text(
+              '取消',
+              style: TextStyle(color: Color(0xFF667EEA)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  void _deleteMusic(String musicName) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF1C1C1E),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: const Text(
+          '删除音乐',
+          style: TextStyle(color: Colors.white),
+        ),
+        content: Text(
+          '确定要删除"$musicName"吗？此操作不可撤销。',
+          style: TextStyle(color: Colors.white.withOpacity(0.8)),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              '取消',
+              style: TextStyle(color: Color(0xFF667EEA)),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              ref.read(musicLibraryProvider.notifier).deleteMusic(musicName);
+              Navigator.pop(context);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('删除'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final libraryState = ref.watch(musicLibraryProvider);
+    final playbackState = ref.watch(playbackProvider);
+    
+    return Scaffold(
+      backgroundColor: const Color(0xFF0A0E21),
+      extendBody: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: const Text(
+          '音乐库',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+            letterSpacing: 0.5,
+          ),
+        ),
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.white),
+        actions: [
+          // 设备选择指示器
+          if (playbackState.selectedDeviceId != null) ...[
+            Container(
+              margin: const EdgeInsets.only(right: 8),
+              child: IconButton(
+                icon: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(
+                    Icons.speaker,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                ),
+                onPressed: () async {
+                  final newDeviceId = await _showDeviceSelectionDialog();
+                  if (newDeviceId != null) {
+                    ref.read(playbackProvider.notifier).selectDevice(newDeviceId);
+                  }
+                },
+                tooltip: '当前设备: ${playbackState.devices.firstWhere(
+                  (d) => d.id == playbackState.selectedDeviceId,
+                  orElse: () => playbackState.devices.first,
+                ).name}',
+              ),
+            ),
+          ] else if (playbackState.devices.isNotEmpty) ...[
+            Container(
+              margin: const EdgeInsets.only(right: 8),
+              child: IconButton(
+                icon: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(
+                    Icons.speaker_outlined,
+                    color: Colors.orange,
+                    size: 20,
+                  ),
+                ),
+                onPressed: () async {
+                  final newDeviceId = await _showDeviceSelectionDialog();
+                  if (newDeviceId != null) {
+                    ref.read(playbackProvider.notifier).selectDevice(newDeviceId);
+                  }
+                },
+                tooltip: '点击选择播放设备',
+              ),
+            ),
+          ],
+          Container(
+            margin: const EdgeInsets.only(right: 16),
+            child: IconButton(
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.refresh,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
+              onPressed: () {
+                ref.read(musicLibraryProvider.notifier).refreshLibrary();
+              },
+              tooltip: '刷新音乐库',
+            ),
+          ),
+        ],
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF0A0E21),
+              Color(0xFF1D1E33),
+            ],
+          ),
+        ),
+        child: Column(
+          children: [
+          // 搜索框
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: TextField(
+              controller: _searchController,
+              onChanged: _onSearchChanged,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                hintText: '搜索本地音乐...',
+                hintStyle: TextStyle(color: Colors.white.withOpacity(0.6)),
+                prefixIcon: Icon(Icons.search, color: Colors.white.withOpacity(0.8)),
+                suffixIcon: _searchController.text.isNotEmpty
+                    ? IconButton(
+                        icon: Icon(Icons.clear, color: Colors.white.withOpacity(0.8)),
+                        onPressed: () {
+                          _searchController.clear();
+                          ref.read(musicLibraryProvider.notifier).filterMusic('');
+                        },
+                      )
+                    : null,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: Colors.white.withOpacity(0.2)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: Colors.white.withOpacity(0.2)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Color(0xFF667EEA)),
+                ),
+                filled: true,
+                fillColor: Colors.white.withOpacity(0.1),
+              ),
+            ),
+          ),
+          
+          // 音乐列表统计
+          if (libraryState.filteredMusicList.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  Text(
+                    '共 ${libraryState.filteredMusicList.length} 首音乐',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.white.withOpacity(0.8),
+                    ),
+                  ),
+                  if (libraryState.searchQuery.isNotEmpty)
+                    Text(
+                      ' (从 ${libraryState.musicList.length} 首中筛选)',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.white.withOpacity(0.6),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          
+          const SizedBox(height: 8),
+          
+          // 音乐列表
+          Expanded(
+            child: _buildMusicList(libraryState),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildMusicList(MusicLibraryState libraryState) {
+    if (libraryState.isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    
+    if (libraryState.error != null) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: 64,
+              color: Colors.red.shade300,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              '加载失败',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              libraryState.error!,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Colors.white.withOpacity(0.8),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                ref.read(musicLibraryProvider.notifier).clearError();
+                ref.read(musicLibraryProvider.notifier).refreshLibrary();
+              },
+              child: const Text('重试'),
+            ),
+          ],
+        ),
+      );
+    }
+    
+    if (libraryState.musicList.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.library_music,
+              size: 64,
+              color: Colors.grey.shade300,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              '暂无音乐',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '音乐库为空，请先添加音乐文件',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Colors.white.withOpacity(0.8),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    
+    if (libraryState.filteredMusicList.isEmpty && libraryState.searchQuery.isNotEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.search_off,
+              size: 64,
+              color: Colors.grey.shade300,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              '没有找到匹配的音乐',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '尝试使用其他关键词搜索',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Colors.white.withOpacity(0.8),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      itemCount: libraryState.filteredMusicList.length,
+      itemBuilder: (context, index) {
+        final music = libraryState.filteredMusicList[index];
+        return MusicListItem(
+          music: music,
+          onTap: () => _playMusic(music.name),
+          onPlay: () => _playMusic(music.name),
+          trailing: PopupMenuButton<String>(
+            onSelected: (value) {
+              switch (value) {
+                case 'play':
+                  _playMusic(music.name);
+                  break;
+                case 'delete':
+                  _deleteMusic(music.name);
+                  break;
+                case 'info':
+                  _showMusicInfo(music);
+                  break;
+              }
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'play',
+                child: Row(
+                  children: [
+                    Icon(Icons.play_arrow),
+                    SizedBox(width: 8),
+                    Text('播放'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'info',
+                child: Row(
+                  children: [
+                    Icon(Icons.info),
+                    SizedBox(width: 8),
+                    Text('详细信息'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'delete',
+                child: Row(
+                  children: [
+                    Icon(Icons.delete, color: Colors.red),
+                    SizedBox(width: 8),
+                    Text('删除', style: TextStyle(color: Colors.red)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+  
+  void _showMusicInfo(music) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF1C1C1E),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: Text(
+          music.title ?? music.name,
+          style: const TextStyle(color: Colors.white),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (music.artist != null) ...[
+              const Text(
+                '艺术家:',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                music.artist!,
+                style: TextStyle(color: Colors.white.withOpacity(0.8)),
+              ),
+              const SizedBox(height: 8),
+            ],
+            if (music.album != null) ...[
+              const Text(
+                '专辑:',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                music.album!,
+                style: TextStyle(color: Colors.white.withOpacity(0.8)),
+              ),
+              const SizedBox(height: 8),
+            ],
+            if (music.duration != null) ...[
+              const Text(
+                '时长:',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                music.duration!,
+                style: TextStyle(color: Colors.white.withOpacity(0.8)),
+              ),
+              const SizedBox(height: 8),
+            ],
+            const Text(
+              '文件名:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            Text(
+              music.name,
+              style: TextStyle(color: Colors.white.withOpacity(0.8)),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              '关闭',
+              style: TextStyle(color: Color(0xFF667EEA)),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _playMusic(music.name);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF667EEA),
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('播放'),
+          ),
+        ],
+      ),
+    );
+  }
+}
