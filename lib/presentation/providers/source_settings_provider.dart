@@ -50,8 +50,8 @@ class SourceSettings {
     this.localScriptPath = '', // 默认无本地脚本路径
     this.jsSearchStrategy = 'qqFirst',
     this.defaultDownloadQuality = 'high', // 默认高品质 (320k)
-    this.audioProxyUrl = 'https://hmusic.hcur.asia', // 🎯 公共音频代理（国内可直接访问）
-    this.useAudioProxy = true, // 🎯 默认启用，解决 CDN 限制问题
+    this.audioProxyUrl = '', // 🎯 音频代理服务器URL（需用户自行部署）
+    this.useAudioProxy = false, // 🎯 默认关闭，用户需自行部署代理后启用
   });
 
   SourceSettings copyWith({
