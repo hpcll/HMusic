@@ -54,6 +54,20 @@
 
 ---
 
+## 💬 交流群
+
+欢迎加入 HMusic 用户交流群，一起讨论使用问题和功能建议～
+
+<p align="center">
+  <img src="docs/donate/群聊.png" alt="微信群二维码" width="250" />
+</p>
+
+<p align="center">
+  <sub>⚠️ 二维码过期？请提 <a href="https://github.com/hpcll/HMusic/issues">Issue</a> 留下微信号，作者会邀请你入群</sub>
+</p>
+
+---
+
 ## ☕ 请作者喝杯咖啡
 
 如果 HMusic 对你有帮助，欢迎请作者喝杯咖啡～ 你的支持是我持续开发的动力！
