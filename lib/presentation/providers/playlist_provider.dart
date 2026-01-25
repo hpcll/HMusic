@@ -69,8 +69,13 @@ class PlaylistNotifier extends StateNotifier<PlaylistState> {
     try {
       state = state.copyWith(isLoading: true);
 
-      final resp = await apiService.getPlaylistNames();
-      final fullMap = await apiService.getMusicList();
+      // 🔧 并行请求两个 API，提升加载速度
+      final results = await Future.wait([
+        apiService.getPlaylistNames(),
+        apiService.getMusicList(),
+      ]);
+      final resp = results[0];  // dynamic 类型，可能是 List 或 Map
+      final fullMap = results[1] as Map<String, dynamic>;
 
       // 🔧 添加调试日志
       debugPrint('📋 [PlaylistProvider] getPlaylistNames响应: $resp');

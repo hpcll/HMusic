@@ -39,6 +39,23 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   AuthNotifier(this.ref) : super(const AuthInitial()) {
     _loadSavedCredentials();
+    _listenToModeChanges();
+  }
+
+  // 🔧 监听播放模式变化，切换到 xiaomusic 模式时自动登录
+  void _listenToModeChanges() {
+    ref.listen<PlaybackMode>(playbackModeProvider, (previous, next) {
+      if (previous == PlaybackMode.miIoTDirect && next == PlaybackMode.xiaomusic) {
+        debugPrint('🔧 [AuthProvider] 检测到模式切换: 直连 -> xiaomusic，尝试自动登录');
+        // 如果当前未登录，尝试加载保存的凭证
+        if (state is! AuthAuthenticated) {
+          // 🔧 延迟一小段时间，等待 SharedPreferences 更新完成
+          Future.delayed(const Duration(milliseconds: 100), () {
+            _loadSavedCredentials();
+          });
+        }
+      }
+    });
   }
 
   Future<void> _loadSavedCredentials() async {

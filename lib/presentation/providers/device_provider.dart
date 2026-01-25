@@ -49,9 +49,8 @@ class DeviceNotifier extends StateNotifier<DeviceState> {
     ref.listen<AuthState>(authProvider, (prev, next) {
       if (next is AuthAuthenticated && prev is! AuthAuthenticated) {
         debugPrint('DeviceProvider: 用户已认证，自动加载设备列表');
-        Future.delayed(const Duration(milliseconds: 1000), () {
-          loadDevices();
-        });
+        // 🔧 移除不必要的 1 秒延迟，立即加载设备
+        loadDevices();
       }
       if (next is AuthInitial) {
         state = const DeviceState();

@@ -284,9 +284,13 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
         }
 
         // 3. 刷新播放状态（仅远程模式需要）
+        // 🔧 优化：异步刷新状态，不阻塞初始化流程，让首页更快显示
         if (_currentStrategy != null && !_currentStrategy!.isLocalMode) {
-          debugPrint('🔧 [PlaybackProvider] 刷新远程播放状态');
-          await refreshStatus();
+          debugPrint('🔧 [PlaybackProvider] 异步刷新远程播放状态（不阻塞初始化）');
+          // ignore: unawaited_futures
+          refreshStatus().catchError((e) {
+            debugPrint('⚠️ [PlaybackProvider] 异步刷新状态失败: $e');
+          });
         }
       }
 
@@ -369,6 +373,11 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
     ref.listen<PlaybackMode>(playbackModeProvider, (previous, next) {
       if (previous != next) {
         debugPrint('🎵 [PlaybackProvider] 检测到播放模式切换: $previous -> $next');
+
+        // 🎯 模式切换时停止当前播放并清空状态
+        // 这样可以避免切换后显示错误的歌曲信息
+        _handleModeSwitch();
+
         _currentDeviceId = null; // 重置设备ID，准备切换策略
         _currentStrategy?.dispose();
         _currentStrategy = null;
@@ -377,6 +386,34 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
         _reinitializeForNewMode(next);
       }
     });
+  }
+
+  /// 🎯 处理模式切换：停止播放但保留目标模式的状态
+  void _handleModeSwitch() {
+    debugPrint('🔄 [PlaybackProvider] 模式切换，停止当前播放');
+
+    // 1. 尝试停止当前策略的播放（如果有的话）
+    try {
+      _currentStrategy?.pause();
+    } catch (e) {
+      debugPrint('⚠️ [PlaybackProvider] 停止播放失败（忽略）: $e');
+    }
+
+    // 2. 停止所有定时器
+    _statusRefreshTimer?.cancel();
+    _statusRefreshTimer = null;
+    _localProgressTimer?.cancel();
+    _localProgressTimer = null;
+
+    // 3. 清空进度预测状态
+    _lastServerOffset = null;
+    _lastUpdateTime = null;
+    _lastProgressUpdate = null;
+
+    // 🎯 注意：不清空 UI 状态！
+    // 目标模式会恢复它自己保存的状态，显示该模式之前播放的歌曲（暂停状态）
+
+    debugPrint('✅ [PlaybackProvider] 已停止播放，准备切换模式');
   }
 
   /// 🎯 模式切换后重新初始化策略
@@ -535,11 +572,13 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
         debugPrint('🎵 [PlaybackProvider] 创建直连模式策略实例');
 
         // 🔧 创建直连模式策略（在构造函数中直接传入回调，避免 NULL 问题）
+        // 🎯 skipRestore: false（默认值）- 恢复该模式之前保存的状态（暂停状态）
         final directStrategy = MiIoTDirectPlaybackStrategy(
           miService: directState.miService,
           deviceId: deviceId,
           deviceName: device.name,
           audioHandler: LocalPlaybackStrategy.sharedAudioHandler,
+          // 🎯 不设置 skipRestore，使用默认值 false，恢复之前保存的状态
           // 🔧 直接在构造时设置状态变化回调，确保轮询启动前回调已就绪
           onStatusChanged: () async {
             debugPrint('🔔 [PlaybackProvider] 直连模式状态变化');
@@ -662,8 +701,9 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
           debugPrint('❌ [PlaybackProvider] 获取音量失败: $e');
         }
 
-        // 💾 尝试恢复缓存的播放状态（直连模式专用）
-        await _restoreDirectModePlayback();
+        // 🎯 策略类会自动恢复之前保存的播放状态（暂停状态）
+        // 用户切换到直连模式后，可以看到之前播放的歌曲，点击播放即可继续
+        debugPrint('✅ [PlaybackProvider] 直连模式初始化完成');
       }
     } catch (e, stackTrace) {
       debugPrint('❌ [PlaybackProvider] 切换直连模式策略失败: $e');
@@ -1010,6 +1050,17 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
             }
           }
 
+          // 🔧 更新进度预测基准值（用于本地平滑预测）
+          final serverOffset = status.offset;
+          if (_lastServerOffset != null) {
+            final diff = (serverOffset - _lastServerOffset!).abs();
+            if (diff > 3) {
+              debugPrint('🔄 [直连模式] 检测到进度跳跃，差异: ${diff}秒，重新校准');
+            }
+          }
+          _lastServerOffset = serverOffset;
+          _lastUpdateTime = DateTime.now();
+
           state = state.copyWith(
             currentMusic: status,
             hasLoaded: true,
@@ -1025,16 +1076,15 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
               debugPrint('🖼️ [AutoCover] 异步搜索封面失败: $e');
             });
           }
+
+          // 🔧 启动进度预测定时器（让进度条平滑显示）
+          _startProgressTimer(status.isPlaying);
+          debugPrint('✅ [PlaybackProvider] 直连模式已启动进度预测定时器');
         }
       } catch (e) {
         debugPrint('❌ [PlaybackProvider] 获取直连模式状态失败: $e');
       }
 
-      // 🎯 关键修复：直连模式不需要启动进度预测定时器！
-      // 直连模式的进度完全由策略内部的轮询（每3秒）管理，
-      // 不需要 playback_provider 的本地预测定时器（_localProgressTimer）
-      // 如果启动了定时器，会导致进度在"服务端返回值"和"本地预测值"之间反复横跳
-      debugPrint('✅ [PlaybackProvider] 直连模式不启动进度预测定时器（由策略轮询管理）');
       return;
     }
 
@@ -1801,6 +1851,14 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
 
     try {
       debugPrint('🎵 [PlaybackProvider] 开始播放音乐: $musicName, 设备ID: $deviceId');
+
+      // 🔧 修复：切歌时立即停止本地预测定时器，重置进度状态
+      // 避免旧的预测定时器导致进度条跳动
+      _localProgressTimer?.cancel();
+      _localProgressTimer = null;
+      _lastServerOffset = 0;
+      _lastUpdateTime = DateTime.now();
+      _lastProgressUpdate = null;
 
       // 🎯 乐观更新：立即更新UI显示歌曲信息，不等待音箱响应
       if (musicName != null && musicName.isNotEmpty) {

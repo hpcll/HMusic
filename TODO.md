@@ -433,6 +433,25 @@ final initializationProvider = FutureProvider<void>((ref) async {
   - 定时关机
   - 预计时间: 30分钟
 
+- [ ] **直连模式播放手机本地音乐** 🆕
+  - **原理**: 在手机上启动 HTTP 服务器，将本地文件暴露为 URL，让音箱播放
+  - **实现方案**:
+    1. 扩展 `AudioProxyServer`（`lib/data/services/audio_proxy_server.dart`）
+       - 添加 `/local` 端点来服务本地文件
+       - URL 格式: `http://192.168.x.x:8090/local?path=/storage/emulated/0/Music/song.mp3`
+    2. 使用已有的 `NativeMusicSearchService` 扫描本地音乐
+    3. 修改 `MiIoTDirectPlaybackStrategy.playMusic()` 支持本地文件路径
+       - 检测是否为本地文件路径
+       - 如果是，启动代理服务器并转换为 HTTP URL
+       - 调用小米 IoT API 播放该 URL
+  - **限制条件**:
+    - ⚠️ 手机和音箱必须在同一 WiFi 网络
+    - ⚠️ App 需保持前台/后台运行（服务器才能响应）
+    - ⚠️ 需要存储权限访问本地文件
+  - **现有基础**: `AudioProxyServer` 已有 HTTP 服务器、获取本机 IP、流式传输功能
+  - **难点**: 后台保活（需要 foreground service）
+  - 预计时间: 2-4小时
+
 - [ ] **UI优化**
   - 添加加载动画
   - 优化错误提示样式

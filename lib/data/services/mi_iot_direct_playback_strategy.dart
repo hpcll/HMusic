@@ -46,6 +46,15 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
   // 🎯 APP生命周期监听器
   AppLifecycleListener? _lifecycleListener;
 
+  // 🎯 缓存有效的 audio_id 和 duration（用于修复暂停时 duration 突变的问题）
+  // 小米 IoT API 在暂停状态下返回的 duration 可能是异常值（如缓冲区大小）
+  String? _lastValidAudioId;
+  int _lastValidDuration = 0;
+
+  // 🎯 播放状态保护窗口（用于修复 playMusic 后状态被轮询覆盖的问题）
+  // playMusic() 成功后，在保护窗口内忽略轮询返回的"暂停"状态
+  DateTime? _playingStateProtectedUntil;
+
   // 🎯 持久化存储的Key
   static const String _keyLastMusicName = 'direct_mode_last_music_name';
   static const String _keyLastPlaylist = 'direct_mode_last_playlist';
@@ -59,6 +68,7 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
     AudioHandlerService? audioHandler,
     Function()? onStatusChanged, // 🔧 在构造函数中接收回调，确保轮询启动前已设置
     Future<String?> Function(String musicName)? onGetMusicUrl, // 🔧 在构造函数中接收回调
+    bool skipRestore = false, // 🎯 模式切换时跳过状态恢复，避免显示错误的歌曲
   })  : _miService = miService,
         _deviceId = deviceId,
         _deviceName = deviceName ?? '小爱音箱',
@@ -67,7 +77,12 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
         onGetMusicUrl = onGetMusicUrl {    // 🔧 立即设置回调
     _initializeAudioHandler();
     _initializeHardwareInfo(); // 🎯 初始化硬件信息
-    _restoreLastPlayingState(); // 🎯 恢复上次播放状态（在轮询之前）
+    // 🎯 只有非模式切换时才恢复状态（APP 首次启动时恢复，模式切换时跳过）
+    if (!skipRestore) {
+      _restoreLastPlayingState(); // 🎯 恢复上次播放状态（在轮询之前）
+    } else {
+      debugPrint('⏭️ [MiIoTDirect] 模式切换，跳过状态恢复，等待轮询获取真实状态');
+    }
     _startStatusPolling(); // 🔄 启动状态轮询
 
     // 🎯 注册APP生命周期监听器（使用 AppLifecycleListener，更简洁）
@@ -152,6 +167,11 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
         );
 
         _albumCoverUrl = lastAlbumCover;
+
+        // 🎯 同时初始化 duration 缓存，避免轮询时误判为异常值
+        if (lastDuration > 10) {
+          _lastValidDuration = lastDuration;
+        }
 
         debugPrint('✅ [MiIoTDirect] 恢复上次播放状态: $lastMusicName');
         debugPrint('📀 [MiIoTDirect] 歌单: $lastPlaylist, 时长: $lastDuration秒, 封面: ${lastAlbumCover ?? "无"}');
@@ -238,19 +258,63 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
       final status = await _miService.getPlayStatus(_deviceId);
       if (status != null) {
         // 解析状态
-        final isPlaying = status['status'] == 1;
+        var isPlaying = status['status'] == 1;
         final detail = status['play_song_detail'] as Map<String, dynamic>?;
+
+        // 🎯 检查播放状态保护窗口
+        // 如果在保护窗口内且设备返回"暂停"，忽略这个状态，保持为"播放"
+        // 原因：playMusic() 成功后设备状态同步有延迟，前几次轮询可能返回旧的"暂停"状态
+        if (_playingStateProtectedUntil != null) {
+          if (DateTime.now().isBefore(_playingStateProtectedUntil!)) {
+            if (!isPlaying && _currentPlayingMusic?.isPlaying == true) {
+              debugPrint('🛡️ [MiIoTDirect] 保护窗口内，忽略设备返回的"暂停"状态，保持为"播放"');
+              isPlaying = true;
+            }
+          } else {
+            // 保护窗口已过期，清除
+            _playingStateProtectedUntil = null;
+            debugPrint('🛡️ [MiIoTDirect] 播放状态保护窗口已过期');
+          }
+        }
 
         debugPrint('🔄 [MiIoTDirect] 轮询状态: status=$isPlaying, detail=$detail');
 
         if (detail != null) {
           final title = detail['title'] as String?;
+          final audioId = detail['audio_id'] as String?; // 🎯 获取 audio_id 用于判断是否同一首歌
           final durationMs = detail['duration'] as int? ?? 0; // 毫秒
           final positionMs = detail['position'] as int? ?? 0; // 毫秒
 
           // 🎯 将毫秒转换为秒（与 xiaomusic 模式保持一致）
-          final duration = (durationMs / 1000).round();
+          int duration = (durationMs / 1000).round();
           final position = (positionMs / 1000).round();
+
+          // 🎯 修复：检测并处理暂停状态下 duration 异常突变的问题
+          // 小米 IoT API 在暂停时可能返回异常小的 duration（如缓冲区大小而非歌曲总时长）
+          if (audioId != null && audioId.isNotEmpty) {
+            if (audioId == _lastValidAudioId) {
+              // 同一首歌，检查 duration 是否异常
+              // 异常条件：新 duration < 10秒 且 之前的有效 duration > 30秒
+              // 或者：新 duration 与 position 非常接近（差值 < 5秒），说明返回的是剩余缓冲区
+              final isAbnormalDuration = (duration < 10 && _lastValidDuration > 30) ||
+                  (duration > 0 && (duration - position).abs() < 5 && _lastValidDuration > 30);
+
+              if (isAbnormalDuration) {
+                debugPrint('⚠️ [MiIoTDirect] 检测到异常 duration: ${duration}秒（position=${position}秒），使用缓存值: ${_lastValidDuration}秒');
+                duration = _lastValidDuration;
+              } else if (duration > 10) {
+                // 有效的 duration，更新缓存
+                _lastValidDuration = duration;
+              }
+            } else {
+              // 换歌了，更新 audio_id 和 duration 缓存
+              _lastValidAudioId = audioId;
+              if (duration > 10) {
+                _lastValidDuration = duration;
+                debugPrint('🎵 [MiIoTDirect] 新歌曲 audio_id: $audioId, duration: ${duration}秒');
+              }
+            }
+          }
 
           // 🎯 智能更新：只有当新值有效时才更新，否则保留原值
           // 注意：小米 IoT API 通常不返回 title，所以必须保留原来的歌曲名！
@@ -667,6 +731,11 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
           debugPrint('✅ [MiIoTDirect] 已更新通知栏播放状态为播放中（进度:0s）');
         }
 
+        // 🎯 设置播放状态保护窗口（5秒内忽略轮询返回的"暂停"状态）
+        // 原因：小米设备状态同步有延迟，轮询可能获取到旧的"暂停"状态
+        _playingStateProtectedUntil = DateTime.now().add(const Duration(seconds: 5));
+        debugPrint('🛡️ [MiIoTDirect] 设置播放状态保护窗口: 5秒');
+
         // 通知状态变化
         debugPrint('🔔 [MiIoTDirect] 准备调用 onStatusChanged (${onStatusChanged != null ? "已设置" : "NULL"})');
         onStatusChanged?.call();
@@ -741,6 +810,13 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
     _playlist.clear();
     onStatusChanged = null;
     onGetMusicUrl = null;
+
+    // 🎯 清理 duration 缓存
+    _lastValidAudioId = null;
+    _lastValidDuration = 0;
+
+    // 🎯 清理播放状态保护窗口
+    _playingStateProtectedUntil = null;
 
     // 🎯 恢复AudioHandler为本地播放模式
     if (_audioHandler != null) {

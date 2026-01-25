@@ -260,6 +260,95 @@ class DirectModeNotifier extends StateNotifier<DirectModeState> {
     }
   }
 
+  /// 🎯 使用 WebView 提取的 Cookie 登录
+  /// 当用户在 WebView 中完成验证后，使用提取的 Cookie 直接登录
+  Future<void> loginWithCookies({
+    required String account,
+    required String password,
+    Map<String, String>? cookies,
+    bool saveCredentials = true,
+  }) async {
+    state = const DirectModeLoading();
+
+    try {
+      final miService = MiIoTService();
+
+      // 🎯 使用 Cookie 登录
+      final success = await miService.loginWithCookies(account, password, cookies: cookies);
+
+      if (!success) {
+        // 🎯 检查是否需要验证码
+        final lastResponse = miService.lastLoginResponse;
+        if (lastResponse != null && lastResponse['code'] == 70016) {
+          final captchaUrl = lastResponse['captchaUrl'] as String?;
+          if (captchaUrl != null && captchaUrl.isNotEmpty) {
+            debugPrint('⚠️ [DirectMode] 仍然需要验证码登录');
+            state = DirectModeNeedsCaptcha(
+              captchaUrl: captchaUrl,
+              account: account,
+              password: password,
+              message: '需要输入验证码',
+            );
+            return;
+          }
+        }
+
+        // 🎯 检查是否是验证后登录失败（code == -1）
+        if (lastResponse != null && lastResponse['code'] == -1) {
+          final errorDesc = lastResponse['desc'] ?? '验证后登录失败';
+          debugPrint('⚠️ [DirectMode] 验证后登录失败: $errorDesc');
+          state = DirectModeError(
+            '$errorDesc\n\n'
+            '可能原因：\n'
+            '1. 小米服务器暂时不可用\n'
+            '2. 验证已过期，请重新登录'
+          );
+          return;
+        }
+
+        // 其他登录失败情况
+        state = const DirectModeError(
+          '登录失败\n\n'
+          '可能原因：\n'
+          '1. 验证未完成\n'
+          '2. Cookie 已过期\n'
+          '3. 请重新验证'
+        );
+        return;
+      }
+
+      // 获取设备列表
+      final devices = await miService.getDevices();
+
+      if (devices.isEmpty) {
+        state = const DirectModeError('登录成功，但未找到小爱音箱设备');
+        return;
+      }
+
+      // 保存凭证
+      if (saveCredentials) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString(_keyAccount, account);
+        await prefs.setString(_keyPassword, password);
+        debugPrint('💾 [DirectMode] 凭证已保存');
+      }
+
+      state = DirectModeAuthenticated(
+        miService: miService,
+        account: account,
+        devices: devices,
+      );
+
+      // 🎯 自动设置代理服务器
+      await _setupProxyServer(miService);
+
+      debugPrint('✅ [DirectMode] Cookie 登录成功，找到 ${devices.length} 个设备');
+    } catch (e) {
+      debugPrint('❌ [DirectMode] Cookie 登录异常: $e');
+      state = DirectModeError('登录失败: $e');
+    }
+  }
+
   /// 刷新设备列表
   Future<void> refreshDevices() async {
     final currentState = state;
