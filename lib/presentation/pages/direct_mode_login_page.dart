@@ -49,27 +49,38 @@ class _DirectModeLoginPageState extends ConsumerState<DirectModeLoginPage> {
   ) async {
     debugPrint('🌐 [DirectMode] 显示 WebView 验证码页面');
 
+    // 🎯 用于跟踪验证是否完成和提取的 Cookie
+    bool verificationCompleted = false;
+    Map<String, String>? extractedCookies;
+
     // 显示 WebView 验证码页面
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => CaptchaWebViewPage(
           captchaUrl: captchaState.captchaUrl,
-          onVerificationComplete: () {
+          onVerificationComplete: (cookies) {
             debugPrint('✅ [DirectMode] WebView 验证完成，准备重试登录');
+            debugPrint('🍪 [DirectMode] 收到 Cookie: $cookies');
+            verificationCompleted = true;
+            extractedCookies = cookies;
           },
         ),
       ),
     );
 
-    // WebView 关闭后，自动重试登录（不需要验证码，因为 Cookie 已保存）
-    if (mounted) {
-      debugPrint('🔄 [DirectMode] WebView 关闭，自动重试登录');
-      await ref.read(directModeProvider.notifier).login(
+    // 🎯 只有当验证完成后才重试登录，避免无限循环
+    if (mounted && verificationCompleted) {
+      debugPrint('🔄 [DirectMode] 验证完成，自动重试登录');
+
+      // 🎯 使用提取的 Cookie 进行登录
+      await ref.read(directModeProvider.notifier).loginWithCookies(
             account: captchaState.account,
             password: captchaState.password,
-            // 不传递 captchaCode，因为 Cookie 中已有有效会话
+            cookies: extractedCookies,
             saveCredentials: true,
           );
+    } else {
+      debugPrint('⚠️ [DirectMode] 用户取消验证，不重试登录');
     }
   }
 

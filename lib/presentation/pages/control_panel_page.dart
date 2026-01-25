@@ -50,13 +50,9 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
       if (mounted) {
         try {
           final authState = ref.read(authProvider);
-          final playbackMode = ref.read(playbackModeProvider);
 
           if (authState is AuthAuthenticated) {
-            // 🎯 根据播放模式加载对应的设备
-            if (playbackMode == PlaybackMode.xiaomusic) {
-              ref.read(deviceProvider.notifier).loadDevices();
-            }
+            // 🔧 优化：移除重复的 loadDevices 调用，ensureInitialized 内部会自动调用
             // 直连模式的设备由 DirectModeProvider 自动加载
             ref.read(playbackProvider.notifier).ensureInitialized();
           } else {

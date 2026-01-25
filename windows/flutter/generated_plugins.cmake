@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  connectivity_plus
   flutter_js
   gal
   permission_handler_windows

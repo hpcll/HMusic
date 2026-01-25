@@ -40,12 +40,13 @@ class MusicApiService {
   }
 
   // 获取当前播放列表
-  Future<Map<String, dynamic>> getCurrentPlaylist({String? did}) async {
+  // 🔧 修复：返回类型改为 dynamic，因为服务端可能返回字符串（播放列表名）或 Map
+  Future<dynamic> getCurrentPlaylist({String? did}) async {
     final response = await _client.get(
       '/curplaylist',
       queryParameters: did != null ? {'did': did} : null,
     );
-    return response.data as Map<String, dynamic>;
+    return response.data;
   }
 
   Future<Map<String, dynamic>> getVolume({String? did}) async {
@@ -72,7 +73,8 @@ class MusicApiService {
   }) async {
     await playMusicList(
       did: did,
-      listName: "临时搜索列表",
+      // 🔧 修复：使用 "全部" 作为默认列表，因为 "临时搜索列表" 通常是空的
+      listName: "全部",
       musicName: musicName ?? '',
     );
   }
