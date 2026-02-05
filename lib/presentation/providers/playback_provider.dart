@@ -595,6 +595,11 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
               await _saveDirectModePlayback(state.currentMusic!);
             }
           },
+          // 🎯 歌曲播放完成回调：自动播放下一首
+          onSongComplete: () async {
+            debugPrint('🎵 [PlaybackProvider] 直连模式歌曲播放完成，尝试播放下一首');
+            await _handleDirectModeSongComplete();
+          },
           // 🔧 直接在构造时设置获取音乐URL的回调
           onGetMusicUrl: (musicName) async {
             try {
@@ -1341,6 +1346,11 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
           _currentStrategy is! MiIoTDirectPlaybackStrategy) {
         _startProgressTimer(currentMusic?.isPlaying ?? false);
         debugPrint('✅ [PlaybackProvider] xiaomusic远程模式已启动进度预测定时器');
+
+        // 🎯 xiaomusic 模式自动下一首检测
+        // 当使用懒加载队列播放在线音乐时，服务端播完不会自动从 APP 队列取下一首
+        // 需要 APP 端检测歌曲是否接近结尾并主动推送下一首
+        await _checkXiaomusicAutoNext(currentMusic);
       } else {
         debugPrint('ℹ️ [PlaybackProvider] 当前模式不需要进度预测定时器（${_currentStrategy?.runtimeType ?? "未初始化"}）');
       }
@@ -1674,7 +1684,33 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
             }
           }
 
-          // 🎯 优先级2：使用旧的策略逻辑（xiaomusic/本地播放/旧逻辑）
+          // 🎯 优先级2：xiaomusic模式 + 有播放队列 → 使用懒加载队列逻辑
+          if (playbackMode == PlaybackMode.xiaomusic) {
+            final queueState = ref.read(playbackQueueProvider);
+            if (queueState.queue != null && queueState.queue!.items.isNotEmpty) {
+              debugPrint('🎵 [PlaybackProvider] xiaomusic模式检测到播放队列');
+              final prevItem = ref.read(playbackQueueProvider.notifier).previous();
+              if (prevItem != null) {
+                debugPrint('🎵 [PlaybackProvider] xiaomusic队列播放上一首: ${prevItem.title}');
+                await playOnlineItem(prevItem);
+
+                // 等待播放状态更新
+                await Future.delayed(const Duration(milliseconds: 1500));
+                await refreshStatus();
+
+                state = state.copyWith(isLoading: false);
+                return; // ✅ 使用队列逻辑成功，直接返回
+              } else {
+                debugPrint('⚠️ [PlaybackProvider] 队列已到开头（顺序播放模式）');
+                state = state.copyWith(isLoading: false, error: '已是第一首');
+                return;
+              }
+            } else {
+              debugPrint('🎵 [PlaybackProvider] xiaomusic模式无队列，使用旧逻辑');
+            }
+          }
+
+          // 🎯 优先级3：使用旧的策略逻辑（xiaomusic/本地播放/旧逻辑）
           debugPrint('🎵 [PlaybackProvider] 使用策略模式播放（xiaomusic/本地/旧逻辑）');
           await _currentStrategy!.previous(); // ✅ xiaomusic 和本地播放完全不受影响
 
@@ -1760,7 +1796,33 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
             }
           }
 
-          // 🎯 优先级2：使用旧的策略逻辑（xiaomusic/本地播放/旧逻辑）
+          // 🎯 优先级2：xiaomusic模式 + 有播放队列 → 使用懒加载队列逻辑
+          if (playbackMode == PlaybackMode.xiaomusic) {
+            final queueState = ref.read(playbackQueueProvider);
+            if (queueState.queue != null && queueState.queue!.items.isNotEmpty) {
+              debugPrint('🎵 [PlaybackProvider] xiaomusic模式检测到播放队列');
+              final nextItem = ref.read(playbackQueueProvider.notifier).next();
+              if (nextItem != null) {
+                debugPrint('🎵 [PlaybackProvider] xiaomusic队列播放下一首: ${nextItem.title}');
+                await playOnlineItem(nextItem);
+
+                // 等待播放状态更新
+                await Future.delayed(const Duration(milliseconds: 1500));
+                await refreshStatus();
+
+                state = state.copyWith(isLoading: false);
+                return; // ✅ 使用队列逻辑成功，直接返回
+              } else {
+                debugPrint('⚠️ [PlaybackProvider] 队列已到末尾（顺序播放模式）');
+                state = state.copyWith(isLoading: false, error: '已是最后一首');
+                return;
+              }
+            } else {
+              debugPrint('🎵 [PlaybackProvider] xiaomusic模式无队列，使用旧逻辑');
+            }
+          }
+
+          // 🎯 优先级3：使用旧的策略逻辑（xiaomusic/本地播放/旧逻辑）
           debugPrint('🎵 [PlaybackProvider] 使用策略模式播放（xiaomusic/本地/旧逻辑）');
           await _currentStrategy!.next(); // ✅ xiaomusic 和本地播放完全不受影响
 
@@ -1924,6 +1986,17 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
           directStrategy.setPlaylist(playlist, startIndex: playIndex);
         }
 
+        // 🎯 方案A：同时更新 PlaybackQueueProvider（统一队列管理）
+        // 将 Music 列表转换为 PlaylistItem 列表
+        final queueItems = playlist.map((m) => PlaylistItem.fromMusic(m)).toList();
+        ref.read(playbackQueueProvider.notifier).setQueue(
+          queueName: '播放列表',
+          source: PlaylistSource.musicLibrary,
+          items: queueItems,
+          startIndex: playIndex,
+        );
+        debugPrint('🎯 [PlaybackProvider] 已同步更新 PlaybackQueueProvider，共 ${queueItems.length} 首');
+
         debugPrint('🎵 [PlaybackProvider] 播放列表已设置，开始索引: $playIndex');
       }
 
@@ -2061,9 +2134,24 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
         _updateLocalProgress();
       });
 
-      print('⏰ 启动智能进度定时器，刷新间隔: ${refreshInterval}秒');
+      debugPrint('⏰ 启动智能进度定时器，刷新间隔: ${refreshInterval}秒');
+    } else if (!isPlaying && state.currentMusic != null) {
+      // 🎯 修复：暂停状态仍保持低频轮询，用于检测自动下一首
+      // 当 xiaomusic 播完歌曲后 isPlaying 可能短暂变为 false
+      // 需要继续轮询才能检测到歌曲切换并触发自动下一首
+      final queueState = ref.read(playbackQueueProvider);
+      if (queueState.queue != null && queueState.queue!.items.isNotEmpty) {
+        _statusRefreshTimer = Timer.periodic(const Duration(seconds: 5), (
+          _,
+        ) {
+          refreshStatus(silent: true);
+        });
+        debugPrint('⏰ 暂停状态但有播放队列，保持低频轮询（5秒）用于自动下一首检测');
+      } else {
+        debugPrint('⏸️ 停止进度定时器（无播放队列）');
+      }
     } else {
-      print('⏸️ 停止进度定时器');
+      debugPrint('⏸️ 停止进度定时器');
     }
   }
 
@@ -2204,6 +2292,268 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
   }
 
   /// 💾 保存直连模式播放状态（专用于直连模式）
+  /// 🎯 直连模式歌曲播放完成处理：自动播放下一首
+  ///
+  /// 当直连模式检测到歌曲播放完成时，会调用此方法
+  /// 从播放队列获取下一首歌曲并播放
+  Future<void> _handleDirectModeSongComplete() async {
+    debugPrint('🎵 [PlaybackProvider] 开始处理直连模式自动下一首');
+
+    try {
+      // 检查播放队列
+      final queueState = ref.read(playbackQueueProvider);
+      if (queueState.queue == null || queueState.queue!.items.isEmpty) {
+        debugPrint('⚠️ [PlaybackProvider] 播放队列为空，无法自动播放下一首');
+        return;
+      }
+
+      // 获取下一首歌曲
+      final nextItem = ref.read(playbackQueueProvider.notifier).next();
+      if (nextItem == null) {
+        debugPrint('⚠️ [PlaybackProvider] 播放队列已到末尾（顺序播放模式）');
+        return;
+      }
+
+      debugPrint('🎵 [PlaybackProvider] 下一首歌曲: ${nextItem.displayName}');
+      debugPrint('🎵 [PlaybackProvider] 来源类型: ${nextItem.sourceType}');
+
+      // 🎯 根据歌曲来源类型决定播放方式
+      if (nextItem.isOnline) {
+        // 🎵 在线歌曲：使用统一的 playOnlineItem 方法
+        debugPrint('🎵 [PlaybackProvider] 在线歌曲，使用 playOnlineItem 播放');
+        await playOnlineItem(nextItem);
+      } else if (nextItem.isLocal && nextItem.localPath != null) {
+        // 🎵 本地歌曲：直接使用本地路径播放
+        debugPrint('🎵 [PlaybackProvider] 本地歌曲，直接播放: ${nextItem.localPath}');
+        await _currentStrategy?.playMusic(
+          musicName: nextItem.displayName,
+          url: nextItem.localPath!,
+          duration: nextItem.duration > 0 ? nextItem.duration : null, // 🎯 方案C
+        );
+      } else if (nextItem.isServer) {
+        // 🎵 服务器歌曲（xiaomusic 模式）：直连模式下无法播放
+        // 因为直连模式没有 xiaomusic 服务端来解析音乐
+        debugPrint('⚠️ [PlaybackProvider] 服务器歌曲在直连模式下无法播放: ${nextItem.displayName}');
+        // 尝试跳到下一首
+        final nextNext = ref.read(playbackQueueProvider.notifier).next();
+        if (nextNext != null && !nextNext.isServer) {
+          debugPrint('🔄 [PlaybackProvider] 跳过服务器歌曲，尝试播放下一首');
+          await _handleDirectModeSongComplete();
+        }
+      } else {
+        debugPrint('⚠️ [PlaybackProvider] 歌曲没有有效的播放源');
+      }
+    } catch (e) {
+      debugPrint('❌ [PlaybackProvider] 自动下一首失败: $e');
+    }
+  }
+
+  // 🎯 xiaomusic 模式自动下一首检测相关变量
+  bool _xiaomusicAutoNextTriggered = false;
+  String? _xiaomusicLastSongName;
+  int _xiaomusicLastPosition = 0;
+  int _xiaomusicLastDuration = 0;
+
+  /// 🎯 xiaomusic 模式：检测歌曲是否接近结尾并触发自动下一首
+  ///
+  /// 当使用懒加载队列播放在线音乐时，服务端播完一首不会自动从 APP 队列取下一首
+  /// 需要 APP 端检测并主动推送下一首
+  ///
+  /// 三重检测机制：
+  /// 1. 接近结尾检测：position 接近 duration（阈值15秒，大于2倍轮询间隔）
+  /// 2. 位置跳跃检测：上次接近结尾 → 这次回到开头
+  /// 3. 歌曲异常切换检测：xiaomusic 自动切到非队列歌曲 → APP 介入
+  Future<void> _checkXiaomusicAutoNext(PlayingMusic? currentMusic) async {
+    if (currentMusic == null) return;
+
+    // 检查是否有 APP 端的播放队列
+    final queueState = ref.read(playbackQueueProvider);
+    if (queueState.queue == null || queueState.queue!.items.isEmpty) {
+      // 没有 APP 端队列，依赖服务端自己的播放列表管理
+      return;
+    }
+
+    final currentSongName = currentMusic.curMusic;
+    final position = currentMusic.offset;
+    final duration = currentMusic.duration;
+
+    // ========== 检测方式C：歌曲异常切换检测（最可靠） ==========
+    // 当 xiaomusic 服务端播完 music_list_json 里的歌后，会自动切回服务端自己的播放列表
+    // 例如：APP 推送了 "青花瓷" → 播完后 xiaomusic 自动切到 "七里香"（服务端的歌）
+    // 如果新歌不在 APP 的播放队列中，说明服务端自行切歌了，APP 应该介入
+    if (_xiaomusicLastSongName != null &&
+        currentSongName != _xiaomusicLastSongName &&
+        !_xiaomusicAutoNextTriggered) {
+      // 歌曲名发生了变化，检查新歌是否在 APP 队列中
+      final queue = queueState.queue!;
+      final isInQueue = queue.items.any((item) => item.displayName == currentSongName);
+
+      if (!isInQueue) {
+        debugPrint('🎵 [xiaomusic-AutoNext] 🔍 检测到歌曲异常切换!');
+        debugPrint('   上一首(APP推送): $_xiaomusicLastSongName');
+        debugPrint('   当前(服务端自切): $currentSongName');
+        debugPrint('   该歌曲不在APP队列中 → 触发自动下一首');
+
+        _xiaomusicAutoNextTriggered = true;
+        _xiaomusicLastSongName = currentSongName; // 更新为当前歌曲名
+
+        // 🎯 从 APP 队列获取下一首
+        final nextItem = ref.read(playbackQueueProvider.notifier).next();
+        if (nextItem != null) {
+          debugPrint('🎵 [xiaomusic-AutoNext] 下一首: ${nextItem.displayName}');
+          try {
+            await playOnlineItem(nextItem);
+            debugPrint('✅ [xiaomusic-AutoNext] 自动下一首播放成功(异常切换检测)');
+          } catch (e) {
+            debugPrint('❌ [xiaomusic-AutoNext] 自动下一首播放失败: $e');
+            _xiaomusicAutoNextTriggered = false;
+          }
+        } else {
+          debugPrint('⚠️ [xiaomusic-AutoNext] 队列已到末尾');
+        }
+
+        // 更新位置信息
+        _xiaomusicLastPosition = position;
+        _xiaomusicLastDuration = duration;
+        return; // 已处理，提前返回
+      }
+    }
+
+    // 🔄 重置保护标志：当歌曲名变化时（新歌开始播放）
+    if (currentSongName != _xiaomusicLastSongName) {
+      if (_xiaomusicAutoNextTriggered) {
+        debugPrint('🔄 [xiaomusic-AutoNext] 检测到新歌曲，重置保护标志');
+      }
+      _xiaomusicAutoNextTriggered = false;
+      _xiaomusicLastSongName = currentSongName;
+    }
+
+    // ========== 检测方式A：position 接近 duration ==========
+    // 🎯 阈值设为15秒，确保不会被5秒的轮询间隔错过
+    final isNearEnd = duration > 10 && position > 10 && (duration - position) < 15;
+
+    // ========== 检测方式B：位置跳跃检测 ==========
+    // 上一次接近结尾 → 这一次回到开头（同一首歌循环播放的情况）
+    final wasNearEnd = _xiaomusicLastDuration > 10 &&
+        _xiaomusicLastPosition > 10 &&
+        (_xiaomusicLastDuration - _xiaomusicLastPosition) < 15;
+    final jumpedToStart = position < 10;
+    final isPositionJump = wasNearEnd && jumpedToStart;
+
+    final shouldTrigger = (isNearEnd || isPositionJump) && !_xiaomusicAutoNextTriggered;
+
+    if (shouldTrigger) {
+      final reason = isNearEnd ? '接近结尾(剩${duration - position}秒)' : '位置跳跃(${_xiaomusicLastPosition}s→${position}s)';
+      debugPrint('🎵 [xiaomusic-AutoNext] 检测到歌曲播放完成 [$reason]');
+      debugPrint('🎵 [xiaomusic-AutoNext] 当前: $currentSongName, position=$position, duration=$duration');
+      debugPrint('🎵 [xiaomusic-AutoNext] 触发自动下一首...');
+
+      // 设置保护标志，防止重复触发
+      _xiaomusicAutoNextTriggered = true;
+
+      // 🎯 从 APP 队列获取下一首
+      final nextItem = ref.read(playbackQueueProvider.notifier).next();
+      if (nextItem != null) {
+        debugPrint('🎵 [xiaomusic-AutoNext] 下一首: ${nextItem.displayName}');
+
+        // 使用统一的播放方法
+        try {
+          await playOnlineItem(nextItem);
+          debugPrint('✅ [xiaomusic-AutoNext] 自动下一首播放成功');
+        } catch (e) {
+          debugPrint('❌ [xiaomusic-AutoNext] 自动下一首播放失败: $e');
+          // 播放失败，重置标志以便重试
+          _xiaomusicAutoNextTriggered = false;
+        }
+      } else {
+        debugPrint('⚠️ [xiaomusic-AutoNext] 队列已到末尾（顺序播放模式）');
+      }
+    }
+
+    // 🔄 更新上一次轮询的位置（必须在检测之后更新）
+    _xiaomusicLastPosition = position;
+    _xiaomusicLastDuration = duration;
+  }
+
+  /// 🎵 统一的在线歌曲播放方法（懒加载方式）
+  ///
+  /// 适用于：
+  /// - 搜索页面点击播放（xiaomusic懒加载模式、直连模式）
+  /// - 自动下一首（xiaomusic模式、直连模式）
+  ///
+  /// 流程：JS解析URL → playMusic() → 更新封面
+  Future<void> playOnlineItem(PlaylistItem item) async {
+    debugPrint('🎵 [PlaybackProvider] playOnlineItem: ${item.displayName}');
+
+    try {
+      // 检查是否为在线音乐
+      if (!item.isOnline) {
+        throw Exception('playOnlineItem 仅支持在线音乐');
+      }
+
+      if (item.platform == null || item.songId == null) {
+        throw Exception('在线音乐缺少 platform 或 songId');
+      }
+
+      // 获取设备 ID
+      final deviceState = ref.read(deviceProvider);
+      final deviceId = deviceState.selectedDeviceId;
+      if (deviceId == null) {
+        throw Exception('未选择播放设备');
+      }
+
+      // 🎯 懒加载：解析 URL
+      debugPrint('🎵 [playOnlineItem] 开始解析 URL...');
+      final url = await _resolveUrlByJS(
+        platform: item.platform!,
+        songId: item.songId!,
+        quality: '320k',
+        title: item.title,
+        artist: item.artist,
+        album: item.album,
+        duration: item.duration,
+        coverUrl: item.coverUrl,
+      );
+
+      if (url == null || url.isEmpty) {
+        throw Exception('无法解析播放 URL');
+      }
+
+      debugPrint('✅ [playOnlineItem] URL 解析成功: ${url.substring(0, url.length > 80 ? 80 : url.length)}...');
+
+      // 🎯 通过 playMusic 播放（自动适配 xiaomusic/直连模式）
+      await playMusic(
+        deviceId: deviceId,
+        musicName: item.displayName,
+        url: url,
+        albumCoverUrl: item.coverUrl,
+      );
+
+      debugPrint('✅ [playOnlineItem] 播放命令已发送');
+
+      // 🖼️ 如果没有封面，自动搜索
+      if (item.coverUrl == null || item.coverUrl!.isEmpty) {
+        debugPrint('🖼️ [playOnlineItem] 封面未缓存，开始搜索');
+        _autoFetchAlbumCover(item.displayName).then((_) {
+          if (state.albumCoverUrl != null && state.albumCoverUrl!.isNotEmpty) {
+            ref.read(playbackQueueProvider.notifier).updateCurrentCover(state.albumCoverUrl!);
+            debugPrint('✅ [playOnlineItem] 封面已缓存到队列');
+          }
+        }).catchError((e) {
+          debugPrint('⚠️ [playOnlineItem] 封面搜索失败: $e');
+        });
+      }
+
+      debugPrint('✅ [playOnlineItem] 播放流程完成');
+    } catch (e, stackTrace) {
+      debugPrint('❌ [playOnlineItem] 播放失败: $e');
+      debugPrint('❌ [playOnlineItem] 堆栈: ${stackTrace.toString().split('\n').take(3).join('\n')}');
+      state = state.copyWith(error: '播放失败: ${e.toString()}');
+      rethrow;
+    }
+  }
+
+  /// 💾 保存直连模式播放状态
   Future<void> _saveDirectModePlayback(PlayingMusic status) async {
     try {
       final prefs = await SharedPreferences.getInstance();
