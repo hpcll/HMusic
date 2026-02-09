@@ -30,7 +30,6 @@ import '../../data/models/playlist_queue.dart'; // 🎯 播放队列模型
 import '../providers/playlist_provider.dart'; // 🎯 播放列表Provider
 import '../providers/local_playlist_provider.dart'; // 🎯 本地播放列表Provider
 import '../../data/models/local_playlist.dart'; // 🎯 本地播放列表模型
-import '../providers/navigation_provider.dart'; // 🎯 Tab 导航Provider
 import '../../data/utils/lx_music_info_builder.dart';
 
 class MusicSearchPage extends ConsumerStatefulWidget {
@@ -938,14 +937,6 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
               context,
               '✅ 已添加到 "$selectedPlaylist"',
               duration: const Duration(seconds: 3),
-              action: SnackBarAction(
-                label: '查看',
-                textColor: Colors.white,
-                onPressed: () {
-                  // 🎯 切换到歌单 Tab（而不是打开新页面）
-                  ref.read(mainTabIndexProvider.notifier).state = MainTabIndex.playlist;
-                },
-              ),
             );
           }
         }
