@@ -15,7 +15,6 @@ import '../providers/js_source_provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:permission_handler/permission_handler.dart';
-import '../providers/music_library_provider.dart';
 import '../widgets/app_snackbar.dart';
 import '../widgets/app_layout.dart';
 import '../providers/device_provider.dart';
@@ -48,7 +47,6 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
   static const String _jsPluginCacheKey = 'xiaomusic_has_js_plugins';
   static const String _jsPluginCacheTimeKey = 'xiaomusic_js_plugins_check_time';
   static const int _cacheExpireHours = 1; // 缓存过期时间：1小时
-
   @override
   void initState() {
     super.initState();
@@ -77,7 +75,9 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
         final expireMs = _cacheExpireHours * 60 * 60 * 1000;
 
         if (cacheAge < expireMs) {
-          debugPrint('[XiaomusicPluginCheck] 📦 使用缓存结果: $cachedResult (缓存年龄: ${cacheAge ~/ 1000}秒)');
+          debugPrint(
+            '[XiaomusicPluginCheck] 📦 使用缓存结果: $cachedResult (缓存年龄: ${cacheAge ~/ 1000}秒)',
+          );
           return cachedResult;
         } else {
           debugPrint('[XiaomusicPluginCheck] ⏰ 缓存已过期，重新检测...');
@@ -94,11 +94,16 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
       }
 
       final hasPlugins = await apiService.hasJsPlugins();
-      debugPrint('[XiaomusicPluginCheck] ✅ 检测结果: ${hasPlugins ? "有插件" : "无插件"}');
+      debugPrint(
+        '[XiaomusicPluginCheck] ✅ 检测结果: ${hasPlugins ? "有插件" : "无插件"}',
+      );
 
       // 缓存结果
       await prefs.setBool(_jsPluginCacheKey, hasPlugins);
-      await prefs.setInt(_jsPluginCacheTimeKey, DateTime.now().millisecondsSinceEpoch);
+      await prefs.setInt(
+        _jsPluginCacheTimeKey,
+        DateTime.now().millisecondsSinceEpoch,
+      );
       debugPrint('[XiaomusicPluginCheck] 💾 结果已缓存');
 
       return hasPlugins;
@@ -219,7 +224,9 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              isSourceError ? Icons.wifi_off_rounded : Icons.error_outline_rounded,
+              isSourceError
+                  ? Icons.wifi_off_rounded
+                  : Icons.error_outline_rounded,
               size: 60,
               color: isSourceError ? Colors.orange : Colors.redAccent,
             ),
@@ -261,7 +268,9 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
                       // 自动重试搜索
                       final query = ref.read(musicSearchProvider).searchQuery;
                       if (query.isNotEmpty) {
-                        ref.read(musicSearchProvider.notifier).searchOnline(query);
+                        ref
+                            .read(musicSearchProvider.notifier)
+                            .searchOnline(query);
                       }
                     },
                     icon: const Icon(Icons.swap_horiz_rounded, size: 18),
@@ -406,25 +415,33 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
                     break;
                 }
               },
-              itemBuilder:
-                  (context) {
-                    // 🎯 根据播放模式显示不同的菜单项
-                    final playbackMode = ref.watch(playbackModeProvider);
-                    final isDirectMode = playbackMode == PlaybackMode.miIoTDirect;
+              itemBuilder: (context) {
+                // 🎯 根据播放模式显示不同的菜单项
+                final playbackMode = ref.watch(playbackModeProvider);
+                final isDirectMode = playbackMode == PlaybackMode.miIoTDirect;
 
-                    return [
-                      const PopupMenuItem(value: 'play', child: Text('解析直链并播放')),
-                      // 🎯 两种模式都显示"加入歌单"
-                      const PopupMenuItem(value: 'add_to_playlist', child: Text('📋 加入歌单')),
-                      // 🎯 直连模式额外显示"加入播放队列"（用于当前播放队列）
-                      if (isDirectMode)
-                        const PopupMenuItem(value: 'add_to_queue', child: Text('➕ 加入播放队列')),
-                      // 🎯 只有 xiaomusic 模式才显示"下载到服务器"（直连模式无服务器）
-                      if (!isDirectMode)
-                        const PopupMenuItem(value: 'server', child: Text('下载到服务器')),
-                      const PopupMenuItem(value: 'local', child: Text('下载到本地')),
-                    ];
-                  },
+                return [
+                  const PopupMenuItem(value: 'play', child: Text('解析直链并播放')),
+                  // 🎯 两种模式都显示"加入本地歌单（元音乐）"
+                  const PopupMenuItem(
+                    value: 'add_to_playlist',
+                    child: Text('📋 加入本地歌单'),
+                  ),
+                  // 🎯 直连模式额外显示"加入播放队列"（用于当前播放队列）
+                  if (isDirectMode)
+                    const PopupMenuItem(
+                      value: 'add_to_queue',
+                      child: Text('➕ 加入播放队列'),
+                    ),
+                  // 🎯 只有 xiaomusic 模式才显示"下载到服务器"（直连模式无服务器）
+                  if (!isDirectMode)
+                    const PopupMenuItem(
+                      value: 'server',
+                      child: Text('下载到服务端歌单'),
+                    ),
+                  const PopupMenuItem(value: 'local', child: Text('下载到本地')),
+                ];
+              },
               icon: Icon(
                 Icons.more_vert_rounded,
                 color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
@@ -439,50 +456,250 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
   }
 
   Future<void> _downloadToServer(OnlineMusicResult item) async {
-    // 获取用户设置的默认下载音质
     final settings = ref.read(sourceSettingsProvider);
     final quality = settings.defaultDownloadQuality;
 
     try {
+      final selectedPlaylist = await _selectServerPlaylistForDownload();
+      if (selectedPlaylist == null || selectedPlaylist.isEmpty) {
+        return;
+      }
+
       var url = item.url;
       if (url.isEmpty) {
-        // 使用音质降级逻辑解析
         url = await _resolveWithQualityFallback(item, quality) ?? '';
       }
 
       if (url.isEmpty) {
         if (mounted) {
-          AppSnackBar.showError(
-            context,
-            '❌ 无法解析直链，下载失败',
-          );
+          AppSnackBar.showError(context, '❌ 无法解析直链，下载失败');
         }
         return;
       }
 
-      // 使用"歌曲名 - 作者名"作为服务端下载名称
-      final safeTitle = item.title.replaceAll(RegExp(r'[\\/:*?"<>|]'), '_');
-      final safeAuthor = item.author.replaceAll(RegExp(r'[\\/:*?"<>|]'), '_');
-      final serverName =
-          safeAuthor.isNotEmpty ? '$safeTitle - $safeAuthor' : safeTitle;
+      final apiService = ref.read(apiServiceProvider);
+      if (apiService == null) {
+        throw Exception('API 服务未初始化');
+      }
 
-      await ref
-          .read(musicLibraryProvider.notifier)
-          .downloadOneMusic(serverName, url: url);
+      final serverName = _buildServerMusicName(item);
+      final currentSettings = await apiService.getSettings();
+      final originalDownloadPath =
+          (currentSettings['download_path'] ?? 'music/download').toString();
+      final targetDownloadPath = _buildDownloadPathForPlaylist(
+        originalDownloadPath,
+        selectedPlaylist,
+      );
+      final targetPlaylistName = selectedPlaylist;
+      final targetDirname = _buildServerDirnameForPlaylist(selectedPlaylist);
+
+      bool _isDownloadOneMusicParamUnsupported(
+        String errorText,
+        String paramName,
+      ) {
+        return errorText.contains('422') ||
+            errorText.contains('validation') ||
+            errorText.contains('extra_forbidden') ||
+            errorText.contains('extra inputs are not permitted') ||
+            (errorText.contains(paramName) && errorText.contains('field'));
+      }
+
+      // 优先尝试新后端：downloadonemusic(playlist_name)
+      // playlist_name 传原始歌单名，不做安全化处理
+      if (apiService.canAttemptDownloadOneMusicPlaylistName()) {
+        final playlistNameSupported =
+            await apiService.supportsDownloadOneMusicPlaylistName();
+        if (playlistNameSupported) {
+          try {
+            final resp = await apiService.downloadOneMusic(
+              musicName: serverName,
+              url: url,
+              playlistName: targetPlaylistName,
+            );
+            if (!(resp['ret'] == 'OK' || resp['success'] == true)) {
+              throw Exception(resp.toString());
+            }
+
+            apiService.markDownloadOneMusicPlaylistNameSupported();
+
+            if (mounted) {
+              AppSnackBar.showSuccess(
+                context,
+                '已提交到歌单 "$selectedPlaylist"：${item.title}',
+              );
+            }
+            return;
+          } catch (e) {
+            final errorText = e.toString().toLowerCase();
+            final playlistNameUnsupported = _isDownloadOneMusicParamUnsupported(
+              errorText,
+              'playlist_name',
+            );
+
+            if (!playlistNameUnsupported) {
+              rethrow;
+            }
+
+            apiService.markDownloadOneMusicPlaylistNameUnsupported();
+            debugPrint(
+              'ℹ️ [MusicSearch] 后端暂不支持 downloadonemusic.playlist_name，继续尝试 dirname',
+            );
+          }
+        }
+      }
+
+      // 兼容旧后端：downloadonemusic(dirname)
+      // 旧版本兼容策略（不读取 OpenAPI）：
+      // - 本次运行第一次先尝试 dirname；
+      // - 若确认不支持则标记，本次运行后续不再尝试，直接走回退逻辑。
+      if (apiService.canAttemptDownloadOneMusicDirname()) {
+        try {
+          final resp = await apiService.downloadOneMusic(
+            musicName: serverName,
+            url: url,
+            dirname: targetDirname,
+          );
+          if (!(resp['ret'] == 'OK' || resp['success'] == true)) {
+            throw Exception(resp.toString());
+          }
+
+          apiService.markDownloadOneMusicDirnameSupported();
+
+          if (mounted) {
+            AppSnackBar.showSuccess(
+              context,
+              '已提交到歌单 "$selectedPlaylist"：${item.title}',
+            );
+          }
+          return;
+        } catch (e) {
+          final errorText = e.toString().toLowerCase();
+          final dirnameUnsupported =
+              _isDownloadOneMusicParamUnsupported(errorText, 'dirname');
+
+          if (!dirnameUnsupported) {
+            rethrow;
+          }
+
+          apiService.markDownloadOneMusicDirnameUnsupported();
+          debugPrint('ℹ️ [MusicSearch] 后端暂不支持 downloadonemusic.dirname，回退旧逻辑');
+        }
+      }
+
+      bool changedPath = false;
+      bool restoreFailed = false;
+      try {
+        if (targetDownloadPath != originalDownloadPath) {
+          await apiService.modifySetting({'download_path': targetDownloadPath});
+          changedPath = true;
+        }
+
+        final resp = await apiService.downloadOneMusic(
+          musicName: serverName,
+          url: url,
+        );
+        if (!(resp['ret'] == 'OK' || resp['success'] == true)) {
+          throw Exception(resp.toString());
+        }
+      } finally {
+        if (changedPath) {
+          try {
+            await apiService.modifySetting({
+              'download_path': originalDownloadPath,
+            });
+          } catch (e) {
+            restoreFailed = true;
+            debugPrint('⚠️ [MusicSearch] 恢复 download_path 失败: $e');
+          }
+        }
+
+        if (restoreFailed && mounted) {
+          AppSnackBar.showWarning(context, '⚠️ 下载目录恢复失败，请检查设置页');
+        }
+      }
+
       if (mounted) {
         AppSnackBar.showSuccess(
           context,
-          '已提交下载任务：${item.title}',
+          '已提交到歌单 "$selectedPlaylist"：${item.title}',
         );
       }
     } catch (e) {
       if (mounted) {
-        AppSnackBar.showError(
-          context,
-          '下载失败：$e',
-        );
+        AppSnackBar.showError(context, '下载失败：$e');
       }
     }
+  }
+
+  Future<String?> _selectServerPlaylistForDownload() async {
+    final playlistNotifier = ref.read(playlistProvider.notifier);
+    await playlistNotifier.refreshPlaylists();
+    final playlistState = ref.read(playlistProvider);
+
+    final customPlaylists = playlistState.deletablePlaylists.toList()..sort();
+    final fallbackPlaylists =
+        playlistState.playlists.map((p) => p.name).toSet().toList()..sort();
+    final playlistNames =
+        customPlaylists.isNotEmpty ? customPlaylists : fallbackPlaylists;
+
+    if (!mounted) return null;
+
+    if (playlistNames.isEmpty) {
+      final newPlaylistName = await _showCreatePlaylistDialog();
+      if (newPlaylistName == null || newPlaylistName.isEmpty) {
+        return null;
+      }
+      await playlistNotifier.createPlaylist(newPlaylistName);
+      return newPlaylistName;
+    }
+
+    final selected = await showDialog<String>(
+      context: context,
+      builder:
+          (context) =>
+              _PlaylistSelectionDialog(playlists: [...playlistNames, '➕ 新建歌单']),
+    );
+
+    if (selected == null || selected.isEmpty) {
+      return null;
+    }
+
+    if (selected == '➕ 新建歌单') {
+      final newPlaylistName = await _showCreatePlaylistDialog();
+      if (newPlaylistName == null || newPlaylistName.isEmpty) {
+        return null;
+      }
+      await playlistNotifier.createPlaylist(newPlaylistName);
+      return newPlaylistName;
+    }
+
+    return selected;
+  }
+
+  String _buildDownloadPathForPlaylist(String basePath, String playlistName) {
+    final safePlaylistName = playlistName
+        .trim()
+        .replaceAll(RegExp(r'[\\/:*?"<>|]'), '_')
+        .replaceAll(RegExp(r'\s+'), ' ');
+    final normalizedBase = basePath
+        .replaceAll('\\', '/')
+        .replaceAll(RegExp(r'/+$'), '');
+
+    if (safePlaylistName.isEmpty) {
+      return normalizedBase;
+    }
+
+    return '$normalizedBase/$safePlaylistName';
+  }
+
+  /// 生成 downloadonemusic.dirname（相对 music 根目录）
+  ///
+  /// 这里直接使用歌单名，确保落在 music/<歌单名>，便于被服务端识别为同名目录分类。
+  String _buildServerDirnameForPlaylist(String playlistName) {
+    return playlistName
+        .trim()
+        .replaceAll(RegExp(r'[\\/:*?"<>|]'), '_')
+        .replaceAll(RegExp(r'\s+'), ' ');
   }
 
   Future<void> _downloadToLocal(OnlineMusicResult item) async {
@@ -519,10 +736,7 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
 
         if (!hasPermission) {
           if (mounted) {
-            AppSnackBar.showError(
-              context,
-              '❌ 需要存储权限才能下载到本地',
-            );
+            AppSnackBar.showError(context, '❌ 需要存储权限才能下载到本地');
           }
           return;
         }
@@ -543,17 +757,15 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
 
       if (url.isEmpty) {
         if (mounted) {
-          AppSnackBar.showError(
-            context,
-            '❌ 无法解析直链，无法下载',
-          );
+          AppSnackBar.showError(context, '❌ 无法解析直链，无法下载');
         }
         return;
       }
 
       final titlePart = item.title.replaceAll(RegExp(r'[\\/:*?"<>|]'), '_');
       final authorPart = item.author.replaceAll(RegExp(r'[\\/:*?"<>|]'), '_');
-      final safeName = authorPart.isNotEmpty ? '$titlePart - $authorPart' : titlePart;
+      final safeName =
+          authorPart.isNotEmpty ? '$titlePart - $authorPart' : titlePart;
 
       String buildFilePath(String targetUrl) {
         final ext = p.extension(Uri.parse(targetUrl).path);
@@ -633,10 +845,7 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
       }
     } catch (e) {
       if (mounted) {
-        AppSnackBar.showError(
-          context,
-          '本地下载失败：$e',
-        );
+        AppSnackBar.showError(context, '本地下载失败：$e');
       }
     }
   }
@@ -866,9 +1075,7 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
               onPressed: () => Navigator.pop(context, null),
               child: Text(
                 '取消',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
+                style: TextStyle(color: Theme.of(context).colorScheme.primary),
               ),
             ),
             FilledButton(
@@ -886,17 +1093,10 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
     );
   }
 
-  /// 📋 添加到歌单（支持两种模式）
+  /// 📋 添加到本地歌单（元音乐）
   Future<void> _addToPlaylist(OnlineMusicResult item) async {
     try {
-      // 🎯 检查当前播放模式
-      final playbackMode = ref.read(playbackModeProvider);
-      final isDirectMode = playbackMode == PlaybackMode.miIoTDirect;
-
-      // 🎯 根据模式获取歌单
-      final playlists = isDirectMode
-          ? ref.read(localPlaylistProvider).playlists
-          : ref.read(playlistProvider).playlists;
+      final playlists = ref.read(localPlaylistProvider).playlists;
 
       if (playlists.isEmpty) {
         // 没有歌单，直接在这里创建并添加歌曲
@@ -907,34 +1107,24 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
             // 🎯 创建歌单成功，直接添加歌曲
             debugPrint('📋 [MusicSearch] 创建歌单并添加: $newPlaylistName');
 
-            if (isDirectMode) {
-              // 直连模式：创建歌单
-              await ref.read(localPlaylistProvider.notifier).createPlaylist(newPlaylistName);
+            await ref
+                .read(localPlaylistProvider.notifier)
+                .createPlaylist(newPlaylistName);
 
-              // 添加歌曲
-              final song = LocalPlaylistSong.fromOnlineMusic(
-                title: item.title,
-                artist: item.author,
-                platform: item.platform ?? 'unknown',
-                songId: item.songId ?? '',
-                coverUrl: item.picture,
-              );
+            final song = LocalPlaylistSong.fromOnlineMusic(
+              title: item.title,
+              artist: item.author,
+              platform: item.platform ?? 'unknown',
+              songId: item.songId ?? '',
+              coverUrl: item.picture,
+            );
 
-              await ref.read(localPlaylistProvider.notifier).addMusicToPlaylist(
-                playlistName: newPlaylistName,
-                songs: [song],
-              );
-            } else {
-              // xiaomusic 模式：创建歌单
-              await ref.read(playlistProvider.notifier).createPlaylist(newPlaylistName);
-
-              // 添加歌曲
-              final musicName = '${item.title} - ${item.author}';
-              await ref.read(playlistProvider.notifier).addMusicToPlaylist(
-                musicNames: [musicName],
-                playlistName: newPlaylistName,
-              );
-            }
+            await ref
+                .read(localPlaylistProvider.notifier)
+                .addMusicToPlaylist(
+                  playlistName: newPlaylistName,
+                  songs: [song],
+                );
 
             // 显示成功提示
             if (mounted) {
@@ -952,40 +1142,34 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
       if (mounted) {
         final selectedPlaylist = await showDialog<String>(
           context: context,
-          builder: (context) => _PlaylistSelectionDialog(
-            playlists: playlists.map((p) => (p as dynamic).name as String).toList(),
-          ),
+          builder:
+              (context) => _PlaylistSelectionDialog(
+                playlists:
+                    playlists
+                        .map((p) => (p as dynamic).name as String)
+                        .toList(),
+              ),
         );
 
         if (selectedPlaylist != null && selectedPlaylist.isNotEmpty) {
-          debugPrint('📋 [MusicSearch] 添加到歌单: $selectedPlaylist (模式: ${isDirectMode ? "直连" : "xiaomusic"})');
+          debugPrint('📋 [MusicSearch] 添加到本地歌单: $selectedPlaylist');
 
-          // 🎯 根据模式调用不同的添加方法
-          if (isDirectMode) {
-            // 直连模式：转换为 LocalPlaylistSong
-            // 🎯 只保存元数据（platform + songId + title + artist），不保存URL
-            // 播放时才根据这些元数据解析URL，解析后缓存6小时
-            final song = LocalPlaylistSong.fromOnlineMusic(
-              title: item.title,
-              artist: item.author,
-              platform: item.platform ?? 'unknown',
-              songId: item.songId ?? '',
-              coverUrl: item.picture,
-            );
+          // 🎯 只保存元数据（platform + songId + title + artist），不保存URL
+          // 播放时才根据这些元数据解析URL，解析后缓存
+          final song = LocalPlaylistSong.fromOnlineMusic(
+            title: item.title,
+            artist: item.author,
+            platform: item.platform ?? 'unknown',
+            songId: item.songId ?? '',
+            coverUrl: item.picture,
+          );
 
-            await ref.read(localPlaylistProvider.notifier).addMusicToPlaylist(
-              playlistName: selectedPlaylist,
-              songs: [song],
-            );
-          } else {
-            // xiaomusic 模式：使用"歌名 - 歌手"格式
-            final musicName = '${item.title} - ${item.author}';
-
-            await ref.read(playlistProvider.notifier).addMusicToPlaylist(
-              musicNames: [musicName],
-              playlistName: selectedPlaylist,
-            );
-          }
+          await ref
+              .read(localPlaylistProvider.notifier)
+              .addMusicToPlaylist(
+                playlistName: selectedPlaylist,
+                songs: [song],
+              );
 
           if (mounted) {
             AppSnackBar.showSuccess(
@@ -1008,6 +1192,12 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
     }
   }
 
+  String _buildServerMusicName(OnlineMusicResult item) {
+    final safeTitle = item.title.replaceAll(RegExp(r'[\\/:*?"<>|]'), '_');
+    final safeAuthor = item.author.replaceAll(RegExp(r'[\\/:*?"<>|]'), '_');
+    return safeAuthor.isNotEmpty ? '$safeTitle - $safeAuthor' : safeTitle;
+  }
+
   /// 🎵 xiaomusic插件模式播放
   ///
   /// 当检测到xiaomusic配置了JS插件时，使用此方法：
@@ -1024,10 +1214,7 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
 
       if (selectedDeviceId == null) {
         if (mounted) {
-          AppSnackBar.showError(
-            context,
-            '❌ 请先选择播放设备',
-          );
+          AppSnackBar.showError(context, '❌ 请先选择播放设备');
         }
         return;
       }
@@ -1040,43 +1227,44 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
 
       // 3. 构建歌曲列表（从搜索结果）
       final searchState = ref.read(musicSearchProvider);
-      final List<Map<String, dynamic>> songList = searchState.onlineResults.map<Map<String, dynamic>>((result) {
-        // 平台映射
-        String mappedPlatform;
-        switch ((result.platform ?? 'qq').toLowerCase()) {
-          case 'qq':
-          case 'tencent':
-            mappedPlatform = 'tx';
-            break;
-          case 'netease':
-          case 'wangyi':
-          case '163':
-            mappedPlatform = 'wy';
-            break;
-          case 'kugou':
-            mappedPlatform = 'kg';
-            break;
-          case 'kuwo':
-            mappedPlatform = 'kw';
-            break;
-          case 'migu':
-            mappedPlatform = 'mg';
-            break;
-          default:
-            mappedPlatform = 'tx';
-        }
+      final List<Map<String, dynamic>> songList =
+          searchState.onlineResults.map<Map<String, dynamic>>((result) {
+            // 平台映射
+            String mappedPlatform;
+            switch ((result.platform ?? 'qq').toLowerCase()) {
+              case 'qq':
+              case 'tencent':
+                mappedPlatform = 'tx';
+                break;
+              case 'netease':
+              case 'wangyi':
+              case '163':
+                mappedPlatform = 'wy';
+                break;
+              case 'kugou':
+                mappedPlatform = 'kg';
+                break;
+              case 'kuwo':
+                mappedPlatform = 'kw';
+                break;
+              case 'migu':
+                mappedPlatform = 'mg';
+                break;
+              default:
+                mappedPlatform = 'tx';
+            }
 
-        return {
-          'name': '${result.title} - ${result.author}',
-          'id': result.songId ?? '',
-          'source': mappedPlatform,
-          'title': result.title,
-          'artist': result.author,
-          'album': result.album ?? '',
-          'duration': result.duration ?? 0,
-          'pic': result.picture ?? '',
-        };
-      }).toList();
+            return {
+              'name': '${result.title} - ${result.author}',
+              'id': result.songId ?? '',
+              'source': mappedPlatform,
+              'title': result.title,
+              'artist': result.author,
+              'album': result.album ?? '',
+              'duration': result.duration ?? 0,
+              'pic': result.picture ?? '',
+            };
+          }).toList();
 
       // 4. 找到当前点击歌曲在列表中的位置，并将其放到第一位
       final clickedIndex = songList.indexWhere(
@@ -1115,10 +1303,11 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
       // 7. 刷新播放状态
       await Future.delayed(const Duration(milliseconds: 1500));
       await ref.read(playbackProvider.notifier).refreshStatus();
-
     } catch (e, stackTrace) {
       debugPrint('[XiaomusicPlugin] ❌ 插件模式播放失败: $e');
-      debugPrint('[XiaomusicPlugin] 堆栈: ${stackTrace.toString().split('\n').take(3).join('\n')}');
+      debugPrint(
+        '[XiaomusicPlugin] 堆栈: ${stackTrace.toString().split('\n').take(3).join('\n')}',
+      );
 
       if (mounted) {
         AppSnackBar.showError(
@@ -1140,20 +1329,14 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
 
       if (directState is! DirectModeAuthenticated) {
         if (mounted) {
-          AppSnackBar.showError(
-            context,
-            '❌ 直连模式未登录，请先登录',
-          );
+          AppSnackBar.showError(context, '❌ 直连模式未登录，请先登录');
         }
         return;
       }
 
       if (directState.devices.isEmpty) {
         if (mounted) {
-          AppSnackBar.showWarning(
-            context,
-            '❌ 没有可用的小米设备',
-          );
+          AppSnackBar.showWarning(context, '❌ 没有可用的小米设备');
         }
         return;
       }
@@ -1172,33 +1355,35 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
 
       if (playUrl.isEmpty) {
         if (mounted) {
-          AppSnackBar.showError(
-            context,
-            '❌ 无法解析播放链接',
-          );
+          AppSnackBar.showError(context, '❌ 无法解析播放链接');
         }
         return;
       }
 
-      debugPrint('[DirectMode] ✅ 播放链接已准备: ${playUrl.substring(0, playUrl.length > 100 ? 100 : playUrl.length)}...');
+      debugPrint(
+        '[DirectMode] ✅ 播放链接已准备: ${playUrl.substring(0, playUrl.length > 100 ? 100 : playUrl.length)}...',
+      );
 
       // 🎯 创建播放队列（仅直连模式）
       final searchState = ref.read(musicSearchProvider);
       if (searchState.onlineResults.isNotEmpty) {
-        debugPrint('[DirectMode] 🎵 创建播放队列: ${searchState.onlineResults.length} 首');
+        debugPrint(
+          '[DirectMode] 🎵 创建播放队列: ${searchState.onlineResults.length} 首',
+        );
 
         // 转换为 PlaylistItem 列表
-        final playlistItems = searchState.onlineResults.map((result) {
-          return PlaylistItem.fromOnlineMusic(
-            title: result.title,
-            artist: result.author,
-            album: result.album,
-            duration: result.duration ?? 0,
-            platform: result.platform,
-            songId: result.songId,
-            coverUrl: result.picture,
-          );
-        }).toList();
+        final playlistItems =
+            searchState.onlineResults.map((result) {
+              return PlaylistItem.fromOnlineMusic(
+                title: result.title,
+                artist: result.author,
+                album: result.album,
+                duration: result.duration ?? 0,
+                platform: result.platform,
+                songId: result.songId,
+                coverUrl: result.picture,
+              );
+            }).toList();
 
         // 找到当前点击歌曲的索引
         final startIndex = searchState.onlineResults.indexWhere(
@@ -1206,14 +1391,18 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
         );
 
         // 设置队列
-        ref.read(playbackQueueProvider.notifier).setQueue(
-          queueName: '搜索结果: ${searchState.searchQuery}',
-          source: PlaylistSource.searchResult,
-          items: playlistItems,
-          startIndex: startIndex >= 0 ? startIndex : 0,
-        );
+        ref
+            .read(playbackQueueProvider.notifier)
+            .setQueue(
+              queueName: '搜索结果: ${searchState.searchQuery}',
+              source: PlaylistSource.searchResult,
+              items: playlistItems,
+              startIndex: startIndex >= 0 ? startIndex : 0,
+            );
 
-        debugPrint('[DirectMode] ✅ 播放队列已创建，起始索引: ${startIndex >= 0 ? startIndex : 0}');
+        debugPrint(
+          '[DirectMode] ✅ 播放队列已创建，起始索引: ${startIndex >= 0 ? startIndex : 0}',
+        );
       }
 
       // 4. 显示播放提示
@@ -1231,17 +1420,21 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
       // ✅ 自动更新 UI 状态
       // ✅ 自动搜索封面图
       // ✅ 自动更新通知栏
-      await ref.read(playbackProvider.notifier).playMusic(
-        deviceId: device.deviceId,
-        musicName: '${item.title} - ${item.author}',
-        url: playUrl,
-        albumCoverUrl: item.picture, // 🎨 传入封面图URL（搜索结果自带）
-      );
+      await ref
+          .read(playbackProvider.notifier)
+          .playMusic(
+            deviceId: device.deviceId,
+            musicName: '${item.title} - ${item.author}',
+            url: playUrl,
+            albumCoverUrl: item.picture, // 🎨 传入封面图URL（搜索结果自带）
+          );
 
       debugPrint('[DirectMode] ✅ 播放请求已通过 PlaybackProvider 发送');
     } catch (e, stackTrace) {
       debugPrint('[DirectMode] ❌ 播放失败: $e');
-      debugPrint('[DirectMode] 堆栈: ${stackTrace.toString().split('\n').take(5).join('\n')}');
+      debugPrint(
+        '[DirectMode] 堆栈: ${stackTrace.toString().split('\n').take(5).join('\n')}',
+      );
 
       if (mounted) {
         AppSnackBar.showError(
@@ -1268,10 +1461,7 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
 
     if (id.isEmpty) {
       if (mounted) {
-        AppSnackBar.showError(
-          context,
-          '❌ 缺少歌曲标识，无法播放',
-        );
+        AppSnackBar.showError(context, '❌ 缺少歌曲标识，无法播放');
       }
       return;
     }
@@ -1292,20 +1482,23 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
     // 创建播放队列（懒加载模式需要）
     final searchState = ref.read(musicSearchProvider);
     if (searchState.onlineResults.isNotEmpty) {
-      debugPrint('[XiaomusicQueue] 🎵 创建播放队列: ${searchState.onlineResults.length} 首');
+      debugPrint(
+        '[XiaomusicQueue] 🎵 创建播放队列: ${searchState.onlineResults.length} 首',
+      );
 
       // 转换为 PlaylistItem 列表
-      final playlistItems = searchState.onlineResults.map((result) {
-        return PlaylistItem.fromOnlineMusic(
-          title: result.title,
-          artist: result.author,
-          album: result.album,
-          duration: result.duration ?? 0,
-          platform: result.platform,
-          songId: result.songId,
-          coverUrl: result.picture,
-        );
-      }).toList();
+      final playlistItems =
+          searchState.onlineResults.map((result) {
+            return PlaylistItem.fromOnlineMusic(
+              title: result.title,
+              artist: result.author,
+              album: result.album,
+              duration: result.duration ?? 0,
+              platform: result.platform,
+              songId: result.songId,
+              coverUrl: result.picture,
+            );
+          }).toList();
 
       // 找到当前点击歌曲的索引
       final startIndex = searchState.onlineResults.indexWhere(
@@ -1313,14 +1506,18 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
       );
 
       // 设置队列
-      ref.read(playbackQueueProvider.notifier).setQueue(
-        queueName: '搜索结果: ${searchState.searchQuery}',
-        source: PlaylistSource.searchResult,
-        items: playlistItems,
-        startIndex: startIndex >= 0 ? startIndex : 0,
-      );
+      ref
+          .read(playbackQueueProvider.notifier)
+          .setQueue(
+            queueName: '搜索结果: ${searchState.searchQuery}',
+            source: PlaylistSource.searchResult,
+            items: playlistItems,
+            startIndex: startIndex >= 0 ? startIndex : 0,
+          );
 
-      debugPrint('[XiaomusicQueue] ✅ 播放队列已创建，起始索引: ${startIndex >= 0 ? startIndex : 0}');
+      debugPrint(
+        '[XiaomusicQueue] ✅ 播放队列已创建，起始索引: ${startIndex >= 0 ? startIndex : 0}',
+      );
     }
 
     // 🎯 使用统一的 playOnlineItem 方法播放
@@ -1376,10 +1573,7 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
 
       if (!isLocalPlayback && deviceState.devices.isEmpty) {
         if (mounted) {
-          AppSnackBar.showWarning(
-            context,
-            '未找到可用设备，请先在控制页检查设备连接',
-          );
+          AppSnackBar.showWarning(context, '未找到可用设备，请先在控制页检查设备连接');
         }
         return;
       }
@@ -1518,17 +1712,13 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
 class _PlaylistSelectionDialog extends StatelessWidget {
   final List<String> playlists;
 
-  const _PlaylistSelectionDialog({
-    required this.playlists,
-  });
+  const _PlaylistSelectionDialog({required this.playlists});
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Text(
         '选择歌单',
         style: TextStyle(
@@ -1566,9 +1756,7 @@ class _PlaylistSelectionDialog extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(),
           child: Text(
             '取消',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.primary,
-            ),
+            style: TextStyle(color: Theme.of(context).colorScheme.primary),
           ),
         ),
       ],

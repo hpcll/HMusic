@@ -2,7 +2,6 @@ import '../../core/network/dio_client.dart';
 import 'package:dio/dio.dart';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import '../../core/constants/app_constants.dart';
 import '../adapters/music_list_json_adapter.dart';
 import '../models/online_music_result.dart';
 
@@ -15,6 +14,9 @@ class UploadFile {
 
 class MusicApiService {
   final DioClient _client;
+  // null: 未知（可尝试）/ true: 支持 / false: 不支持（本次运行不再尝试）
+  bool? _supportsDownloadOneMusicDirname;
+  bool? _supportsDownloadOneMusicPlaylistName;
 
   MusicApiService(this._client);
 
@@ -121,8 +123,13 @@ class MusicApiService {
 
   // 修改部分设置接口（只更新指定字段）
   // 🎯 这个 API 专门用于修改部分设置，不需要发送完整配置
-  Future<Map<String, dynamic>> modifySetting(Map<String, dynamic> settings) async {
-    final response = await _client.post('/api/system/modifiysetting', data: settings);
+  Future<Map<String, dynamic>> modifySetting(
+    Map<String, dynamic> settings,
+  ) async {
+    final response = await _client.post(
+      '/api/system/modifiysetting',
+      data: settings,
+    );
     return response.data as Map<String, dynamic>;
   }
 
@@ -480,10 +487,145 @@ class MusicApiService {
   Future<Map<String, dynamic>> downloadOneMusic({
     required String musicName,
     String? url,
+    String? dirname,
+    String? playlistName,
   }) async {
-    final payload = {'name': musicName, if (url != null) 'url': url};
+    final payload = {
+      'name': musicName,
+      if (url != null) 'url': url,
+      if (dirname != null && dirname.isNotEmpty) 'dirname': dirname,
+      if (playlistName != null && playlistName.isNotEmpty)
+        'playlist_name': playlistName,
+    };
     final resp = await _client.post('/downloadonemusic', data: payload);
     return (resp.data as Map).cast<String, dynamic>();
+  }
+
+  /// 检测当前后端是否支持 downloadonemusic.dirname 参数
+  ///
+  /// 通过 openapi schema 中 DownloadOneMusic 的字段判断。
+  /// 结果会缓存，避免重复请求。
+  Future<bool> supportsDownloadOneMusicDirname() async {
+    if (_supportsDownloadOneMusicDirname != null) {
+      return _supportsDownloadOneMusicDirname!;
+    }
+
+    try {
+      final response = await _client.get('/openapi.json');
+      final root = response.data as Map<String, dynamic>;
+      final components = root['components'];
+      if (components is! Map) {
+        _supportsDownloadOneMusicDirname = false;
+        return false;
+      }
+
+      final schemas = components['schemas'];
+      if (schemas is! Map) {
+        _supportsDownloadOneMusicDirname = false;
+        return false;
+      }
+
+      final downloadOneMusic = schemas['DownloadOneMusic'];
+      if (downloadOneMusic is! Map) {
+        _supportsDownloadOneMusicDirname = false;
+        return false;
+      }
+
+      final properties = downloadOneMusic['properties'];
+      if (properties is! Map) {
+        _supportsDownloadOneMusicDirname = false;
+        return false;
+      }
+
+      _supportsDownloadOneMusicDirname = properties.containsKey('dirname');
+      return _supportsDownloadOneMusicDirname!;
+    } catch (e) {
+      debugPrint('⚠️ [MusicApiService] 检测 downloadonemusic.dirname 支持失败: $e');
+      _supportsDownloadOneMusicDirname = false;
+      return false;
+    }
+  }
+
+  /// 检测当前后端是否支持 downloadonemusic.playlist_name 参数
+  ///
+  /// 通过 openapi schema 中 DownloadOneMusic 的字段判断。
+  /// 结果会缓存，避免重复请求。
+  Future<bool> supportsDownloadOneMusicPlaylistName() async {
+    if (_supportsDownloadOneMusicPlaylistName != null) {
+      return _supportsDownloadOneMusicPlaylistName!;
+    }
+
+    try {
+      final response = await _client.get('/openapi.json');
+      final root = response.data as Map<String, dynamic>;
+      final components = root['components'];
+      if (components is! Map) {
+        _supportsDownloadOneMusicPlaylistName = false;
+        return false;
+      }
+
+      final schemas = components['schemas'];
+      if (schemas is! Map) {
+        _supportsDownloadOneMusicPlaylistName = false;
+        return false;
+      }
+
+      final downloadOneMusic = schemas['DownloadOneMusic'];
+      if (downloadOneMusic is! Map) {
+        _supportsDownloadOneMusicPlaylistName = false;
+        return false;
+      }
+
+      final properties = downloadOneMusic['properties'];
+      if (properties is! Map) {
+        _supportsDownloadOneMusicPlaylistName = false;
+        return false;
+      }
+
+      _supportsDownloadOneMusicPlaylistName =
+          properties.containsKey('playlist_name');
+      return _supportsDownloadOneMusicPlaylistName!;
+    } catch (e) {
+      debugPrint('⚠️ [MusicApiService] 检测 downloadonemusic.playlist_name 支持失败: $e');
+      _supportsDownloadOneMusicPlaylistName = false;
+      return false;
+    }
+  }
+
+  /// 本次应用运行中是否还应尝试 dirname 参数。
+  ///
+  /// - false: 已确认不支持，不再尝试
+  /// - true/null: 允许尝试
+  bool canAttemptDownloadOneMusicDirname() {
+    return _supportsDownloadOneMusicDirname != false;
+  }
+
+  /// 本次应用运行中是否还应尝试 playlist_name 参数。
+  ///
+  /// - false: 已确认不支持，不再尝试
+  /// - true/null: 允许尝试
+  bool canAttemptDownloadOneMusicPlaylistName() {
+    return _supportsDownloadOneMusicPlaylistName != false;
+  }
+
+  /// 标记后端支持 dirname 参数。
+  void markDownloadOneMusicDirnameSupported() {
+    _supportsDownloadOneMusicDirname = true;
+  }
+
+  /// 标记后端支持 playlist_name 参数。
+  void markDownloadOneMusicPlaylistNameSupported() {
+    _supportsDownloadOneMusicPlaylistName = true;
+  }
+
+  /// 标记后端不支持 dirname 参数（本次运行不再尝试）。
+  void markDownloadOneMusicDirnameUnsupported() {
+    _supportsDownloadOneMusicDirname = false;
+  }
+
+  /// 标记后端不支持 playlist_name 参数（本次运行不再尝试）。
+  void markDownloadOneMusicPlaylistNameUnsupported() {
+    _supportsDownloadOneMusicPlaylistName = false;
   }
 
   // 通用文件上传方法
@@ -562,11 +704,7 @@ class MusicApiService {
   }) async {
     final response = await _client.post(
       '/api/device/pushList',
-      data: {
-        'did': did,
-        'songList': songList,
-        'playlistName': playlistName,
-      },
+      data: {'did': did, 'songList': songList, 'playlistName': playlistName},
     );
     return response.data as Map<String, dynamic>;
   }
