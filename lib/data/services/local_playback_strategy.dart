@@ -13,6 +13,9 @@ import 'audio_handler_service.dart';
 /// 本地播放策略实现
 /// 使用 just_audio 在手机本地播放音乐
 class LocalPlaybackStrategy implements PlaybackStrategy {
+  @override
+  String? get lastAudioId => null;
+
   static AudioHandlerService? _sharedAudioHandler;
   static AudioPlayer? _sharedAudioPlayer; // 🔧 添加静态共享 AudioPlayer
   static final Completer<void> _handlerReadyCompleter = Completer<void>();

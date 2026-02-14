@@ -23,6 +23,9 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
   // 状态变化回调
   Function()? onStatusChanged;
 
+  @override
+  String? get lastAudioId => null;
+
   // 获取音乐URL的回调（由PlaybackProvider设置）
   Future<String?> Function(String musicName)? onGetMusicUrl;
 

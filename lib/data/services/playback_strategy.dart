@@ -43,4 +43,7 @@ abstract class PlaybackStrategy {
 
   /// 是否为本地播放模式
   bool get isLocalMode;
+
+  /// 最近一次状态查询的 audio_id（仅远程模式有效，用于检测同名歌曲源切换）
+  String? get lastAudioId => null;
 }

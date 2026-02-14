@@ -1117,6 +1117,7 @@ class _MusicSearchPageState extends ConsumerState<MusicSearchPage> {
               platform: item.platform ?? 'unknown',
               songId: item.songId ?? '',
               coverUrl: item.picture,
+              duration: item.duration,
             );
 
             await ref

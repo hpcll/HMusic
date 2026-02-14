@@ -40,6 +40,7 @@ LocalPlaylistSong _$LocalPlaylistSongFromJson(Map<String, dynamic> json) =>
           json['urlExpireTime'] == null
               ? null
               : DateTime.parse(json['urlExpireTime'] as String),
+      duration: (json['duration'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$LocalPlaylistSongToJson(LocalPlaylistSong instance) =>
@@ -52,4 +53,5 @@ Map<String, dynamic> _$LocalPlaylistSongToJson(LocalPlaylistSong instance) =>
       'coverUrl': instance.coverUrl,
       'cachedUrl': instance.cachedUrl,
       'urlExpireTime': instance.urlExpireTime?.toIso8601String(),
+      'duration': instance.duration,
     };

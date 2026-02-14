@@ -24,6 +24,10 @@ class RemotePlaybackStrategy implements PlaybackStrategy {
   _PlaybackApiGroup? _activeApiGroup;
   String? _lastKnownMusicName;
   bool? _lastKnownIsPlaying;
+  String? _lastAudioId; // 🎯 追踪 audio_id 变化，检测服务端劫持
+
+  /// 最近一次状态查询返回的 audio_id（用于检测同名歌曲的源切换）
+  String? get lastAudioId => _lastAudioId;
 
   RemotePlaybackStrategy({
     required MusicApiService apiService,
@@ -182,8 +186,32 @@ class RemotePlaybackStrategy implements PlaybackStrategy {
       await _playOnlineMusicWithCompatibility(musicName: musicName, url: url);
     } else {
       // 否则，使用音乐名称播放（服务器本地音乐）
+      // 🛡️ 如果当前在 playUrl 分组（元歌单/在线播放中），先暂停再切换
+      final didPrePause = _activeApiGroup == _PlaybackApiGroup.playUrl;
+      if (didPrePause) {
+        try {
+          debugPrint('🔄 [RemotePlayback] 先暂停 playUrl 播放，避免切换竞争');
+          await _apiService.pauseMusic(did: _deviceId);
+          await Future.delayed(const Duration(milliseconds: 200));
+        } catch (_) {}
+      }
       debugPrint('🎵 [RemotePlayback] 播放服务器本地音乐');
       await _apiService.playMusic(did: _deviceId, musicName: musicName);
+      // 🎵 如果之前做了预暂停，playmusiclist 可能不会自动播放
+      // 先检查状态，只在确实暂停时才补发恢复指令（避免重复播放开头）
+      if (didPrePause) {
+        try {
+          await Future.delayed(const Duration(milliseconds: 500));
+          final status = await _apiService.getPlayerStatus(did: _deviceId);
+          final playerStatus = status['status']; // 1=playing, 2=paused
+          if (playerStatus == 2) {
+            debugPrint('▶️ [RemotePlayback] 检测到暂停状态，补发恢复播放指令');
+            await _apiService.resumeMusic(did: _deviceId);
+          } else {
+            debugPrint('✅ [RemotePlayback] 已在播放中，无需补发恢复指令');
+          }
+        } catch (_) {}
+      }
     }
   }
 
@@ -293,6 +321,12 @@ class RemotePlaybackStrategy implements PlaybackStrategy {
         currentMusic.isNotEmpty ? currentMusic : (_lastKnownMusicName ?? '');
     _lastKnownIsPlaying = isPlaying;
 
+    // 🎯 保存 audio_id 用于检测同名歌曲的源切换
+    final audioId = detail?['audio_id'];
+    if (audioId != null) {
+      _lastAudioId = audioId.toString();
+    }
+
     return {
       'ret': status['ret'] ?? 'ok',
       'is_playing': isPlaying,
@@ -372,6 +406,19 @@ class RemotePlaybackStrategy implements PlaybackStrategy {
     required String musicName,
     required String url,
   }) async {
+    // 🛡️ 如果当前在 legacy 分组（服务端歌单播放中），先暂停再切换
+    // 避免服务端歌单逻辑与 playurl 产生竞争
+    final didPrePause = _activeApiGroup == _PlaybackApiGroup.legacy;
+    if (didPrePause) {
+      try {
+        debugPrint('🔄 [RemotePlayback] 先暂停 legacy 播放，避免切换竞争');
+        await _apiService.pauseMusic(did: _deviceId);
+        await Future.delayed(const Duration(milliseconds: 200));
+      } catch (_) {
+        // 暂停失败不影响后续播放
+      }
+    }
+
     final useNewGroup = await _shouldUsePlayUrlGroup();
     final proxyUrl = _apiService.buildProxyUrl(url);
 
@@ -407,6 +454,20 @@ class RemotePlaybackStrategy implements PlaybackStrategy {
       musicAuthor: author,
     );
     _activeApiGroup = _PlaybackApiGroup.legacy;
+    // 🎵 如果之前做了预暂停，检查状态，只在暂停时才补发恢复指令
+    if (didPrePause) {
+      try {
+        await Future.delayed(const Duration(milliseconds: 500));
+        final status = await _apiService.getPlayerStatus(did: _deviceId);
+        final playerStatus = status['status'];
+        if (playerStatus == 2) {
+          debugPrint('▶️ [RemotePlayback] 检测到暂停状态，补发恢复播放指令');
+          await _apiService.resumeMusic(did: _deviceId);
+        } else {
+          debugPrint('✅ [RemotePlayback] 已在播放中，无需补发恢复指令');
+        }
+      } catch (_) {}
+    }
   }
 
   Future<bool> _verifyPlayUrlApplied({

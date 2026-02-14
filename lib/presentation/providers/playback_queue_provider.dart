@@ -217,6 +217,25 @@ class PlaybackQueueNotifier extends StateNotifier<PlaybackQueueState> {
     _saveToCache();
   }
 
+  /// 更新当前歌曲的 duration（用于旧歌曲解析 URL 时获取到 duration 的场景）
+  void updateCurrentDuration(int duration) {
+    if (state.queue == null || state.queue!.currentItem == null) {
+      debugPrint('⚠️ [PlaybackQueue] 无法更新 duration：队列为空');
+      return;
+    }
+
+    final currentIndex = state.queue!.currentIndex;
+    final updatedItem = state.queue!.items[currentIndex].copyWith(duration: duration);
+    final updatedItems = List<PlaylistItem>.from(state.queue!.items);
+    updatedItems[currentIndex] = updatedItem;
+
+    debugPrint('🎯 [PlaybackQueue] 已更新当前歌曲 duration: ${duration}秒');
+    state = state.copyWith(
+      queue: state.queue!.copyWith(items: updatedItems),
+    );
+    _saveToCache();
+  }
+
   /// 添加单首歌曲到队列末尾
   ///
   /// 如果队列不存在，会自动创建一个新队列

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:just_audio/just_audio.dart';
 
 import '../providers/playlist_provider.dart';
 import '../providers/local_playlist_provider.dart'; // 🎯 本地播放列表
@@ -11,10 +12,13 @@ import '../providers/device_provider.dart';
 import '../providers/music_library_provider.dart';
 import '../providers/js_proxy_provider.dart'; // 🎯 JS代理（QuickJS）
 import '../providers/js_source_provider.dart'; // 🎯 JS音源服务
+import '../providers/playback_queue_provider.dart'; // 🎯 播放队列管理
 import '../widgets/app_snackbar.dart';
 import '../widgets/app_layout.dart';
 import '../../data/models/music.dart';
 import '../../data/models/local_playlist.dart'; // 🎯 本地播放列表模型
+import '../../data/models/playlist_item.dart'; // 🎯 统一播放列表项
+import '../../data/models/playlist_queue.dart'; // 🎯 PlaylistSource 枚举
 import '../../data/utils/lx_music_info_builder.dart';
 
 class PlaylistDetailPage extends ConsumerStatefulWidget {
@@ -123,8 +127,22 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
         // 🎯 播放第一首歌曲（带URL缓存和自动重试）
         final firstSong = playlist.songs.first;
 
+        // 🎯 设置播放队列（确保 _getCurrentQueueName() 能返回正确的歌单名）
+        final queueItems = _localSongsToPlaylistItems(playlist.songs);
+        ref.read(playbackQueueProvider.notifier).setQueue(
+              queueName: widget.playlistName,
+              source: PlaylistSource.customPlaylist,
+              items: queueItems,
+              startIndex: 0,
+            );
+        debugPrint(
+          '🎯 [PlaylistDetail] 已设置元歌单队列: ${widget.playlistName}, ${queueItems.length}首',
+        );
+
         // 🎯 解析URL（自动使用缓存或重新解析）
-        String? playUrl = await _resolveUrlWithCache(firstSong, 0);
+        var resolveResult = await _resolveUrlWithCache(firstSong, 0);
+        String? playUrl = resolveResult.url;
+        int? songDuration = resolveResult.duration;
 
         if (playUrl == null || playUrl.isEmpty) {
           if (mounted) {
@@ -146,6 +164,7 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
                 url: playUrl,
                 albumCoverUrl: firstSong.coverUrl,
                 playlistName: widget.playlistName,
+                duration: songDuration,
               );
 
           if (mounted) {
@@ -155,11 +174,13 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
           // 🔄 播放失败，可能是缓存URL失效，尝试强制刷新重试
           debugPrint('❌ [PlaylistDetail] 播放失败，尝试强制刷新缓存: $e');
 
-          playUrl = await _resolveUrlWithCache(
+          resolveResult = await _resolveUrlWithCache(
             firstSong,
             0,
             forceRefresh: true,
           );
+          playUrl = resolveResult.url;
+          songDuration = resolveResult.duration;
 
           if (playUrl == null || playUrl.isEmpty) {
             if (mounted) {
@@ -181,6 +202,7 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
                   url: playUrl,
                   albumCoverUrl: firstSong.coverUrl,
                   playlistName: widget.playlistName,
+                  duration: songDuration,
                 );
 
             if (mounted) {
@@ -216,6 +238,22 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
           .read(playlistProvider.notifier)
           .playPlaylist(deviceId: did, playlistName: widget.playlistName);
     }
+  }
+
+  /// 🎯 将元歌单歌曲列表转为统一的 PlaylistItem 列表
+  List<PlaylistItem> _localSongsToPlaylistItems(List<LocalPlaylistSong> songs) {
+    return songs
+        .map(
+          (s) => PlaylistItem.fromOnlineMusic(
+            title: s.title,
+            artist: s.artist,
+            duration: s.duration ?? 0,
+            platform: s.platform,
+            songId: s.songId,
+            coverUrl: s.coverUrl,
+          ),
+        )
+        .toList();
   }
 
   Future<void> _playSingle(String musicName) async {
@@ -273,8 +311,23 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
 
         final song = playlist.songs[songIndex];
 
+        // 🎯 设置播放队列（确保 _getCurrentQueueName() 能返回正确的歌单名）
+        final queueItems = _localSongsToPlaylistItems(playlist.songs);
+        ref.read(playbackQueueProvider.notifier).setQueue(
+              queueName: widget.playlistName,
+              source: PlaylistSource.customPlaylist,
+              items: queueItems,
+              startIndex: songIndex,
+            );
+        debugPrint(
+          '🎯 [PlaylistDetail] 已设置元歌单队列: ${widget.playlistName}, '
+          '${queueItems.length}首, 当前第${songIndex + 1}首',
+        );
+
         // 🎯 解析URL（自动使用缓存或重新解析）
-        String? playUrl = await _resolveUrlWithCache(song, songIndex);
+        var resolveResult = await _resolveUrlWithCache(song, songIndex);
+        String? playUrl = resolveResult.url;
+        int? songDuration = resolveResult.duration;
 
         if (playUrl == null || playUrl.isEmpty) {
           if (mounted) {
@@ -293,16 +346,19 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
                 url: playUrl,
                 albumCoverUrl: song.coverUrl,
                 playlistName: widget.playlistName,
+                duration: songDuration,
               );
         } catch (e) {
           // 🔄 播放失败，可能是缓存URL失效，尝试强制刷新重试
           debugPrint('❌ [PlaylistDetail] 播放失败，尝试强制刷新缓存: $e');
 
-          playUrl = await _resolveUrlWithCache(
+          resolveResult = await _resolveUrlWithCache(
             song,
             songIndex,
             forceRefresh: true,
           );
+          playUrl = resolveResult.url;
+          songDuration = resolveResult.duration;
 
           if (playUrl == null || playUrl.isEmpty) {
             if (mounted) {
@@ -321,6 +377,7 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
                   url: playUrl,
                   albumCoverUrl: song.coverUrl,
                   playlistName: widget.playlistName,
+                  duration: songDuration,
                 );
           } catch (e2) {
             // 第二次也失败，显示错误
@@ -614,11 +671,11 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
     }
   }
 
-  /// 🎯 解析播放URL（带缓存逻辑）
+  /// 🎯 解析播放URL（带缓存逻辑），同时返回 duration
   /// [song] 要播放的歌曲
   /// [songIndex] 歌曲在歌单中的索引（用于更新缓存）
   /// [forceRefresh] 强制刷新缓存（播放失败时使用）
-  Future<String?> _resolveUrlWithCache(
+  Future<({String? url, int? duration})> _resolveUrlWithCache(
     LocalPlaylistSong song,
     int songIndex, {
     bool forceRefresh = false,
@@ -627,7 +684,23 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
     if (!forceRefresh && song.isCacheValid) {
       debugPrint('✅ [PlaylistDetail] 使用缓存URL: ${song.displayName}');
       debugPrint('   缓存过期时间: ${song.urlExpireTime}');
-      return song.cachedUrl;
+
+      // 🎯 如果已有 duration，直接返回
+      if (song.duration != null && song.duration! > 0) {
+        return (url: song.cachedUrl, duration: song.duration);
+      }
+
+      // 🎯 旧歌曲没有 duration，用 just_audio 从缓存 URL 探测
+      final probedDuration = await _probeDurationFromUrl(song.cachedUrl!);
+      if (probedDuration != null && probedDuration > 0) {
+        // 保存 duration 到 LocalPlaylistSong
+        await ref.read(localPlaylistProvider.notifier).updateSongDuration(
+              playlistName: widget.playlistName,
+              songIndex: songIndex,
+              duration: probedDuration,
+            );
+      }
+      return (url: song.cachedUrl, duration: probedDuration ?? song.duration);
     }
 
     // 强制刷新时记录日志
@@ -642,7 +715,7 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
 
     if (songId.isEmpty) {
       debugPrint('❌ [PlaylistDetail] 歌曲ID为空，无法解析');
-      return null;
+      return (url: null, duration: null);
     }
 
     try {
@@ -820,13 +893,50 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
               songIndex: songIndex,
               cachedUrl: resolvedUrl,
             );
-        return resolvedUrl;
+
+        // 🎯 如果没有 duration，用 just_audio 从新 URL 探测
+        int? duration = song.duration;
+        if (duration == null || duration <= 0) {
+          duration = await _probeDurationFromUrl(resolvedUrl);
+          if (duration != null && duration > 0) {
+            await ref.read(localPlaylistProvider.notifier).updateSongDuration(
+                  playlistName: widget.playlistName,
+                  songIndex: songIndex,
+                  duration: duration,
+                );
+          }
+        }
+        return (url: resolvedUrl, duration: duration);
       }
 
       debugPrint('❌ [PlaylistDetail] 所有解析方法均失败');
-      return null;
+      return (url: null, duration: null);
     } catch (e) {
       debugPrint('❌ [PlaylistDetail] URL解析失败: $e');
+      return (url: null, duration: null);
+    }
+  }
+
+  /// 🎯 使用 just_audio 从 URL 探测音频时长
+  Future<int?> _probeDurationFromUrl(String url) async {
+    try {
+      debugPrint('🎯 [PlaylistDetail] 探测音频时长: ${url.substring(0, url.length > 60 ? 60 : url.length)}...');
+      final tempPlayer = AudioPlayer();
+      try {
+        final duration = await tempPlayer.setUrl(url).timeout(
+          const Duration(seconds: 8),
+        );
+        if (duration != null && duration.inSeconds > 0) {
+          debugPrint('✅ [PlaylistDetail] 探测到时长: ${duration.inSeconds}秒');
+          return duration.inSeconds;
+        }
+        debugPrint('⚠️ [PlaylistDetail] 探测返回空时长');
+        return null;
+      } finally {
+        await tempPlayer.dispose();
+      }
+    } catch (e) {
+      debugPrint('⚠️ [PlaylistDetail] 探测时长失败: $e');
       return null;
     }
   }

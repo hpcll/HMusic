@@ -306,6 +306,44 @@ class LocalPlaylistNotifier extends StateNotifier<LocalPlaylistState> {
     }
   }
 
+  /// 🎯 更新歌曲的 duration（用于旧歌曲探测到时长后持久化）
+  Future<void> updateSongDuration({
+    required String playlistName,
+    required int songIndex,
+    required int duration,
+  }) async {
+    try {
+      final playlistIndex =
+          state.playlists.indexWhere((p) => p.name == playlistName);
+
+      if (playlistIndex == -1) return;
+
+      final playlist = state.playlists[playlistIndex];
+      if (songIndex < 0 || songIndex >= playlist.songs.length) return;
+
+      final song = playlist.songs[songIndex];
+      final updatedSong = song.copyWith(duration: duration);
+
+      final updatedSongs = [...playlist.songs];
+      updatedSongs[songIndex] = updatedSong;
+
+      final updatedPlaylist = playlist.copyWith(
+        songs: updatedSongs,
+        updatedAt: DateTime.now(),
+      );
+
+      final updatedPlaylists = [...state.playlists];
+      updatedPlaylists[playlistIndex] = updatedPlaylist;
+
+      state = state.copyWith(playlists: updatedPlaylists);
+      await _savePlaylists();
+
+      debugPrint('✅ [LocalPlaylist] 更新歌曲时长: ${song.displayName} → ${duration}秒');
+    } catch (e) {
+      debugPrint('❌ [LocalPlaylist] 更新歌曲时长失败: $e');
+    }
+  }
+
   /// 清除错误信息
   void clearError() {
     state = state.copyWith(error: null);

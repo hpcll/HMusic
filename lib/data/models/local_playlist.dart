@@ -85,6 +85,7 @@ class LocalPlaylistSong {
   final String? coverUrl; // 封面图URL
   final String? cachedUrl; // 🎯 缓存的播放链接
   final DateTime? urlExpireTime; // 🎯 链接过期时间（6小时有效期）
+  final int? duration; // 🎯 歌曲时长（秒），用于进度条显示
 
   const LocalPlaylistSong({
     required this.title,
@@ -95,6 +96,7 @@ class LocalPlaylistSong {
     this.coverUrl,
     this.cachedUrl,
     this.urlExpireTime,
+    this.duration,
   });
 
   factory LocalPlaylistSong.fromJson(Map<String, dynamic> json) =>
@@ -109,6 +111,7 @@ class LocalPlaylistSong {
     required String platform,
     required String songId,
     String? coverUrl,
+    int? duration,
   }) {
     return LocalPlaylistSong(
       title: title,
@@ -116,6 +119,7 @@ class LocalPlaylistSong {
       platform: platform,
       songId: songId,
       coverUrl: coverUrl,
+      duration: duration,
     );
   }
 
@@ -160,6 +164,7 @@ class LocalPlaylistSong {
     String? coverUrl,
     String? cachedUrl,
     DateTime? urlExpireTime,
+    int? duration,
   }) {
     return LocalPlaylistSong(
       title: title ?? this.title,
@@ -170,6 +175,7 @@ class LocalPlaylistSong {
       coverUrl: coverUrl ?? this.coverUrl,
       cachedUrl: cachedUrl ?? this.cachedUrl,
       urlExpireTime: urlExpireTime ?? this.urlExpireTime,
+      duration: duration ?? this.duration,
     );
   }
 

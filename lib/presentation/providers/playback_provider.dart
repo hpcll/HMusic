@@ -1495,14 +1495,32 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
       // 而用户实际可能在从搜索结果/自定义歌单播放
       if (finalMusic != null) {
         final realQueueName = _getCurrentQueueName();
-        if (realQueueName.isNotEmpty && realQueueName != finalMusic.curPlaylist) {
+        // 🎯 当服务端返回 duration=0 时（playurl 场景），从 APP 队列获取 duration 作为 fallback
+        int finalDuration = finalMusic.duration;
+        if (finalDuration <= 0) {
+          final queueState = ref.read(playbackQueueProvider);
+          final queue = queueState.queue;
+          if (queue != null) {
+            final currentItem = queue.items.cast<PlaylistItem?>().firstWhere(
+              (item) => item!.displayName == finalMusic?.curMusic,
+              orElse: () => null,
+            );
+            if (currentItem != null && currentItem.duration > 0) {
+              finalDuration = currentItem.duration;
+              debugPrint('🎯 [PlaybackProvider] 使用队列中的 duration 补充: ${finalDuration}秒');
+            }
+          }
+        }
+
+        if (realQueueName.isNotEmpty && realQueueName != finalMusic.curPlaylist ||
+            finalDuration != finalMusic.duration) {
           finalMusic = PlayingMusic(
             ret: finalMusic.ret,
             curMusic: finalMusic.curMusic,
-            curPlaylist: realQueueName,
+            curPlaylist: realQueueName.isNotEmpty ? realQueueName : finalMusic.curPlaylist,
             isPlaying: finalMusic.isPlaying,
             offset: finalMusic.offset,
-            duration: finalMusic.duration,
+            duration: finalDuration,
           );
         }
       }
@@ -1584,9 +1602,8 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
           _currentStrategy is! MiIoTDirectPlaybackStrategy) {
         final canPredictProgress =
             currentMusic != null &&
-            currentMusic.isPlaying &&
-            currentMusic.duration > 0 &&
-            currentMusic.offset > 0;
+            currentMusic.isPlaying;
+            // 🎯 不再要求 duration>0，playurl 场景也需要本地进度递增
         _startProgressTimer(canPredictProgress);
         debugPrint('✅ [PlaybackProvider] xiaomusic远程模式已启动进度预测定时器');
 
@@ -2261,6 +2278,7 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
     List<Music>? playlist, // 🎵 新增：播放列表（用于本地播放上一曲/下一曲）
     int? startIndex, // 🎵 新增：开始播放的索引
     String? playlistName, // 🎵 新增：歌单名称（用于 UI 显示和 API 调用）
+    int? duration, // 🎯 新增：歌曲时长（秒），用于乐观更新进度条
   }) async {
     // 🎵 使用策略模式播放
     if (_currentStrategy == null) {
@@ -2314,13 +2332,28 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
             existingMusic.curMusic == musicName &&
             existingMusic.duration > 0;
 
+        // 🎯 duration 优先级：传入参数 > 保护期已有值 > 队列中的值 > 0
+        int optimisticDuration = 0;
+        if (duration != null && duration > 0) {
+          optimisticDuration = duration;
+        } else if (keepExistingDuration) {
+          optimisticDuration = existingMusic.duration;
+        } else {
+          // 从队列中查找 duration
+          final queueState = ref.read(playbackQueueProvider);
+          final currentItem = queueState.queue?.currentItem;
+          if (currentItem != null && currentItem.duration > 0 &&
+              currentItem.displayName == musicName) {
+            optimisticDuration = currentItem.duration;
+          }
+        }
+
         final optimisticMusic = PlayingMusic(
           ret: 'OK',
           curMusic: musicName,
           curPlaylist: _getCurrentQueueName(),
           isPlaying: true, // 乐观地认为会播放成功
-          // 保护期内如果上一层已写入有效时长（如 playOnlineItem），不要重置为 0
-          duration: keepExistingDuration ? existingMusic.duration : 0,
+          duration: optimisticDuration,
           offset: 0, // 进度从0开始
         );
 
@@ -2331,7 +2364,7 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
           albumCoverUrl: albumCoverUrl, // 如果有封面图，立即显示
         );
         debugPrint(
-          '✨ [PlaybackProvider] 乐观更新UI: $musicName (保护期: $inProtectionPeriod)',
+          '✨ [PlaybackProvider] 乐观更新UI: $musicName (保护期: $inProtectionPeriod, duration: $optimisticDuration)',
         );
       } else {
         state = state.copyWith(
@@ -2569,12 +2602,14 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
     final currentOffset = state.currentMusic!.offset;
 
     // 智能更新策略：
-    // 1. 确保进度不超过总时长
+    // 1. 确保进度不超过总时长（duration>0 时）
     // 2. 避免倒退（除非是合理的小幅调整）
     // 3. 限制更新频率避免UI抖动
+    // 4. duration=0（playurl 场景）时也递增进度（仅显示已播放时间）
     final newOffset = predictedOffset.floor();
 
-    if (newOffset < duration &&
+    final withinDuration = duration <= 0 || newOffset < duration; // 🎯 duration=0 时不限制上限
+    if (withinDuration &&
         (newOffset > currentOffset || (currentOffset - newOffset).abs() <= 1)) {
       // 避免频繁的微小更新
       if ((newOffset - currentOffset).abs() >= 1 ||
@@ -2832,6 +2867,7 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
   int _xiaomusicLastPosition = 0;
   int _xiaomusicLastDuration = 0;
   int _xiaomusicNearEndHits = 0;
+  String? _xiaomusicLastAudioId; // 🎯 追踪 audio_id 变化
 
   /// 🎯 xiaomusic 模式：检测歌曲是否接近结尾并触发自动下一首
   ///
@@ -2863,22 +2899,12 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
     final duration = currentMusic.duration;
     final isPlaying = currentMusic.isPlaying;
 
-    // duration/offset 不可靠时，跳过自动下一首检测
-    if (duration <= 0 || position < 0 || !isPlaying) {
-      _xiaomusicLastPosition = position;
-      _xiaomusicLastDuration = duration;
-      return;
-    }
-
-    final remaining = duration - position;
-    final nearEndThreshold = (duration * 0.02).round().clamp(3, 8);
-    final isAtEnd = duration > 0 && remaining <= 3;
-    final shouldCountNearEnd = remaining > 0 && remaining <= nearEndThreshold;
-
-    // ========== 检测方式C：歌曲异常切换检测（最可靠） ==========
-    // 当 xiaomusic 服务端播完 music_list_json 里的歌后，会自动切回服务端自己的播放列表
-    // 例如：APP 推送了 "青花瓷" → 播完后 xiaomusic 自动切到 "七里香"（服务端的歌）
-    // 如果新歌不在 APP 的播放队列中，说明服务端自行切歌了，APP 应该介入
+    // ========== 检测方式C：歌曲异常切换检测（最可靠，优先级最高） ==========
+    // 🎯 必须在 duration 检查之前！因为元歌单通过 playurl 播放时 duration=0，
+    // 如果放在后面会被 duration<=0 的早期返回跳过，导致无法自动切歌。
+    //
+    // 原理：xiaomusic 服务端播完 APP 推送的歌后，会自动切回服务端自己的播放列表。
+    // 如果新歌不在 APP 的播放队列中，说明服务端自行切歌了，APP 应该介入。
     if (_xiaomusicLastSongName != null &&
         currentSongName != _xiaomusicLastSongName &&
         !_xiaomusicAutoNextTriggered) {
@@ -2888,20 +2914,32 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
         (item) => item.displayName == currentSongName,
       );
 
-      final wasNearEnd =
-          _xiaomusicLastDuration > 10 &&
+      // 🎯 判断上一首歌是否已播放完毕
+      // 当 duration > 0 时：精确判断（上一首接近结尾 + 当前在开头）
+      // 当 duration == 0 时（元歌单/playurl场景）：放宽条件，只要歌名变了且不在队列中就触发
+      final hasDurationInfo = _xiaomusicLastDuration > 10;
+      final nearEndThresholdC = hasDurationInfo
+          ? (_xiaomusicLastDuration * 0.02).round().clamp(3, 8)
+          : 0;
+      final wasNearEnd = hasDurationInfo &&
           _xiaomusicLastPosition > 10 &&
-          (_xiaomusicLastDuration - _xiaomusicLastPosition) < nearEndThreshold;
+          (_xiaomusicLastDuration - _xiaomusicLastPosition) < nearEndThresholdC;
       final isAtStart = position < 10;
 
-      if (!isInQueue && wasNearEnd && isAtStart) {
-        debugPrint('🎵 [xiaomusic-AutoNext] 🔍 检测到歌曲异常切换!');
+      // 触发条件：新歌不在队列中 + (上一首接近结尾 或 上一首没有时长信息)
+      final shouldTriggerC = !isInQueue && (wasNearEnd || !hasDurationInfo) && isAtStart;
+
+      if (shouldTriggerC) {
+        final reason = hasDurationInfo
+            ? '上一首接近结尾'
+            : '上一首无时长信息(元歌单/playurl)';
+        debugPrint('🎵 [xiaomusic-AutoNext] 🔍 检测到歌曲异常切换! [$reason]');
         debugPrint('   上一首(APP推送): $_xiaomusicLastSongName');
         debugPrint('   当前(服务端自切): $currentSongName');
         debugPrint('   该歌曲不在APP队列中 → 触发自动下一首');
 
         _xiaomusicAutoNextTriggered = true;
-        _xiaomusicLastSongName = currentSongName; // 更新为当前歌曲名
+        _xiaomusicLastSongName = currentSongName;
 
         // 🎯 从 APP 队列获取下一首
         final nextItem = ref.read(playbackQueueProvider.notifier).next();
@@ -2925,6 +2963,55 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
       }
     }
 
+    // ========== 检测方式D：audio_id 变化检测（同名歌曲源切换） ==========
+    // 🎯 当歌名没变但 audio_id 变了，说明服务端切到了同名但不同源的歌曲
+    // 例如：元歌单的「伤不起」播完 → 服务端「全部」列表里的「伤不起」
+    final currentAudioId = _currentStrategy?.lastAudioId;
+    if (currentAudioId != null &&
+        _xiaomusicLastAudioId != null &&
+        currentAudioId != _xiaomusicLastAudioId &&
+        !_xiaomusicAutoNextTriggered) {
+      // audio_id 变了，检查是否需要触发自动下一首
+      final queue = queueState.queue!;
+      final isAtStart = position < 10;
+
+      // 🎯 判断上一首是否已播放完毕（duration=0 的 playurl 场景）
+      final hasDurationInfo = _xiaomusicLastDuration > 10;
+
+      if (!hasDurationInfo && isAtStart) {
+        // 元歌单（playurl）场景：无 duration 信息 + 从头开始 → 服务端劫持
+        debugPrint('🎵 [xiaomusic-AutoNext] 🔍 检测到 audio_id 变化（同名歌曲源切换）!');
+        debugPrint('   歌名: $currentSongName（未变化）');
+        debugPrint('   audio_id: $_xiaomusicLastAudioId → $currentAudioId');
+        debugPrint('   上一首无时长信息(元歌单/playurl) → 触发自动下一首');
+
+        _xiaomusicAutoNextTriggered = true;
+        _xiaomusicLastAudioId = currentAudioId;
+
+        final nextItem = ref.read(playbackQueueProvider.notifier).next();
+        if (nextItem != null) {
+          debugPrint('🎵 [xiaomusic-AutoNext] 下一首: ${nextItem.displayName}');
+          try {
+            await _playNextItem(nextItem);
+            debugPrint('✅ [xiaomusic-AutoNext] 自动下一首播放成功(audio_id变化检测)');
+          } catch (e) {
+            debugPrint('❌ [xiaomusic-AutoNext] 自动下一首播放失败: $e');
+            _xiaomusicAutoNextTriggered = false;
+          }
+        } else {
+          debugPrint('⚠️ [xiaomusic-AutoNext] 队列已到末尾');
+        }
+
+        _xiaomusicLastPosition = position;
+        _xiaomusicLastDuration = duration;
+        return;
+      }
+    }
+    // 更新 audio_id 追踪
+    if (currentAudioId != null) {
+      _xiaomusicLastAudioId = currentAudioId;
+    }
+
     // 🔄 重置保护标志：当歌曲名变化时（新歌开始播放）
     if (currentSongName != _xiaomusicLastSongName) {
       if (_xiaomusicAutoNextTriggered) {
@@ -2933,6 +3020,54 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
       _xiaomusicAutoNextTriggered = false;
       _xiaomusicLastSongName = currentSongName;
     }
+
+    // ========== 检测方式E：duration=0 时的位置回跳检测 ==========
+    // 🎯 playUrl 播放的元歌单歌曲，服务端返回 duration=0，
+    // 歌曲播完后服务端会重新循环（同歌名、同 audio_id），position 从大值跳回开头。
+    // Method A/B 因 duration<=0 会被跳过，所以需要单独处理。
+    if (duration <= 0 &&
+        _xiaomusicLastPosition > 30 &&
+        position < 10 &&
+        isPlaying &&
+        !_xiaomusicAutoNextTriggered) {
+      debugPrint('🎵 [xiaomusic-AutoNext] 🔍 检测到 playUrl 歌曲位置回跳（Method E）!');
+      debugPrint('   歌名: $currentSongName');
+      debugPrint('   位置: ${_xiaomusicLastPosition}s → ${position}s (duration=0)');
+      debugPrint('   判定：元歌单歌曲播放完毕，服务端重新循环 → 触发自动下一首');
+
+      _xiaomusicAutoNextTriggered = true;
+
+      final nextItem = ref.read(playbackQueueProvider.notifier).next();
+      if (nextItem != null) {
+        debugPrint('🎵 [xiaomusic-AutoNext] 下一首: ${nextItem.displayName}');
+        try {
+          await _playNextItem(nextItem);
+          debugPrint('✅ [xiaomusic-AutoNext] 自动下一首播放成功(playUrl位置回跳检测)');
+        } catch (e) {
+          debugPrint('❌ [xiaomusic-AutoNext] 自动下一首播放失败: $e');
+          _xiaomusicAutoNextTriggered = false;
+        }
+      } else {
+        debugPrint('⚠️ [xiaomusic-AutoNext] 队列已到末尾');
+      }
+
+      _xiaomusicLastPosition = position;
+      _xiaomusicLastDuration = duration;
+      return;
+    }
+
+    // duration/offset 不可靠时，跳过基于进度的检测（方式A/B）
+    // 注意：方式C/D/E 已在上方处理，不受此限制
+    if (duration <= 0 || position < 0 || !isPlaying) {
+      _xiaomusicLastPosition = position;
+      _xiaomusicLastDuration = duration;
+      return;
+    }
+
+    final remaining = duration - position;
+    final nearEndThreshold = (duration * 0.02).round().clamp(3, 8);
+    final isAtEnd = duration > 0 && remaining <= 3;
+    final shouldCountNearEnd = remaining > 0 && remaining <= nearEndThreshold;
 
     // ========== 检测方式A：position 接近 duration ==========
     // 🎯 阈值基于时长动态调整，避免短歌过早触发
@@ -2944,12 +3079,12 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
 
     // ========== 检测方式B：位置跳跃检测 ==========
     // 上一次接近结尾 → 这一次回到开头（同一首歌循环播放的情况）
-    final wasNearEnd =
+    final wasNearEndAB =
         _xiaomusicLastDuration > 10 &&
         _xiaomusicLastPosition > 10 &&
         (_xiaomusicLastDuration - _xiaomusicLastPosition) < nearEndThreshold;
     final jumpedToStart = position < 10;
-    final isPositionJump = wasNearEnd && jumpedToStart;
+    final isPositionJump = wasNearEndAB && jumpedToStart;
 
     if (isAtEnd) {
       _xiaomusicNearEndHits = 2;
@@ -3076,7 +3211,9 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
 
       // 🎯 懒加载：解析 URL
       debugPrint('🎵 [playOnlineItem] 开始解析 URL...');
-      final url = await _resolveUrlWithPerSongFallback(item);
+      final resolveResult = await _resolveUrlWithPerSongFallback(item);
+      final url = resolveResult.url;
+      final resolvedDuration = resolveResult.duration;
 
       if (url == null || url.isEmpty) {
         throw Exception('无法解析播放 URL');
@@ -3085,6 +3222,23 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
       debugPrint(
         '✅ [playOnlineItem] URL 解析成功: ${url.substring(0, url.length > 80 ? 80 : url.length)}...',
       );
+
+      // 🎯 如果解析过程中获取到了 duration（旧歌曲没有存储 duration 的情况），更新乐观状态
+      if (resolvedDuration != null && resolvedDuration > 0 && (item.duration == null || item.duration == 0)) {
+        debugPrint('🎯 [playOnlineItem] 解析获得 duration=${resolvedDuration}秒，补充到状态');
+        final updatedMusic = PlayingMusic(
+          ret: 'OK',
+          curMusic: item.displayName,
+          curPlaylist: _getCurrentQueueName(),
+          isPlaying: true,
+          duration: resolvedDuration,
+          offset: 0,
+        );
+        state = state.copyWith(currentMusic: updatedMusic);
+
+        // 🎯 同时更新队列中该歌曲的 duration，后续播放就不用再补了
+        ref.read(playbackQueueProvider.notifier).updateCurrentDuration(resolvedDuration);
+      }
 
       // 🎯 通过 playMusic 播放（自动适配 xiaomusic/直连模式）
       await playMusic(
@@ -3134,7 +3288,7 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
 
   /// 🎯 单曲级回退解析：
   /// 先按设置策略的首选平台解析，失败后再跨平台搜同一首并解析
-  Future<String?> _resolveUrlWithPerSongFallback(PlaylistItem item) async {
+  Future<({String? url, int? duration})> _resolveUrlWithPerSongFallback(PlaylistItem item) async {
     final settings = ref.read(sourceSettingsProvider);
     final nativeSearch = ref.read(nativeMusicSearchServiceProvider);
     final platforms = _buildPerSongResolvePlan(settings.jsSearchStrategy);
@@ -3162,7 +3316,7 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
             coverUrl: item.coverUrl,
           );
           if (directUrl != null && directUrl.isNotEmpty) {
-            return directUrl;
+            return (url: directUrl, duration: item.duration);
           }
         } else {
           debugPrint('🎵 [单曲回退] 尝试平台=$platform，搜索="$query"');
@@ -3198,9 +3352,9 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
           );
           if (fallbackUrl != null && fallbackUrl.isNotEmpty) {
             debugPrint(
-              '✅ [单曲回退] 解析成功: 平台=$platform, 歌曲=${best.title} - ${best.author}',
+              '✅ [单曲回退] 解析成功: 平台=$platform, 歌曲=${best.title} - ${best.author}, duration=${best.duration}',
             );
-            return fallbackUrl;
+            return (url: fallbackUrl, duration: best.duration);
           }
           debugPrint('⚠️ [单曲回退] 平台=$platform 解析失败');
         }
@@ -3210,7 +3364,7 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
     }
 
     debugPrint('❌ [单曲回退] 所有平台解析失败: ${item.displayName}');
-    return null;
+    return (url: null, duration: null);
   }
 
   List<String> _buildPerSongResolvePlan(String strategy) {

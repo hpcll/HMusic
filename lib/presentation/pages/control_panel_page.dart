@@ -980,7 +980,7 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
               style: TextStyle(color: onSurface.withOpacity(0.7)),
             ),
             Text(
-              _formatDuration(totalTime),
+              totalTime > 0 ? _formatDuration(totalTime) : '--:--',
               style: TextStyle(color: onSurface.withOpacity(0.7)),
             ),
           ],
