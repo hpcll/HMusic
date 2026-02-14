@@ -71,8 +71,8 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
 
   Future<void> _playWholePlaylist() async {
     if (widget.isLocalPlaylist) {
-      // 🎵 直连模式：播放本地歌单
-      debugPrint('🎵 [PlaylistDetail] 直连模式播放整个歌单: ${widget.playlistName}');
+      // 🎵 本地元歌单播放
+      debugPrint('🎵 [PlaylistDetail] 元歌单播放: ${widget.playlistName}');
 
       // 获取歌单歌曲列表
       final localState = ref.read(localPlaylistProvider);
@@ -88,22 +88,36 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
           return;
         }
 
-        // 🎯 检查是否有选中的播放设备
-        final directState = ref.read(directModeProvider);
-        if (directState is! DirectModeAuthenticated) {
-          if (mounted) {
-            AppSnackBar.showWarning(context, '请先登录直连模式');
-          }
-          return;
-        }
+        // 🎯 根据当前播放模式获取设备 ID
+        final playbackMode = ref.read(playbackModeProvider);
+        final String deviceId;
 
-        // 🔧 修复：检查 playbackDeviceType 而不是 selectedDeviceId
-        // playbackDeviceType 才是真正的播放设备选择！
-        if (directState.playbackDeviceType.isEmpty) {
-          if (mounted) {
-            AppSnackBar.showWarning(context, '请先在控制页选择播放设备');
+        if (playbackMode == PlaybackMode.miIoTDirect) {
+          // 直连模式
+          final directState = ref.read(directModeProvider);
+          if (directState is! DirectModeAuthenticated) {
+            if (mounted) {
+              AppSnackBar.showWarning(context, '请先登录直连模式');
+            }
+            return;
           }
-          return;
+          if (directState.playbackDeviceType.isEmpty) {
+            if (mounted) {
+              AppSnackBar.showWarning(context, '请先在控制页选择播放设备');
+            }
+            return;
+          }
+          deviceId = directState.playbackDeviceType;
+        } else {
+          // xiaomusic 模式
+          final did = ref.read(deviceProvider).selectedDeviceId;
+          if (did == null) {
+            if (mounted) {
+              AppSnackBar.showWarning(context, '请先在控制页选择播放设备');
+            }
+            return;
+          }
+          deviceId = did;
         }
 
         // 🎯 播放第一首歌曲（带URL缓存和自动重试）
@@ -127,9 +141,7 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
           await ref
               .read(playbackProvider.notifier)
               .playMusic(
-                deviceId:
-                    directState
-                        .playbackDeviceType, // 🔧 修复：使用 playbackDeviceType
+                deviceId: deviceId,
                 musicName: firstSong.displayName,
                 url: playUrl,
                 albumCoverUrl: firstSong.coverUrl,
@@ -164,9 +176,7 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
             await ref
                 .read(playbackProvider.notifier)
                 .playMusic(
-                  deviceId:
-                      directState
-                          .playbackDeviceType, // 🔧 修复：使用 playbackDeviceType
+                  deviceId: deviceId,
                   musicName: firstSong.displayName,
                   url: playUrl,
                   albumCoverUrl: firstSong.coverUrl,
@@ -210,25 +220,39 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
 
   Future<void> _playSingle(String musicName) async {
     if (widget.isLocalPlaylist) {
-      // 🎵 直连模式：播放本地歌单中的歌曲
-      debugPrint('🎵 [PlaylistDetail] 直连模式播放歌曲: $musicName');
+      // 🎵 元歌单播放歌曲
+      debugPrint('🎵 [PlaylistDetail] 元歌单播放歌曲: $musicName');
 
-      // 🎯 检查是否有选中的播放设备
-      final directState = ref.read(directModeProvider);
-      if (directState is! DirectModeAuthenticated) {
-        if (mounted) {
-          AppSnackBar.showWarning(context, '请先登录直连模式');
-        }
-        return;
-      }
+      // 🎯 根据当前播放模式获取设备 ID
+      final playbackMode = ref.read(playbackModeProvider);
+      final String deviceId;
 
-      // 🔧 修复：检查 playbackDeviceType 而不是 selectedDeviceId
-      // playbackDeviceType 才是真正的播放设备选择！
-      if (directState.playbackDeviceType.isEmpty) {
-        if (mounted) {
-          AppSnackBar.showWarning(context, '请先在控制页选择播放设备');
+      if (playbackMode == PlaybackMode.miIoTDirect) {
+        // 直连模式
+        final directState = ref.read(directModeProvider);
+        if (directState is! DirectModeAuthenticated) {
+          if (mounted) {
+            AppSnackBar.showWarning(context, '请先登录直连模式');
+          }
+          return;
         }
-        return;
+        if (directState.playbackDeviceType.isEmpty) {
+          if (mounted) {
+            AppSnackBar.showWarning(context, '请先在控制页选择播放设备');
+          }
+          return;
+        }
+        deviceId = directState.playbackDeviceType;
+      } else {
+        // xiaomusic 模式
+        final did = ref.read(deviceProvider).selectedDeviceId;
+        if (did == null) {
+          if (mounted) {
+            AppSnackBar.showWarning(context, '请先在控制页选择播放设备');
+          }
+          return;
+        }
+        deviceId = did;
       }
 
       // 🎯 获取歌曲信息和索引
@@ -264,9 +288,7 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
           await ref
               .read(playbackProvider.notifier)
               .playMusic(
-                deviceId:
-                    directState
-                        .playbackDeviceType, // 🔧 修复：使用 playbackDeviceType
+                deviceId: deviceId,
                 musicName: musicName,
                 url: playUrl,
                 albumCoverUrl: song.coverUrl,
@@ -294,9 +316,7 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
             await ref
                 .read(playbackProvider.notifier)
                 .playMusic(
-                  deviceId:
-                      directState
-                          .playbackDeviceType, // 🔧 修复：使用 playbackDeviceType
+                  deviceId: deviceId,
                   musicName: musicName,
                   url: playUrl,
                   albumCoverUrl: song.coverUrl,
