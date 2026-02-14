@@ -778,6 +778,27 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
         _currentStrategy = directStrategy;
         _currentDeviceId = deviceId;
 
+        // 🎯 覆盖 audioHandler 回调，让通知栏控制路由到 PlaybackProvider
+        final audioHandler = LocalPlaybackStrategy.sharedAudioHandler;
+        if (audioHandler != null) {
+          audioHandler.onPlay = () {
+            debugPrint('🎵 [通知栏] 触发播放 → PlaybackProvider（直连）');
+            resumeMusic();
+          };
+          audioHandler.onPause = () {
+            debugPrint('🎵 [通知栏] 触发暂停 → PlaybackProvider（直连）');
+            pauseMusic();
+          };
+          audioHandler.onNext = () {
+            debugPrint('🎵 [通知栏] 触发下一首 → PlaybackProvider（直连）');
+            next();
+          };
+          audioHandler.onPrevious = () {
+            debugPrint('🎵 [通知栏] 触发上一首 → PlaybackProvider（直连）');
+            previous();
+          };
+        }
+
         debugPrint('✅ [PlaybackProvider] 策略对象已赋值: ${_currentStrategy != null}');
 
         // 更新状态
@@ -1098,6 +1119,29 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
         };
 
         _currentStrategy = remoteStrategy;
+
+        // 🎯 覆盖 audioHandler 回调，让通知栏控制路由到 PlaybackProvider
+        // 这样通知栏的上下曲会经过播放队列逻辑（支持元歌单），
+        // 暂停/播放也会经过乐观更新和保护期机制
+        final audioHandler = LocalPlaybackStrategy.sharedAudioHandler;
+        if (audioHandler != null) {
+          audioHandler.onPlay = () {
+            debugPrint('🎵 [通知栏] 触发播放 → PlaybackProvider');
+            resumeMusic();
+          };
+          audioHandler.onPause = () {
+            debugPrint('🎵 [通知栏] 触发暂停 → PlaybackProvider');
+            pauseMusic();
+          };
+          audioHandler.onNext = () {
+            debugPrint('🎵 [通知栏] 触发下一首 → PlaybackProvider');
+            next();
+          };
+          audioHandler.onPrevious = () {
+            debugPrint('🎵 [通知栏] 触发上一首 → PlaybackProvider');
+            previous();
+          };
+        }
 
         // 先恢复远程缓存，避免首轮 getplayerstatus 为空标题导致 UI 闪空
         await _loadRemotePlayback(deviceId);
@@ -1784,6 +1828,25 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
     }
 
     try {
+      // 🎯 playUrl 模式（元歌单）：「播放歌曲」会触发 xiaomusic 服务端歌单播放，
+      // 无法恢复 playUrl 歌曲 → 必须重新推送 URL 播放当前队列歌曲
+      if (_currentStrategy is RemotePlaybackStrategy) {
+        final remoteStrategy = _currentStrategy as RemotePlaybackStrategy;
+        if (remoteStrategy.activeApiGroupName == 'playurl') {
+          final queueState = ref.read(playbackQueueProvider);
+          final currentItem = queueState.queue?.currentItem;
+          if (currentItem != null && currentItem.isOnline) {
+            debugPrint('🎵 [PlaybackProvider] playUrl 模式恢复播放 → 重新播放当前元歌单歌曲: ${currentItem.displayName}');
+            await _playNextItem(currentItem);
+
+            // 🔄 静默刷新
+            await Future.delayed(const Duration(milliseconds: 500));
+            await refreshStatus(silent: true);
+            return;
+          }
+        }
+      }
+
       debugPrint('🎵 [PlaybackProvider] 执行播放');
       await _currentStrategy!.play();
 
@@ -1915,8 +1978,30 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
 
       // 异步执行实际命令（通过策略）
       if (isPlaying) {
+        // 🎯 playUrl 模式（元歌单）：使用 stopDevice（无 TTS）暂停
+        if (_currentStrategy is RemotePlaybackStrategy &&
+            (_currentStrategy as RemotePlaybackStrategy).activeApiGroupName == 'playurl') {
+          debugPrint('🎵 [PlaybackProvider] playUrl 模式暂停 → 通过策略处理');
+        }
         await _currentStrategy!.pause();
       } else {
+        // 🎯 playUrl 模式（元歌单）：重新播放当前歌曲代替「播放歌曲」命令
+        if (_currentStrategy is RemotePlaybackStrategy) {
+          final remoteStrategy = _currentStrategy as RemotePlaybackStrategy;
+          if (remoteStrategy.activeApiGroupName == 'playurl') {
+            final queueState = ref.read(playbackQueueProvider);
+            final currentItem = queueState.queue?.currentItem;
+            if (currentItem != null && currentItem.isOnline) {
+              debugPrint('🎵 [PlaybackProvider] playUrl 模式恢复播放 → 重新播放当前元歌单歌曲: ${currentItem.displayName}');
+              await _playNextItem(currentItem);
+
+              // 🔄 静默刷新
+              await Future.delayed(const Duration(milliseconds: 500));
+              await refreshStatus(silent: true);
+              return;
+            }
+          }
+        }
         await _currentStrategy!.play();
       }
 

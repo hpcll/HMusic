@@ -86,6 +86,12 @@ class MusicApiService {
     await _client.post('/cmd', data: {'did': did, 'cmd': '暂停'});
   }
 
+  /// 🎯 直接停止设备播放（无 TTS，用于 playUrl 模式）
+  /// 调用 /device/stop 端点，跳过 xiaomusic 的 TTS "收到,再见"
+  Future<void> stopDevice({required String did}) async {
+    await _client.post('/device/stop', data: {'did': did});
+  }
+
   Future<void> resumeMusic({required String did}) async {
     await _client.post('/cmd', data: {'did': did, 'cmd': '播放歌曲'});
   }

@@ -48,24 +48,10 @@ class RemotePlaybackStrategy implements PlaybackStrategy {
       debugPrint('🔧 [RemotePlayback] 已启用远程播放模式');
     }
 
-    // 🔧 连接通知栏控制按钮到远程播放
+    // 🔧 连接通知栏控制按钮（默认回调，PlaybackProvider 会覆盖 play/pause/next/previous）
     if (_audioHandler != null) {
-      _audioHandler!.onPlay = () {
-        debugPrint('🎵 [RemotePlayback] 通知栏触发播放');
-        play();
-      };
-      _audioHandler!.onPause = () {
-        debugPrint('🎵 [RemotePlayback] 通知栏触发暂停');
-        pause();
-      };
-      _audioHandler!.onNext = () {
-        debugPrint('🎵 [RemotePlayback] 通知栏触发下一首');
-        next();
-      };
-      _audioHandler!.onPrevious = () {
-        debugPrint('🎵 [RemotePlayback] 通知栏触发上一首');
-        previous();
-      };
+      // onPlay/onPause/onNext/onPrevious 由 PlaybackProvider 设置，
+      // 路由到 PlaybackProvider 的方法以支持播放队列逻辑
       _audioHandler!.onSeek = (position) {
         debugPrint('🎵 [RemotePlayback] 通知栏跳转: ${position.inSeconds}s');
         seekTo(position.inSeconds);
@@ -101,6 +87,10 @@ class RemotePlaybackStrategy implements PlaybackStrategy {
   @override
   Future<void> play() async {
     debugPrint('🎵 [RemotePlayback] 执行播放 (设备: $_deviceId)');
+
+    // 🎯 playUrl 模式下「播放歌曲」会触发 xiaomusic 服务端歌单播放，
+    // 而非恢复 playUrl 歌曲。此处不做额外处理，
+    // PlaybackProvider.play() 会在上层拦截并重新 push URL。
     await _apiService.resumeMusic(did: _deviceId);
 
     // 🔧 获取最新状态并更新通知栏
@@ -110,7 +100,15 @@ class RemotePlaybackStrategy implements PlaybackStrategy {
   @override
   Future<void> pause() async {
     debugPrint('🎵 [RemotePlayback] 执行暂停 (设备: $_deviceId)');
-    await _apiService.pauseMusic(did: _deviceId);
+
+    if (_activeApiGroup == _PlaybackApiGroup.playUrl) {
+      // 🎯 playUrl 模式：使用 /device/stop（无 TTS）代替 /cmd 暂停
+      // /cmd 暂停 → xiaomusic stop() → TTS "收到,再见" + 等待 3 秒，体验极差
+      debugPrint('🎵 [RemotePlayback] playUrl 模式 → 使用 stopDevice（无 TTS）');
+      await _apiService.stopDevice(did: _deviceId);
+    } else {
+      await _apiService.pauseMusic(did: _deviceId);
+    }
 
     // 🔧 获取最新状态并更新通知栏
     await _updateNotificationState();

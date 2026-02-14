@@ -600,23 +600,9 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
       _audioHandler!.setRemotePlayback(true);
       debugPrint('🔧 [MiIoTDirect] 已启用远程播放模式');
 
-      // 连接通知栏控制按钮
-      _audioHandler!.onPlay = () {
-        debugPrint('🎵 [MiIoTDirect] 通知栏触发播放');
-        play();
-      };
-      _audioHandler!.onPause = () {
-        debugPrint('🎵 [MiIoTDirect] 通知栏触发暂停');
-        pause();
-      };
-      _audioHandler!.onNext = () {
-        debugPrint('🎵 [MiIoTDirect] 通知栏触发下一首');
-        next();
-      };
-      _audioHandler!.onPrevious = () {
-        debugPrint('🎵 [MiIoTDirect] 通知栏触发上一首');
-        previous();
-      };
+      // 连接通知栏控制按钮（默认回调，PlaybackProvider 会覆盖 play/pause/next/previous）
+      // onPlay/onPause/onNext/onPrevious 由 PlaybackProvider 设置，
+      // 路由到 PlaybackProvider 的方法以支持播放队列逻辑
 
       // 🎯 关键修复：初始化通知栏显示时设置正确的 PlaybackState
       // 确保控制中心能正常显示控制项
