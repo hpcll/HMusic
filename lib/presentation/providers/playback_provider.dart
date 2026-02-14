@@ -1500,21 +1500,24 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
           final shouldUseServerProgress =
               currentMusic != null &&
               currentMusic.curMusic == state.currentMusic!.curMusic;
-          // 🎯 关键修复：保护期内保留本地歌曲名 + 播放状态
+          // 🎯 保护期内保留本地歌曲名 + 播放状态
           // 仅当服务器歌曲名一致时才更新进度，避免旧歌覆盖
+          // 🎯 但当本地 duration 为 0 时，允许用服务器的 duration（进度条需要 duration 才能显示）
+          final localDuration = state.currentMusic!.duration;
+          final serverDuration = currentMusic?.duration ?? 0;
+          final bestDuration = shouldUseServerProgress
+              ? currentMusic!.duration
+              : (localDuration > 0 ? localDuration : serverDuration);
+          final bestOffset = shouldUseServerProgress
+              ? currentMusic!.offset
+              : state.currentMusic!.offset;
           finalMusic = PlayingMusic(
             ret: currentMusic?.ret ?? state.currentMusic!.ret,
             curMusic: state.currentMusic!.curMusic, // 🛡️ 保留本地歌曲名
             curPlaylist: state.currentMusic!.curPlaylist, // 🛡️ 保留本地播放列表
             isPlaying: state.currentMusic!.isPlaying, // 🛡️ 保留本地播放状态
-            offset:
-                shouldUseServerProgress
-                    ? currentMusic!.offset
-                    : state.currentMusic!.offset,
-            duration:
-                shouldUseServerProgress
-                    ? currentMusic!.duration
-                    : state.currentMusic!.duration,
+            offset: bestOffset,
+            duration: bestDuration,
           );
           // 🎯 不触发歌曲切换检测
           isSongChanged = false;
