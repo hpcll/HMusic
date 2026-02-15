@@ -446,7 +446,26 @@ class PlaylistImportService {
       final data = _decodeData(resp.data);
       final cdList = (data['cdlist'] as List?) ?? const [];
       if (cdList.isEmpty) {
-        throw const ImportException(ImportError.playlistNotFound);
+        final directSongNumRaw = data['songnum'] ?? data['total_song_num'];
+        final directSongNum =
+            directSongNumRaw is int
+                ? directSongNumRaw
+                : int.tryParse('${directSongNumRaw ?? ''}');
+        if ((directSongNum ?? 0) > 0) {
+          return ImportedPlaylistSummary(
+            name: (data['dissname'] ?? data['dirname'] ?? data['title'] ?? 'QQ歌单')
+                .toString(),
+            platform: PlatformId.tx,
+            playlistId: id,
+            totalCount: directSongNum ?? 0,
+          );
+        }
+        throw ImportException(
+          ImportError.fetchFailed,
+          platform: PlatformId.tx,
+          detail: 'QQ摘要主接口返回空cdlist',
+          debugInfo: 'response=${resp.data}',
+        );
       }
 
       final first = Map<String, dynamic>.from(cdList.first as Map);
@@ -490,7 +509,26 @@ class PlaylistImportService {
       final data = _decodeData(resp.data);
       final cdList = (data['cdlist'] as List?) ?? const [];
       if (cdList.isEmpty) {
-        throw const ImportException(ImportError.playlistNotFound);
+        final directSongNumRaw = data['songnum'] ?? data['total_song_num'];
+        final directSongNum =
+            directSongNumRaw is int
+                ? directSongNumRaw
+                : int.tryParse('${directSongNumRaw ?? ''}');
+        if ((directSongNum ?? 0) > 0) {
+          return ImportedPlaylistSummary(
+            name: (data['dissname'] ?? data['dirname'] ?? data['title'] ?? 'QQ歌单')
+                .toString(),
+            platform: PlatformId.tx,
+            playlistId: id,
+            totalCount: directSongNum ?? 0,
+          );
+        }
+        throw ImportException(
+          ImportError.fetchFailed,
+          platform: PlatformId.tx,
+          detail: 'QQ摘要备用接口返回空cdlist',
+          debugInfo: 'response=${resp.data}',
+        );
       }
 
       final first = Map<String, dynamic>.from(cdList.first as Map);
@@ -504,10 +542,62 @@ class PlaylistImportService {
         totalCount: songNum ?? 0,
       );
     } catch (e) {
+      debugPrint('⚠️ [Import] QQ c/i 接口摘要失败，尝试 musicu: $e');
+      return _fetchQQSummaryMusicu(id, cancelToken);
+    }
+  }
+
+  Future<ImportedPlaylistSummary> _fetchQQSummaryMusicu(
+    String id,
+    CancelToken? cancelToken,
+  ) async {
+    final options = Options(headers: const {'Referer': 'https://y.qq.com/'});
+    try {
+      final body = {
+        'comm': {'ct': 24, 'cv': 0},
+        'playlist': {
+          'module': 'music.srfDissInfo.aiDissInfo',
+          'method': 'fcg_musiclist_getinfo_cp',
+          'param': {'disstid': int.tryParse(id) ?? id, 'song_begin': 0, 'song_num': 1},
+        },
+      };
+      final resp = await _dio.post(
+        'https://u.y.qq.com/cgi-bin/musicu.fcg',
+        data: body,
+        options: options,
+        cancelToken: cancelToken,
+      );
+      final data = _decodeData(resp.data);
+      final playlist =
+          data['playlist'] is Map
+              ? Map<String, dynamic>.from(data['playlist'] as Map)
+              : <String, dynamic>{};
+      final inner =
+          playlist['data'] is Map
+              ? Map<String, dynamic>.from(playlist['data'] as Map)
+              : <String, dynamic>{};
+      final songNumRaw = inner['songnum'] ?? inner['song_num'] ?? inner['total_song_num'];
+      final songNum =
+          songNumRaw is int ? songNumRaw : int.tryParse('${songNumRaw ?? ''}');
+      if (inner.isEmpty || (songNum ?? 0) <= 0) {
+        throw ImportException(
+          ImportError.playlistNotFound,
+          platform: PlatformId.tx,
+          detail: 'QQ musicu 摘要为空',
+          debugInfo: 'response=${resp.data}',
+        );
+      }
+      return ImportedPlaylistSummary(
+        name: (inner['dissname'] ?? inner['title'] ?? 'QQ歌单').toString(),
+        platform: PlatformId.tx,
+        playlistId: id,
+        totalCount: songNum ?? 0,
+      );
+    } catch (e) {
       throw _normalizeImportException(
         e,
         platform: PlatformId.tx,
-        operation: 'QQ音乐歌单摘要备用接口获取失败',
+        operation: 'QQ musicu 摘要获取失败',
       );
     }
   }
@@ -528,7 +618,7 @@ class PlaylistImportService {
     String id,
     CancelToken? cancelToken,
   ) async {
-    final options = Options(headers: const {'Referer': 'https://www.kuwo.cn/'});
+    final options = await _buildKuwoOptions(cancelToken: cancelToken);
     try {
       final resp = await _dio.get(
         'https://www.kuwo.cn/api/www/playlist/playListInfo',
@@ -542,7 +632,12 @@ class PlaylistImportService {
               ? Map<String, dynamic>.from(data['data'] as Map)
               : <String, dynamic>{};
       if (dataObj.isEmpty) {
-        throw const ImportException(ImportError.playlistNotFound);
+        throw ImportException(
+          ImportError.fetchFailed,
+          platform: PlatformId.kw,
+          detail: '酷我歌单摘要返回空数据（可能触发反爬）',
+          debugInfo: 'response=${resp.data}',
+        );
       }
 
       final totalRaw = dataObj['total'] ?? dataObj['totalNum'] ?? dataObj['num'];
@@ -567,15 +662,11 @@ class PlaylistImportService {
     String id,
     CancelToken? cancelToken,
   ) async {
-    final token = DateTime.now().millisecondsSinceEpoch.toString();
-    final options = Options(
-      headers: {
-        'Referer': 'https://www.kuwo.cn/',
-        'Cookie': 'kw_token=$token',
-        'csrf': token,
-      },
-    );
     try {
+      final options = await _buildKuwoOptions(
+        cancelToken: cancelToken,
+        forceRefreshToken: true,
+      );
       final resp = await _dio.get(
         'https://www.kuwo.cn/api/www/playlist/playListInfo',
         queryParameters: {'pid': id, 'pn': 1, 'rn': 1},
@@ -588,7 +679,12 @@ class PlaylistImportService {
               ? Map<String, dynamic>.from(data['data'] as Map)
               : <String, dynamic>{};
       if (dataObj.isEmpty) {
-        throw const ImportException(ImportError.playlistNotFound);
+        throw ImportException(
+          ImportError.fetchFailed,
+          platform: PlatformId.kw,
+          detail: '酷我歌单摘要备用接口返回空数据',
+          debugInfo: 'response=${resp.data}',
+        );
       }
 
       final totalRaw = dataObj['total'] ?? dataObj['totalNum'] ?? dataObj['num'];
@@ -601,11 +697,8 @@ class PlaylistImportService {
         totalCount: total ?? 0,
       );
     } catch (e) {
-      throw _normalizeImportException(
-        e,
-        platform: PlatformId.kw,
-        operation: '酷我歌单摘要备用接口获取失败',
-      );
+      debugPrint('⚠️ [Import] 酷我新接口摘要失败，尝试老接口: $e');
+      return _fetchKuwoSummaryLegacy(id, cancelToken);
     }
   }
 
@@ -733,7 +826,60 @@ class PlaylistImportService {
       final data = _decodeData(resp.data);
       final cdList = (data['cdlist'] as List?) ?? const [];
       if (cdList.isEmpty) {
-        throw const ImportException(ImportError.playlistNotFound);
+        final directSongs = (data['songlist'] as List?) ?? const [];
+        if (directSongs.isNotEmpty) {
+          final songs =
+              directSongs
+                  .map((e) => Map<String, dynamic>.from(e as Map))
+                  .map((song) {
+                    final songId =
+                        (song['songmid'] ?? song['mid'] ?? song['id'] ?? '')
+                            .toString();
+                    final title =
+                        (song['songname'] ?? song['title'] ?? '').toString();
+                    final singers = (song['singer'] as List?) ?? const [];
+                    final artist = singers
+                        .whereType<Map>()
+                        .map((e) => e['name']?.toString() ?? '')
+                        .where((e) => e.isNotEmpty)
+                        .join('/');
+                    final coverMid =
+                        (song['albummid'] ?? song['albumMid'] ?? '').toString();
+                    final cover =
+                        coverMid.isEmpty
+                            ? null
+                            : 'https://y.gtimg.cn/music/photo_new/T002R300x300M000$coverMid.jpg';
+                    final interval = song['interval'];
+                    final duration =
+                        interval is int
+                            ? interval
+                            : int.tryParse('${interval ?? ''}');
+                    return LocalPlaylistSong.fromOnlineMusic(
+                      title: title,
+                      artist: artist,
+                      platform: PlatformId.tx,
+                      songId: songId,
+                      coverUrl: cover,
+                      duration: duration,
+                    );
+                  })
+                  .toList();
+          return ImportedPlaylist(
+            name:
+                (data['dissname'] ?? data['dirname'] ?? data['title'] ?? 'QQ歌单')
+                    .toString(),
+            platform: PlatformId.tx,
+            playlistId: id,
+            totalCount: songs.length,
+            songs: songs,
+          );
+        }
+        throw ImportException(
+          ImportError.fetchFailed,
+          platform: PlatformId.tx,
+          detail: 'QQ详情主接口返回空cdlist',
+          debugInfo: 'response=${resp.data}',
+        );
       }
       final first = Map<String, dynamic>.from(cdList.first as Map);
       final songs =
@@ -812,7 +958,60 @@ class PlaylistImportService {
       final data = _decodeData(resp.data);
       final cdList = (data['cdlist'] as List?) ?? const [];
       if (cdList.isEmpty) {
-        throw const ImportException(ImportError.playlistNotFound);
+        final directSongs = (data['songlist'] as List?) ?? const [];
+        if (directSongs.isNotEmpty) {
+          final songs =
+              directSongs
+                  .map((e) => Map<String, dynamic>.from(e as Map))
+                  .map((song) {
+                    final songId =
+                        (song['songmid'] ?? song['mid'] ?? song['id'] ?? '')
+                            .toString();
+                    final title =
+                        (song['songname'] ?? song['title'] ?? '').toString();
+                    final singers = (song['singer'] as List?) ?? const [];
+                    final artist = singers
+                        .whereType<Map>()
+                        .map((e) => e['name']?.toString() ?? '')
+                        .where((e) => e.isNotEmpty)
+                        .join('/');
+                    final coverMid =
+                        (song['albummid'] ?? song['albumMid'] ?? '').toString();
+                    final cover =
+                        coverMid.isEmpty
+                            ? null
+                            : 'https://y.gtimg.cn/music/photo_new/T002R300x300M000$coverMid.jpg';
+                    final interval = song['interval'];
+                    final duration =
+                        interval is int
+                            ? interval
+                            : int.tryParse('${interval ?? ''}');
+                    return LocalPlaylistSong.fromOnlineMusic(
+                      title: title,
+                      artist: artist,
+                      platform: PlatformId.tx,
+                      songId: songId,
+                      coverUrl: cover,
+                      duration: duration,
+                    );
+                  })
+                  .toList();
+          return ImportedPlaylist(
+            name:
+                (data['dissname'] ?? data['dirname'] ?? data['title'] ?? 'QQ歌单')
+                    .toString(),
+            platform: PlatformId.tx,
+            playlistId: id,
+            totalCount: songs.length,
+            songs: songs,
+          );
+        }
+        throw ImportException(
+          ImportError.fetchFailed,
+          platform: PlatformId.tx,
+          detail: 'QQ详情备用接口返回空cdlist',
+          debugInfo: 'response=${resp.data}',
+        );
       }
       final first = Map<String, dynamic>.from(cdList.first as Map);
       final songs =
@@ -860,10 +1059,90 @@ class PlaylistImportService {
         songs: songs,
       );
     } catch (e) {
+      debugPrint('⚠️ [Import] QQ c/i 接口详情失败，尝试 musicu: $e');
+      return _fetchQQDetailMusicu(id, cancelToken);
+    }
+  }
+
+  Future<ImportedPlaylist> _fetchQQDetailMusicu(
+    String id,
+    CancelToken? cancelToken,
+  ) async {
+    final options = Options(headers: const {'Referer': 'https://y.qq.com/'});
+    try {
+      final body = {
+        'comm': {'ct': 24, 'cv': 0},
+        'playlist': {
+          'module': 'music.srfDissInfo.aiDissInfo',
+          'method': 'fcg_musiclist_getinfo_cp',
+          'param': {'disstid': int.tryParse(id) ?? id, 'song_begin': 0, 'song_num': 1000},
+        },
+      };
+      final resp = await _dio.post(
+        'https://u.y.qq.com/cgi-bin/musicu.fcg',
+        data: body,
+        options: options,
+        cancelToken: cancelToken,
+      );
+      final data = _decodeData(resp.data);
+      final playlist =
+          data['playlist'] is Map
+              ? Map<String, dynamic>.from(data['playlist'] as Map)
+              : <String, dynamic>{};
+      final inner =
+          playlist['data'] is Map
+              ? Map<String, dynamic>.from(playlist['data'] as Map)
+              : <String, dynamic>{};
+      final rawSongs = (inner['songlist'] as List?) ?? const [];
+      if (rawSongs.isEmpty) {
+        throw ImportException(
+          ImportError.playlistNotFound,
+          platform: PlatformId.tx,
+          detail: 'QQ musicu 详情为空',
+          debugInfo: 'response=${resp.data}',
+        );
+      }
+      final songs =
+          rawSongs.map((e) => Map<String, dynamic>.from(e as Map)).map((song) {
+            final singers = (song['singer'] as List?) ?? const [];
+            final artist = singers
+                .whereType<Map>()
+                .map((e) => e['name']?.toString() ?? '')
+                .where((e) => e.isNotEmpty)
+                .join('/');
+            final songId =
+                (song['songmid'] ?? song['mid'] ?? song['id'] ?? '').toString();
+            final title = (song['songname'] ?? song['title'] ?? '').toString();
+            final coverMid =
+                (song['albummid'] ?? song['albumMid'] ?? '').toString();
+            final cover =
+                coverMid.isEmpty
+                    ? null
+                    : 'https://y.gtimg.cn/music/photo_new/T002R300x300M000$coverMid.jpg';
+            final interval = song['interval'];
+            final duration =
+                interval is int ? interval : int.tryParse('${interval ?? ''}');
+            return LocalPlaylistSong.fromOnlineMusic(
+              title: title,
+              artist: artist,
+              platform: PlatformId.tx,
+              songId: songId,
+              coverUrl: cover,
+              duration: duration,
+            );
+          }).toList();
+      return ImportedPlaylist(
+        name: (inner['dissname'] ?? inner['title'] ?? 'QQ歌单').toString(),
+        platform: PlatformId.tx,
+        playlistId: id,
+        totalCount: songs.length,
+        songs: songs,
+      );
+    } catch (e) {
       throw _normalizeImportException(
         e,
         platform: PlatformId.tx,
-        operation: 'QQ音乐歌单备用接口获取失败',
+        operation: 'QQ musicu 详情获取失败',
       );
     }
   }
@@ -884,7 +1163,7 @@ class PlaylistImportService {
     String id,
     CancelToken? cancelToken,
   ) async {
-    final options = Options(headers: const {'Referer': 'https://www.kuwo.cn/'});
+    final options = await _buildKuwoOptions(cancelToken: cancelToken);
     try {
       final resp = await _dio.get(
         'https://www.kuwo.cn/api/www/playlist/playListInfo',
@@ -941,15 +1220,11 @@ class PlaylistImportService {
     String id,
     CancelToken? cancelToken,
   ) async {
-    final token = DateTime.now().millisecondsSinceEpoch.toString();
-    final options = Options(
-      headers: {
-        'Referer': 'https://www.kuwo.cn/',
-        'Cookie': 'kw_token=$token',
-        'csrf': token,
-      },
-    );
     try {
+      final options = await _buildKuwoOptions(
+        cancelToken: cancelToken,
+        forceRefreshToken: true,
+      );
       final resp = await _dio.get(
         'https://www.kuwo.cn/api/www/playlist/playListInfo',
         queryParameters: {'pid': id, 'pn': 1, 'rn': 1000},
@@ -993,10 +1268,124 @@ class PlaylistImportService {
         songs: songs,
       );
     } catch (e) {
+      debugPrint('⚠️ [Import] 酷我新接口详情失败，尝试老接口: $e');
+      return _fetchKuwoDetailLegacy(id, cancelToken);
+    }
+  }
+
+  Future<ImportedPlaylistSummary> _fetchKuwoSummaryLegacy(
+    String id,
+    CancelToken? cancelToken,
+  ) async {
+    try {
+      final resp = await _dio.get(
+        'https://nplserver.kuwo.cn/pl.svc',
+        queryParameters: {
+          'op': 'getlistinfo',
+          'pid': id,
+          'pn': 0,
+          'rn': 1,
+          'encode': 'utf8',
+          'keyset': 'pl2012',
+          'vipver': 'MUSIC_9.0.5.0_W1',
+          'newver': 1,
+        },
+        cancelToken: cancelToken,
+      );
+      final data = _decodeData(resp.data);
+      if (data.isEmpty) {
+        throw ImportException(
+          ImportError.fetchFailed,
+          platform: PlatformId.kw,
+          detail: '酷我老接口摘要返回空数据',
+          debugInfo: 'response=${resp.data}',
+        );
+      }
+
+      final totalRaw = data['total'] ?? data['totalnum'] ?? data['num'];
+      final total =
+          totalRaw is int ? totalRaw : int.tryParse('${totalRaw ?? ''}');
+      return ImportedPlaylistSummary(
+        name: (data['name'] ?? data['title'] ?? '酷我歌单').toString(),
+        platform: PlatformId.kw,
+        playlistId: id,
+        totalCount: total ?? 0,
+      );
+    } catch (e) {
       throw _normalizeImportException(
         e,
         platform: PlatformId.kw,
-        operation: '酷我歌单备用接口获取失败',
+        operation: '酷我老接口摘要获取失败',
+      );
+    }
+  }
+
+  Future<ImportedPlaylist> _fetchKuwoDetailLegacy(
+    String id,
+    CancelToken? cancelToken,
+  ) async {
+    try {
+      final resp = await _dio.get(
+        'https://nplserver.kuwo.cn/pl.svc',
+        queryParameters: {
+          'op': 'getlistinfo',
+          'pid': id,
+          'pn': 0,
+          'rn': 1000,
+          'encode': 'utf8',
+          'keyset': 'pl2012',
+          'vipver': 'MUSIC_9.0.5.0_W1',
+          'newver': 1,
+        },
+        cancelToken: cancelToken,
+      );
+      final data = _decodeData(resp.data);
+      if (data.isEmpty) {
+        throw ImportException(
+          ImportError.fetchFailed,
+          platform: PlatformId.kw,
+          detail: '酷我老接口详情返回空数据',
+          debugInfo: 'response=${resp.data}',
+        );
+      }
+      final rawList = (data['musiclist'] as List?) ?? (data['musicList'] as List?) ?? const [];
+      if (rawList.isEmpty) {
+        throw ImportException(
+          ImportError.playlistNotFound,
+          platform: PlatformId.kw,
+          detail: '酷我老接口未返回歌曲列表',
+          debugInfo: 'response=${resp.data}',
+        );
+      }
+      final songs =
+          rawList.map((e) => Map<String, dynamic>.from(e as Map)).map((song) {
+            final songId =
+                (song['id'] ?? song['rid'] ?? song['musicrid'] ?? '').toString();
+            final duration = _parseDurationSeconds(
+              song['duration'] ?? song['songTimeMinutes'],
+            );
+            return LocalPlaylistSong.fromOnlineMusic(
+              title: (song['name'] ?? song['songName'] ?? '').toString(),
+              artist: (song['artist'] ?? song['artistName'] ?? '').toString(),
+              platform: PlatformId.kw,
+              songId: songId,
+              coverUrl: (song['pic'] ?? song['pic100'] ?? song['albumpic'])?.toString(),
+              duration: duration,
+            );
+          }).toList();
+
+      return ImportedPlaylist(
+        name: (data['name'] ?? data['title'] ?? '酷我歌单').toString(),
+        platform: PlatformId.kw,
+        playlistId: id,
+        totalCount: songs.length,
+        songs: songs,
+      );
+    } catch (e) {
+      throw _normalizeImportException(
+        e,
+        platform: PlatformId.kw,
+        operation: '酷我老接口详情获取失败',
       );
     }
   }
@@ -1250,6 +1639,28 @@ class PlaylistImportService {
     return result;
   }
 
+  int? _parseDurationSeconds(dynamic raw) {
+    if (raw == null) return null;
+    if (raw is int) return raw;
+    final text = raw.toString().trim();
+    if (text.isEmpty) return null;
+    final plain = int.tryParse(text);
+    if (plain != null) return plain;
+    final parts = text.split(':');
+    if (parts.length == 2) {
+      final m = int.tryParse(parts[0]);
+      final s = int.tryParse(parts[1]);
+      if (m != null && s != null) return m * 60 + s;
+    }
+    if (parts.length == 3) {
+      final h = int.tryParse(parts[0]);
+      final m = int.tryParse(parts[1]);
+      final s = int.tryParse(parts[2]);
+      if (h != null && m != null && s != null) return h * 3600 + m * 60 + s;
+    }
+    return null;
+  }
+
   Future<T> _withFallback<T>({
     required String platform,
     required String operation,
@@ -1265,7 +1676,7 @@ class PlaylistImportService {
         operation: '$operation 主接口失败',
       );
       if (primaryError.error == ImportError.cancelled ||
-          primaryError.error == ImportError.playlistNotFound) {
+          primaryError.error == ImportError.unsupportedPlatform) {
         throw primaryError;
       }
 
@@ -1289,7 +1700,17 @@ class PlaylistImportService {
     required String platform,
     required String operation,
   }) {
-    if (error is ImportException) return error;
+    if (error is ImportException) {
+      if (error.platform != null && error.detail != null) {
+        return error;
+      }
+      return ImportException(
+        error.error,
+        platform: error.platform ?? platform,
+        detail: error.detail ?? operation,
+        debugInfo: error.debugInfo,
+      );
+    }
     if (error is DioException) {
       if (error.type == DioExceptionType.cancel ||
           CancelToken.isCancel(error)) {
@@ -1300,11 +1721,18 @@ class PlaylistImportService {
         return const ImportException(ImportError.playlistNotFound);
       }
       final type = error.type.name;
+      final body = error.response?.data?.toString() ?? '';
+      final hasIllegal =
+          body.toLowerCase().contains('illegal') ||
+          body.contains('request is illegal');
       return ImportException(
         ImportError.fetchFailed,
         platform: platform,
-        detail: '$operation（HTTP ${status ?? '-'} / $type）',
-        debugInfo: error.message,
+        detail:
+            hasIllegal
+                ? '$operation（酷我接口触发风控）'
+                : '$operation（HTTP ${status ?? '-'} / $type）',
+        debugInfo: 'message=${error.message}; body=$body',
       );
     }
 
@@ -1320,6 +1748,52 @@ class PlaylistImportService {
     if (token?.isCancelled == true) {
       throw const ImportException(ImportError.cancelled);
     }
+  }
+
+  Future<Options> _buildKuwoOptions({
+    CancelToken? cancelToken,
+    bool forceRefreshToken = false,
+  }) async {
+    String? kwToken;
+    if (forceRefreshToken) {
+      kwToken = await _fetchKuwoToken(cancelToken: cancelToken);
+    } else {
+      kwToken = await _fetchKuwoToken(cancelToken: cancelToken);
+    }
+    final token = kwToken ?? DateTime.now().millisecondsSinceEpoch.toString();
+    return Options(
+      headers: {
+        'Referer': 'https://www.kuwo.cn/',
+        'Origin': 'https://www.kuwo.cn',
+        'Cookie': 'kw_token=$token',
+        'csrf': token,
+      },
+    );
+  }
+
+  Future<String?> _fetchKuwoToken({CancelToken? cancelToken}) async {
+    try {
+      final resp = await _dio.get(
+        'https://www.kuwo.cn/',
+        options: Options(
+          headers: const {
+            'Referer': 'https://www.kuwo.cn/',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+          },
+        ),
+        cancelToken: cancelToken,
+      );
+      final setCookies = resp.headers['set-cookie'] ?? const [];
+      for (final item in setCookies) {
+        final match = RegExp(r'kw_token=([^;]+)').firstMatch(item);
+        if (match != null && (match.group(1)?.isNotEmpty ?? false)) {
+          return match.group(1);
+        }
+      }
+    } catch (_) {
+      // ignore and fallback to generated token
+    }
+    return null;
   }
 }
 
