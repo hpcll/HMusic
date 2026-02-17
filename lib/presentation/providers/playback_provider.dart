@@ -2212,6 +2212,13 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
       error: null,
       albumCoverUrl: item.coverUrl,
     );
+
+    // 🎯 切歌时重置进度预测基准，避免沿用上一首的 offset
+    _lastServerOffset = 0;
+    _lastUpdateTime = DateTime.now();
+    _lastProgressUpdate = null;
+    _startProgressTimer(true);
+
     debugPrint('✨ [_applyOptimisticUpdate] 乐观更新UI（无转圈）: ${item.displayName}');
   }
 
