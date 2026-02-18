@@ -2298,6 +2298,10 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
       _optimisticUpdateProtectionUntil = null;
       _directWarmupUntil = null;
       _directWarmupSong = null;
+      // 🔇 解除策略层切歌准备期，恢复轮询
+      if (_currentStrategy is MiIoTDirectPlaybackStrategy) {
+        (_currentStrategy as MiIoTDirectPlaybackStrategy).cancelSongSwitchPending();
+      }
       await refreshStatus(silent: true);
     }
   }
@@ -2312,6 +2316,11 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
     _directWarmupUntil = DateTime.now().add(const Duration(seconds: 8));
     _directWarmupSong = item.displayName;
     debugPrint('🛡️ [_applyOptimisticUpdate] 设置乐观更新保护期: 10秒');
+
+    // 🔇 通知策略层：切歌准备中，丢弃旧歌轮询结果
+    if (_currentStrategy is MiIoTDirectPlaybackStrategy) {
+      (_currentStrategy as MiIoTDirectPlaybackStrategy).prepareSongSwitch();
+    }
 
     final optimisticMusic = PlayingMusic(
       ret: 'OK',
@@ -2465,6 +2474,10 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
       _optimisticUpdateProtectionUntil = null;
       _directWarmupUntil = null;
       _directWarmupSong = null;
+      // 🔇 解除策略层切歌准备期，恢复轮询
+      if (_currentStrategy is MiIoTDirectPlaybackStrategy) {
+        (_currentStrategy as MiIoTDirectPlaybackStrategy).cancelSongSwitchPending();
+      }
       await refreshStatus(silent: true);
     }
   }
@@ -2691,6 +2704,9 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
         _directWarmupUntil = DateTime.now().add(const Duration(seconds: 8));
         _directWarmupSong = musicName;
         directSessionId = _directSwitchSessionId;
+
+        // 🔇 通知策略层：切歌准备中，丢弃旧歌轮询结果
+        (_currentStrategy as MiIoTDirectPlaybackStrategy).prepareSongSwitch();
       }
 
       // 使用策略播放

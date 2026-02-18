@@ -48,6 +48,9 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
   String? _warmupSongName;
   int? _activeSwitchSessionId;
 
+  // 🔇 切歌准备期：从 prepareSongSwitch 到 playMusic finally，丢弃旧轮询
+  bool _isSongSwitchPending = false;
+
   // 🎯 设备硬件信息
   String? _hardware;
 
@@ -274,6 +277,27 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
     debugPrint('⏰ [MiIoTDirect] 启动状态轮询（${intervalSeconds}s）');
   }
 
+  /// 🔇 通知策略层即将切歌：直接停止轮询定时器 + 标记 pending
+  /// 停止定时器 → URL 解析期间不会有新轮询产生（根源解决）
+  /// pending 标记 → 仅用于拦截停止定时器前已在飞行中的最后一个 HTTP 请求
+  /// playMusic 的 finally 块统一清除 pending 并启动新的 warmup 轮询
+  void prepareSongSwitch() {
+    _statusTimer?.cancel();
+    _statusTimer = null;
+    _isSongSwitchPending = true;
+    debugPrint('🔇 [MiIoTDirect] 切歌准备：已停止轮询定时器');
+  }
+
+  /// 🔇 取消切歌准备期（用于失败回滚：URL 解析或播放失败时立即恢复轮询）
+  void cancelSongSwitchPending() {
+    if (_isSongSwitchPending) {
+      _isSongSwitchPending = false;
+      debugPrint('🔇 [MiIoTDirect] 切歌准备已取消，恢复轮询');
+      // prepareSongSwitch 停了定时器，失败回滚时必须重启
+      _startStatusPolling(intervalSeconds: _statusPollIntervalSeconds);
+    }
+  }
+
   void _enterWarmupPolling(String songName) {
     _isWarmupPolling = true;
     _warmupDeadline = DateTime.now().add(const Duration(seconds: 8));
@@ -299,8 +323,31 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
       return;
     }
 
+    // 🔇 切歌准备期：定时器已停，但可能有在飞行中的旧 HTTP 请求
+    if (_isSongSwitchPending) {
+      debugPrint('⏭️ [MiIoTDirect] 切歌准备中，跳过轮询');
+      return;
+    }
+
     try {
+      // 🎯 Session 快照：慢网下旧 HTTP 可能在 finally 清除 pending 之后才返回
+      // 此时 pending 已 false，但 session 已变 → 快照不匹配 → 丢弃
+      final sessionSnapshot = _activeSwitchSessionId;
+
       final status = await _miService.getPlayStatus(_deviceId);
+
+      // 🔇 二次检查（双重防线）：
+      // 防线1: pending — 覆盖 URL 解析阶段（pending=true，定时器已停）
+      // 防线2: session 快照 — 覆盖慢网长尾：旧 HTTP 在 finally 清 pending 后才返回
+      if (_isSongSwitchPending) {
+        debugPrint('⏭️ [MiIoTDirect] 轮询返回时已处于切歌准备期，丢弃结果');
+        return;
+      }
+      if (_activeSwitchSessionId != sessionSnapshot) {
+        debugPrint('⏭️ [MiIoTDirect] 轮询期间 session 已变更 ($sessionSnapshot→$_activeSwitchSessionId)，丢弃旧结果');
+        return;
+      }
+
       if (status != null) {
         // 解析状态
         var isPlaying = status['status'] == 1;
@@ -567,6 +614,7 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
     // 验证条件：
     // 1. 定时器对应的歌曲名与当前播放的歌曲名一致（没有被手动切歌）
     // 2. 尚未通过 API 检测触发过自动下一首
+    // 3. 实际播放进度已接近歌曲末尾（防止暂停后挂钟超时误触发）
     final currentMusic = _currentPlayingMusic?.curMusic ?? '';
     final isSameSong = currentMusic == expectedMusicName ||
         expectedMusicName == _backupTimerMusicName;
@@ -579,6 +627,18 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
     if (_isAutoNextTriggered) {
       debugPrint('⏭️ [MiIoTDirect] 已通过 API 检测触发，忽略备用定时器');
       return;
+    }
+
+    // 🎯 进度检查：备用定时器基于挂钟时间，暂停时挂钟仍在走
+    // 如果实际进度离歌曲结尾还很远（>30秒），说明用户暂停了很久，不应触发
+    final offset = _currentPlayingMusic?.offset ?? 0;
+    final duration = _currentPlayingMusic?.duration ?? 0;
+    if (duration > 0 && offset > 0) {
+      final remaining = duration - offset;
+      if (remaining > 30) {
+        debugPrint('⏭️ [MiIoTDirect] 备用定时器：进度 $offset/$duration 秒，剩余 $remaining 秒，未到结尾，忽略（可能暂停了很久）');
+        return;
+      }
     }
 
     // 🎯 触发自动下一首
@@ -926,6 +986,9 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
     } catch (e) {
       debugPrint('❌ [MiIoTDirect] 播放异常: $e');
     } finally {
+      // 🔇 解除切歌准备期（慢网下旧 HTTP 可能仍未返回，由 session 快照兜底）
+      _isSongSwitchPending = false;
+
       // 🎯 即时轮询获取设备真实位置（带超时保护，避免网络慢时阻塞轮询恢复）
       try {
         debugPrint('▶️ [MiIoTDirect] 即时轮询获取真实进度...');
@@ -1020,6 +1083,9 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
 
     // 🎯 清理播放状态保护窗口
     _playingStateProtectedUntil = null;
+
+    // 🔇 清理切歌准备状态
+    _isSongSwitchPending = false;
 
     // 🎯 恢复AudioHandler为本地播放模式
     if (_audioHandler != null) {
