@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/app_snackbar.dart';
+import '../widgets/app_bottom_sheet.dart';
 import '../providers/music_library_provider.dart';
 import '../providers/playback_provider.dart';
 import '../providers/device_provider.dart';
@@ -140,35 +141,24 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
   // NAS 播放以本地为主，设备选择逻辑移除
 
   void _deleteMusic(String musicName) {
-    final primary = Theme.of(context).colorScheme.primary;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        title: const Text('删除音乐', style: TextStyle(color: Colors.black87)),
-        content: const Text(
-          '确定要删除该音乐吗？此操作不可撤销。',
-          style: TextStyle(color: Colors.black54),
-        ),
+        title: const Text('删除音乐'),
+        content: const Text('确定要删除该音乐吗？此操作不可撤销。'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(
-              '取消',
-              style: TextStyle(color: primary),
-            ),
+            child: const Text('取消'),
           ),
-          ElevatedButton(
+          FilledButton(
             onPressed: () {
               ref.read(musicLibraryProvider.notifier).deleteMusic(musicName);
               Navigator.pop(context);
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+              foregroundColor: Theme.of(context).colorScheme.onError,
             ),
             child: const Text('删除'),
           ),
@@ -821,28 +811,19 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
   }
 
   void _showBatchDeleteDialog(MusicLibraryState libraryState) {
-    final primary = Theme.of(context).colorScheme.primary;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        title: const Text('批量删除音乐', style: TextStyle(color: Colors.black87)),
+        title: const Text('批量删除音乐'),
         content: Text(
           '确定要删除选中的 ${libraryState.selectedMusicNames.length} 首音乐吗？\n\n此操作不可撤销。',
-          style: const TextStyle(color: Colors.black54),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(
-              '取消',
-              style: TextStyle(color: primary),
-            ),
+            child: const Text('取消'),
           ),
-          ElevatedButton(
+          FilledButton(
             onPressed: () async {
               Navigator.pop(context);
               await ref.read(musicLibraryProvider.notifier).deleteSelectedMusic();
@@ -853,9 +834,9 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
                 );
               }
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+              foregroundColor: Theme.of(context).colorScheme.onError,
             ),
             child: const Text('删除'),
           ),
@@ -896,21 +877,15 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
       return;
     }
 
-    final selectedPlaylist = await showModalBottomSheet<String>(
+    final selectedPlaylist = await showAppBottomSheet<String>(
       context: context,
       builder: (context) {
-        return SafeArea(
+        return AppBottomSheet(
+          title: '添加到歌单',
+          centerTitle: true,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Text(
-                  '添加到歌单',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-              ),
-              const Divider(height: 1),
               Flexible(
                 child: ListView.builder(
                   shrinkWrap: true,
@@ -977,6 +952,7 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
 
   void _showMusicInfo(music) {
     final primary = Theme.of(context).colorScheme.primary;
+    final colorScheme = Theme.of(context).colorScheme;
     final ext = music.name.contains('.') ? music.name.split('.').last : '未知';
 
     // 获取包含此歌曲的歌单
@@ -986,13 +962,9 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
         title: Text(
           music.title ?? music.name,
-          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w600),
+          style: TextStyle(color: colorScheme.onSurface, fontWeight: FontWeight.w600),
         ),
         content: SingleChildScrollView(
           child: Column(
@@ -1007,7 +979,7 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
                     Expanded(
                       child: Text(
                         music.artist!,
-                        style: TextStyle(color: Colors.black54),
+                        style: TextStyle(color: colorScheme.onSurfaceVariant),
                       ),
                     ),
                   ],
@@ -1021,7 +993,7 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
                     Expanded(
                       child: Text(
                         music.album!,
-                        style: TextStyle(color: Colors.black54),
+                        style: TextStyle(color: colorScheme.onSurfaceVariant),
                       ),
                     ),
                   ],
@@ -1035,7 +1007,7 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
                     Expanded(
                       child: Text(
                         music.duration!,
-                        style: TextStyle(color: Colors.black54),
+                        style: TextStyle(color: colorScheme.onSurfaceVariant),
                       ),
                     ),
                   ],
@@ -1048,7 +1020,7 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
                   Expanded(
                     child: Text(
                       music.name,
-                      style: TextStyle(color: Colors.black87),
+                      style: TextStyle(color: colorScheme.onSurface),
                     ),
                   ),
                 ],
@@ -1061,7 +1033,7 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
                   Expanded(
                     child: Text(
                       '后缀: $ext',
-                      style: TextStyle(color: Colors.black54),
+                      style: TextStyle(color: colorScheme.onSurfaceVariant),
                     ),
                   ),
                 ],
@@ -1083,7 +1055,7 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
                           Text(
                             '所属歌单:',
                             style: TextStyle(
-                              color: Colors.black87,
+                              color: colorScheme.onSurface,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -1128,20 +1100,13 @@ class _MusicLibraryPageState extends ConsumerState<MusicLibraryPage>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(
-              '关闭',
-              style: TextStyle(color: primary),
-            ),
+            child: const Text('关闭'),
           ),
-          ElevatedButton(
+          FilledButton(
             onPressed: () {
               Navigator.pop(context);
               _playMusic(music.name);
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: primary,
-              foregroundColor: Colors.white,
-            ),
             child: const Text('播放'),
           ),
         ],

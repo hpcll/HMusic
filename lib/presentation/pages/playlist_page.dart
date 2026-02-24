@@ -8,6 +8,7 @@ import '../providers/direct_mode_provider.dart';
 import 'playlist_detail_page.dart';
 import '../widgets/app_snackbar.dart';
 import '../widgets/app_layout.dart';
+import '../widgets/app_bottom_sheet.dart';
 import '../providers/auth_provider.dart';
 import '../../core/utils/platform_id.dart';
 import '../../data/services/playlist_import_service.dart';
@@ -674,34 +675,30 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage> {
   }
 
   Future<void> _showPlaylistActionSheet() async {
-    final action = await showModalBottomSheet<String>(
+    final action = await showAppBottomSheet<String>(
       context: context,
-      useSafeArea: true,
-      showDragHandle: true,
-      builder: (context) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(8, 8, 8, 16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.note_add_rounded),
-                  title: const Text('新建空歌单'),
-                  subtitle: const Text('手动创建空歌单'),
-                  onTap: () => Navigator.pop(context, 'create'),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.link_rounded),
-                  title: const Text('导入外部歌单'),
-                  subtitle: const Text('粘贴 QQ/酷我/网易云链接'),
-                  onTap: () => Navigator.pop(context, 'import'),
-                ),
-              ],
-            ),
+      builder: (context) => AppBottomSheet(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.note_add_rounded),
+                title: const Text('新建空歌单'),
+                subtitle: const Text('手动创建空歌单'),
+                onTap: () => Navigator.pop(context, 'create'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.link_rounded),
+                title: const Text('导入外部歌单'),
+                subtitle: const Text('粘贴 QQ/酷我/网易云链接'),
+                onTap: () => Navigator.pop(context, 'import'),
+              ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
 
     if (action == 'create') {
@@ -719,11 +716,9 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage> {
     final modeScope =
         playbackMode == PlaybackMode.miIoTDirect ? 'direct' : 'xiaomusic';
 
-    final result = await showModalBottomSheet<ImportResult>(
+    final result = await showAppBottomSheet<ImportResult>(
       context: context,
       isScrollControlled: true,
-      useSafeArea: true,
-      showDragHandle: true,
       builder: (context) {
         final importService = ref.read(playlistImportServiceProvider);
         ImportStage? stage;
@@ -847,19 +842,16 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage> {
               padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      '导入外部歌单',
-                      style: Theme.of(context).textTheme.titleMedium,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 12),
-                    if (!importing)
+              child: AppBottomSheet(
+                title: '导入外部歌单',
+                centerTitle: true,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      if (!importing)
                       TextField(
                         controller: controller,
                         minLines: 1,
@@ -909,6 +901,7 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage> {
                     ),
                   ],
                 ),
+              ),
               ),
             );
           },
@@ -991,16 +984,10 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage> {
     final modeScope =
         playbackMode == PlaybackMode.miIoTDirect ? 'direct' : 'xiaomusic';
 
-    showModalBottomSheet(
+    showAppBottomSheet(
       context: context,
       isScrollControlled: true,
-      useSafeArea: true,
       enableDrag: true,
-      showDragHandle: true,
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
       builder: (context) {
         final onSurface = Theme.of(context).colorScheme.onSurface;
         final focusNode = FocusNode();
@@ -1024,23 +1011,15 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage> {
               padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                    const SizedBox(height: 4),
-                    Text(
-                      '新建歌单',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: onSurface,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 12),
+              child: AppBottomSheet(
+                title: '新建歌单',
+                centerTitle: true,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
                     TextField(
                       controller: controller,
                       focusNode: focusNode,
@@ -1123,6 +1102,7 @@ class _PlaylistPageState extends ConsumerState<PlaylistPage> {
                     ),
                   ],
                 ),
+              ),
               ),
             );
           },

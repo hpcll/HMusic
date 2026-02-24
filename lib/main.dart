@@ -196,6 +196,23 @@ class MyApp extends ConsumerWidget {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
+        bottomSheetTheme: BottomSheetThemeData(
+          backgroundColor: lightScheme.surface,
+          surfaceTintColor: Colors.transparent,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          showDragHandle: true,
+          dragHandleColor: lightScheme.onSurface.withOpacity(0.2),
+          dragHandleSize: const Size(40, 5),
+        ),
+        dialogTheme: DialogThemeData(
+          backgroundColor: lightScheme.surface,
+          surfaceTintColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
       ),
       darkTheme: ThemeData(
         useMaterial3: true,
@@ -216,6 +233,23 @@ class MyApp extends ConsumerWidget {
           elevation: 8,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        bottomSheetTheme: BottomSheetThemeData(
+          backgroundColor: darkScheme.surface,
+          surfaceTintColor: Colors.transparent,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          showDragHandle: true,
+          dragHandleColor: darkScheme.onSurface.withOpacity(0.2),
+          dragHandleSize: const Size(40, 5),
+        ),
+        dialogTheme: DialogThemeData(
+          backgroundColor: darkScheme.surface,
+          surfaceTintColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
           ),
         ),
       ),

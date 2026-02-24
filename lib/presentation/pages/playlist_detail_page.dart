@@ -13,6 +13,7 @@ import '../providers/music_library_provider.dart';
 import '../providers/playback_queue_provider.dart'; // 🎯 播放队列管理
 import '../widgets/app_snackbar.dart';
 import '../widgets/app_layout.dart';
+import '../widgets/app_bottom_sheet.dart';
 import '../../data/models/music.dart';
 import '../../data/models/local_playlist.dart'; // 🎯 本地播放列表模型
 import '../../data/models/playlist_item.dart'; // 🎯 统一播放列表项
@@ -61,23 +62,17 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
       return;
     }
 
-    await showModalBottomSheet<void>(
+    await showAppBottomSheet<void>(
       context: context,
-      useSafeArea: true,
-      showDragHandle: true,
       builder: (context) {
-        return SafeArea(
+        return AppBottomSheet(
+          title: playlist.name,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  playlist.name,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 12),
                 ListTile(
                   contentPadding: EdgeInsets.zero,
                   title: const Text('来源平台'),
@@ -542,25 +537,15 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
             ? false
             : _isVirtualPlaylist(widget.playlistName);
 
-    final result = await showModalBottomSheet<String>(
+    final result = await showAppBottomSheet<String>(
       context: context,
       builder: (context) {
-        return SafeArea(
+        return AppBottomSheet(
+          title: musicName,
+          centerTitle: true,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // 标题
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Text(
-                  musicName,
-                  style: Theme.of(context).textTheme.titleMedium,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              const Divider(height: 1),
               // 对于虚拟播放列表,显示"添加到...";对于普通列表,显示"移动到..."和"复制到..."
               if (isVirtualPlaylist)
                 ListTile(
@@ -652,21 +637,15 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
       return;
     }
 
-    final selectedPlaylist = await showModalBottomSheet<String>(
+    final selectedPlaylist = await showAppBottomSheet<String>(
       context: context,
       builder: (context) {
-        return SafeArea(
+        return AppBottomSheet(
+          title: isMove ? '移动到播放列表' : '添加到播放列表',
+          centerTitle: true,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Text(
-                  isMove ? '移动到播放列表' : '添加到播放列表',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-              ),
-              const Divider(height: 1),
               Flexible(
                 child: ListView.builder(
                   shrinkWrap: true,
@@ -741,8 +720,12 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
                 onPressed: () => Navigator.pop(context, false),
                 child: const Text('取消'),
               ),
-              TextButton(
+              FilledButton(
                 onPressed: () => Navigator.pop(context, true),
+                style: FilledButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                  foregroundColor: Theme.of(context).colorScheme.onError,
+                ),
                 child: const Text('删除'),
               ),
             ],

@@ -10,6 +10,7 @@ import '../providers/lyric_provider.dart';
 import '../../data/models/device.dart';
 import '../widgets/app_layout.dart';
 import '../widgets/app_snackbar.dart';
+import '../widgets/app_bottom_sheet.dart';
 import 'lyrics_page.dart';
 import '../providers/direct_mode_provider.dart';
 
@@ -527,64 +528,31 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
     DeviceState state,
     PlaybackMode playbackMode,
   ) {
-    showModalBottomSheet(
+    showAppBottomSheet(
       context: context,
-      backgroundColor: Colors.transparent,
       builder: (context) {
-        final surfaceColor = Theme.of(context).colorScheme.surface;
         final onSurfaceColor = Theme.of(context).colorScheme.onSurface;
 
-        return Container(
-          decoration: BoxDecoration(
-            color: surfaceColor,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        return AppBottomSheet(
+          title: '选择设备',
+          trailing: IconButton(
+            onPressed: () async {
+              try {
+                // 🎯 根据播放模式刷新对应的设备列表
+                if (playbackMode == PlaybackMode.miIoTDirect) {
+                  await ref.read(directModeProvider.notifier).refreshDevices();
+                } else {
+                  await ref.read(deviceProvider.notifier).loadDevices();
+                }
+              } catch (e) {
+                // ignore
+              }
+            },
+            icon: Icon(Icons.refresh_rounded, color: onSurfaceColor),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                margin: const EdgeInsets.only(top: 12, bottom: 12),
-                width: 40,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: onSurfaceColor.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(2.5),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 8,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '选择设备',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: onSurfaceColor,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () async {
-                        try {
-                          // 🎯 根据播放模式刷新对应的设备列表
-                          if (playbackMode == PlaybackMode.miIoTDirect) {
-                            await ref.read(directModeProvider.notifier).refreshDevices();
-                          } else {
-                            await ref.read(deviceProvider.notifier).loadDevices();
-                          }
-                        } catch (e) {
-                          // ignore
-                        }
-                      },
-                      icon: Icon(Icons.refresh_rounded, color: onSurfaceColor),
-                    ),
-                  ],
-                ),
-              ),
               if (state.isLoading && state.devices.isEmpty)
                 const Padding(
                   padding: EdgeInsets.all(20.0),
@@ -655,7 +623,7 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
                     ],
                   ),
                 ),
-              SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
+              const SizedBox(height: 8),
             ],
           ),
         );
@@ -1398,63 +1366,30 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
 
   /// ⏰ 显示定时器底部弹窗选择器
   void _showTimerBottomSheet(BuildContext context, PlaybackState state) {
-    final surfaceColor = Theme.of(context).colorScheme.surface;
     final onSurfaceColor = Theme.of(context).colorScheme.onSurface;
     final primaryColor = Theme.of(context).colorScheme.primary;
 
-    showModalBottomSheet(
+    showAppBottomSheet(
       context: context,
-      backgroundColor: Colors.transparent,
       isScrollControlled: true, // 允许自定义高度
-      builder: (context) => Container(
-        decoration: BoxDecoration(
-          color: surfaceColor,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-        ),
+      builder: (context) => AppBottomSheet(
+        title: '定时关机',
+        trailing: state.timerMinutes > 0
+            ? TextButton.icon(
+                onPressed: () {
+                  ref.read(playbackProvider.notifier).cancelTimer();
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Icons.close_rounded, size: 18),
+                label: const Text('取消定时'),
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.orangeAccent,
+                ),
+              )
+            : null,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // 顶部拖动条
-            Container(
-              margin: const EdgeInsets.only(top: 12, bottom: 8),
-              width: 40,
-              height: 5,
-              decoration: BoxDecoration(
-                color: onSurfaceColor.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(2.5),
-              ),
-            ),
-
-            // 标题栏
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '定时关机',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: onSurfaceColor,
-                    ),
-                  ),
-                  if (state.timerMinutes > 0)
-                    TextButton.icon(
-                      onPressed: () {
-                        ref.read(playbackProvider.notifier).cancelTimer();
-                        Navigator.pop(context);
-                      },
-                      icon: const Icon(Icons.close_rounded, size: 18),
-                      label: const Text('取消定时'),
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.orangeAccent,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-
             // 当前定时状态提示
             if (state.timerMinutes > 0)
               Container(
@@ -1555,7 +1490,7 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
               ),
             ),
 
-            SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
+            SizedBox(height: 16),
           ],
         ),
       ),
