@@ -270,16 +270,16 @@ class _MainPageState extends ConsumerState<MainPage> with SingleTickerProviderSt
         child: Row(
           children: [
             Transform.translate(
-              offset: const Offset(-8, 8),
+              offset: const Offset(0, 8),
               child: SvgPicture.asset(
                 'assets/hmusic-logo.svg',
-                width: 180,
+                width: 120,
                 fit: BoxFit.fitWidth,
               ),
             ),
             const Spacer(),
-            // Upload button - only show on music library tab (index 3)
-            if (_selectedIndex == 3)
+            // Upload button - only show on music library tab (index 3) in xiaomusic mode
+            if (_selectedIndex == 3 && ref.watch(playbackModeProvider) == PlaybackMode.xiaomusic)
               Container(
                 margin: const EdgeInsets.only(right: 8),
                 child: IconButton(

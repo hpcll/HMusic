@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 import '../providers/auth_provider.dart';
+import '../providers/direct_mode_provider.dart';
 import '../../core/constants/app_constants.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -40,6 +40,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
 
   void _handleLogin() {
+    FocusScope.of(context).unfocus();
     if (!_formKey.currentState!.validate()) return;
     ref.read(authProvider.notifier).login(
       serverUrl: _serverUrlController.text.trim(),
@@ -55,115 +56,59 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
 
     final isLight = Theme.of(context).brightness == Brightness.light;
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Container(
-        decoration:
-            isLight
-                ? const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color(0xFFF9FBFB), Color(0xFFF1F9F8)],
-                  ),
-                )
-                : const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color(0xFF0A0E21),
-                      Color(0xFF1D1E33),
-                      Color(0xFF2D1B69),
-                    ],
-                  ),
-                ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.only(
-              left: 24.0,
-              right: 24.0,
-              top: 20.0,
-              bottom: keyboardHeight > 0 ? keyboardHeight + 20 : 20.0,
-            ),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight:
-                    screenHeight > 40
-                        ? screenHeight - MediaQuery.of(context).padding.top - 40
-                        : 400, // 设置最小高度避免负值
+    final isLoading = authState is AuthLoading;
+
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: SafeArea(
+        child: Stack(
+          children: [
+            // 主内容
+            SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: EdgeInsets.only(
+                left: 24.0,
+                right: 24.0,
+                bottom: keyboardHeight > 0 ? keyboardHeight + 20 : 20.0,
               ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 40),
+                  SizedBox(height: screenHeight * 0.13),
 
                   // Logo和标题区域
                   Column(
                     children: [
-                      Container(
-                        width: 160,
-                        height: 160,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white.withOpacity(isLight ? 1.0 : 0.1),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 20,
-                              offset: const Offset(0, 10),
-                            ),
-                          ],
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: SvgPicture.asset(
-                            'assets/hmusic-logo.svg',
-                            fit: BoxFit.contain,
-                          ),
+                      SvgPicture.asset(
+                        'assets/hmusic-logo.svg',
+                        width: 120,
+                        colorFilter: ColorFilter.mode(
+                          isLight
+                              ? const Color(0xFF21B0A5)
+                              : const Color(0xFF21B0A5).withValues(alpha: 0.9),
+                          BlendMode.srcIn,
                         ),
                       ),
                       const SizedBox(height: 24),
                       Text(
-                        'HMusic',
+                        'xiaomusic 模式',
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
-                          color:
-                              isLight
-                                  ? const Color(0xFF2D3748) // 深色文字用于浅色主题
-                                  : Colors.white, // 白色文字用于深色主题
+                          color: isLight
+                              ? const Color(0xFF2D3748)
+                              : Colors.white,
                           letterSpacing: 1.2,
-                          shadows:
-                              isLight
-                                  ? [
-                                    Shadow(
-                                      color: Colors.black.withOpacity(0.08),
-                                      offset: const Offset(0, 1),
-                                      blurRadius: 3,
-                                    ),
-                                  ]
-                                  : [
-                                    Shadow(
-                                      color: Colors.black.withOpacity(0.5),
-                                      offset: const Offset(0, 2),
-                                      blurRadius: 4,
-                                    ),
-                                  ],
                         ),
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '播放 NAS 音乐',
+                        '连接 xiaomusic 服务端，播放 NAS 音乐',
                         style: TextStyle(
                           fontSize: 16,
-                          color:
-                              isLight
-                                  ? const Color(0xFF4A5568) // 深色副标题用于浅色主题
-                                  : Colors.white.withOpacity(
-                                    0.7,
-                                  ), // 半透明白色用于深色主题
+                          color: isLight
+                              ? const Color(0xFF4A5568)
+                              : Colors.white.withValues(alpha: 0.7),
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -231,17 +176,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           // 用户名输入框
                           _buildModernTextField(
                             controller: _usernameController,
-                            labelText: '用户名',
-                            hintText: 'xiaomusic 后台的账号',
+                            labelText: '用户名（选填）',
+                            hintText: '未设置可留空',
                             prefixIcon: Icons.person_rounded,
                             textInputAction: TextInputAction.next,
                             enableClear: true,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return '请输入用户名';
-                              }
-                              return null;
-                            },
                           ),
 
                           const SizedBox(height: 20),
@@ -249,8 +188,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           // 密码输入框
                           _buildModernTextField(
                             controller: _passwordController,
-                            labelText: '密码',
-                            hintText: 'xiaomusic 后台的密码',
+                            labelText: '密码（选填）',
+                            hintText: '未设置可留空',
                             prefixIcon: Icons.lock_rounded,
                             obscureText: _obscurePassword,
                             textInputAction: TextInputAction.done,
@@ -269,17 +208,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 });
                               },
                             ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return '请输入密码';
-                              }
-                              return null;
-                            },
                           ),
 
                           const SizedBox(height: 32),
 
-                          // 错误提示
+                          // 错误提示 / 登录提示（互斥）
                           if (authState is AuthError)
                             Container(
                               margin: const EdgeInsets.only(bottom: 20),
@@ -316,6 +249,28 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                   ),
                                 ],
                               ),
+                            )
+                          else
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 20),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.info_outline_rounded,
+                                    size: 16,
+                                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    '后台未设置账号密码？直接点击登录',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
 
                           // 登录按钮
@@ -325,34 +280,30 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             isLoading: authState is AuthLoading,
                           ),
 
-                          const SizedBox(height: 16),
-
-                          // 模式选择入口
-                          TextButton(
-                            onPressed: () {
-                              context.go('/mode_selection');
-                            },
-                            style: TextButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                            ),
-                            child: Text(
-                              '选择其他登录方式',
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
                         ],
                       ),
                     ),
                   ),
 
-                  const SizedBox(height: 40),
-                ],
+                    const SizedBox(height: 40),
+                  ],
+                ),
               ),
-            ),
+              // 返回按钮
+              Positioned(
+                top: 4,
+                left: 0,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: isLight ? const Color(0xFF2D3748) : Colors.white,
+                  ),
+                  onPressed: isLoading
+                      ? null
+                      : () => ref.read(playbackModeProvider.notifier).clearMode(),
+                ),
+              ),
+            ],
           ),
         ),
       ),

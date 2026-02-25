@@ -512,18 +512,30 @@ class PlaybackModeNotifier extends StateNotifier<PlaybackMode> {
 
   static const String _keyMode = 'playback_mode';
 
+  /// 用户是否已明确选择过模式（首次安装为 false）
+  bool _hasSelectedMode = false;
+  bool get hasSelectedMode => _hasSelectedMode;
+
+  /// 始终通知监听者（解决选择相同默认模式时不触发重建的问题）
+  @override
+  bool updateShouldNotify(PlaybackMode old, PlaybackMode current) => true;
+
   Future<void> _loadSavedMode() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final savedMode = prefs.getString(_keyMode);
 
       if (savedMode != null) {
+        // 🎯 只恢复模式状态用于自动登录判断，不设置 _hasSelectedMode
+        // 这样重启后若未登录成功，仍会展示模式选择页
         if (savedMode == PlaybackMode.miIoTDirect.name) {
           state = PlaybackMode.miIoTDirect;
         } else {
           state = PlaybackMode.xiaomusic;
         }
-        debugPrint('📱 [PlaybackMode] 加载保存的模式: ${state.displayName}');
+        debugPrint('📱 [PlaybackMode] 加载保存的模式: ${state.displayName}（等待验证登录状态）');
+      } else {
+        debugPrint('📱 [PlaybackMode] 首次启动，等待用户选择模式');
       }
     } catch (e) {
       debugPrint('❌ [PlaybackMode] 加载模式失败: $e');
@@ -532,6 +544,7 @@ class PlaybackModeNotifier extends StateNotifier<PlaybackMode> {
 
   Future<void> setMode(PlaybackMode mode) async {
     state = mode;
+    _hasSelectedMode = true;
 
     // 保存选择
     final prefs = await SharedPreferences.getInstance();
@@ -540,16 +553,17 @@ class PlaybackModeNotifier extends StateNotifier<PlaybackMode> {
     debugPrint('✅ [PlaybackMode] 模式已切换: ${mode.displayName}');
   }
 
-  /// 清除模式选择（用于切换模式功能）
+  /// 清除模式选择（用于返回模式选择页）
   Future<void> clearMode() async {
-    // 清除保存的模式选择
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_keyMode);
-
-    // 重置为默认模式（但不保存，让用户重新选择）
+    // 先重置状态，确保 UI 立刻响应
+    _hasSelectedMode = false;
     state = PlaybackMode.xiaomusic;
 
     debugPrint('🔄 [PlaybackMode] 模式选择已清除，等待用户重新选择');
+
+    // 再异步清理持久化数据
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_keyMode);
   }
 }
 
