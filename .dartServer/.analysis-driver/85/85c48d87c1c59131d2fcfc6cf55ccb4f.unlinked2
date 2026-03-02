@@ -1,0 +1,1315 @@
+_tokeninstance__getRootIsolateToken	_instance_configurationonPlatformConfigurationChanged_onPlatformConfigurationChanged#_onPlatformConfigurationChangedZonedisplays	_displaysviews_viewsviewimplicitView_debugLastImplicitView_debugRecordedLastImplicitViewonMetricsChanged_onMetricsChanged_onMetricsChangedZone_addView_removeView_sendViewFocusEventengineId	_engineId_updateDisplays_updateWindowMetricsonViewFocusChange_onViewFocusChange_onViewFocusChangeZonerequestViewFocusChange_requestViewFocusChangeonBeginFrame_onBeginFrame_onBeginFrameZone_beginFrameonDrawFrame_onDrawFrame_onDrawFrameZone
+_drawFrameonPointerDataPacket_onPointerDataPacket_onPointerDataPacketZone_dispatchPointerDataPacket_kPointerDataFieldCount_unpackPointerDataPacket_keyDataListener	onKeyData
+_onKeyData_kKeyDataFieldCount_unpackKeyDataonReportTimings_onReportTimings_onReportTimingsZone_setNeedsReportTimings_nativeSetNeedsReportTimings__nativeSetNeedsReportTimings_reportTimingssendPlatformMessage_sendPlatformMessage__sendPlatformMessagesendPortPlatformMessage_sendPortPlatformMessage__sendPortPlatformMessageregisterBackgroundIsolate__registerBackgroundIsolateonPlatformMessage_onPlatformMessage_onPlatformMessageZone_respondToPlatformMessage__respondToPlatformMessage%_zonedPlatformMessageResponseCallback_dispatchPlatformMessagesetIsolateDebugName_setIsolateDebugNamerequestDartPerformanceMode_requestDartPerformanceModegetPersistentIsolateData_getPersistentIsolateDatascheduleFrame_scheduleFramescheduleWarmUpFrame_endWarmUpFrameaccessibilityFeaturesonAccessibilityFeaturesChanged_onAccessibilityFeaturesChanged#_onAccessibilityFeaturesChangedZone_updateAccessibilityFeaturesupdateSemantics_updateSemanticslocalelocalescomputePlatformResolvedLocale_computePlatformResolvedLocale__computePlatformResolvedLocaleonLocaleChanged_onLocaleChanged_onLocaleChangedZone_updateLocales_localeClosureinitialLifecycleState_initialLifecycleState_initialLifecycleStateAccessed_updateInitialLifecycleStatealwaysUse24HourFormattextScaleFactoronTextScaleFactorChanged_onTextScaleFactorChanged_onTextScaleFactorChangedZonenativeSpellCheckServiceDefined_nativeSpellCheckServiceDefined supportsShowingSystemContextMenu!_supportsShowingSystemContextMenubrieflyShowPassword_brieflyShowPasswordplatformBrightnessonPlatformBrightnessChanged_onPlatformBrightnessChanged _onPlatformBrightnessChangedZonesystemFontFamilyonSystemFontFamilyChanged_onSystemFontFamilyChanged_onSystemFontFamilyChangedZone_updateUserSettingsDatasemanticsEnabledonSemanticsEnabledChanged_onSemanticsEnabledChanged_onSemanticsEnabledChangedZone_updateSemanticsEnabledonSemanticsActionEvent_onSemanticsActionEvent_onSemanticsActionEventZone_updateFrameData	frameData
+_frameDataonFrameDataChanged_onFrameDataChanged_onFrameDataChangedZone_dispatchSemanticsAction_onError_onErrorZoneonError_dispatchErrordefaultRouteName_defaultRouteNamescaleFontSize_cachedFontSizes_scaleAndMemoize_getScaledFontSizenamevalueisSupportedplatformProvidesSystemColorslightdark
+brightness_systemColorUnsupportedErroraccentColoraccentColorText
+activeTextbuttonBorder
+buttonFace
+buttonTextcanvas
+canvasTextfield	fieldTextgrayText	highlighthighlightTextlinkTextmarkmarkTextselectedItemselectedItemTextvisitedTextcopyWithconfigurationId	displayIddevicePixelRatiosize
+viewInsetsviewPaddingsystemGestureInsetspaddinggestureSettingsdisplayFeaturestoString
+vsyncStart
+buildStartbuildFinishrasterStartrasterFinishrasterFinishWallTimelayerCacheCountlayerCacheBytespictureCacheCountpictureCacheBytesframeNumber_dataLengthtimestampInMicroseconds_rawDuration_rawInfobuildDurationrasterDurationvsyncOverhead	totalSpanlayerCacheMegabytespictureCacheMegabytes_data	_formatMSdetachedresumedinactivehiddenpausedexitcancel
+cancelablerequiredlefttoprightbottomzerominWidthmaxWidth	minHeight	maxHeightisSatisfiedByisTight/==hashCodeboundstypestateunknownfoldhingecutoutpostureFlatpostureHalfOpenedlanguageCode_languageCode_deprecatedLanguageSubtagMap
+scriptCodecountryCode_countryCode_deprecatedRegionSubtagMap_cachedLocale_cachedLocaleStringtoLanguageTag_rawToStringbalancedlatency
+throughputmemoryviewIdnodeId	arguments_noArgumentPlaceholder	direction	unfocusedfocused	undefinedforwardbackward&VoidCallbackFrameCallbackTimingsCallbackPointerDataPacketCallbackKeyDataCallbackSemanticsActionEventCallbackPlatformMessageResponseCallbackPlatformMessageCallback_SetNeedsReportTimingsFuncErrorCallback_kUnsetGestureSetting_kFlutterKeyDataChannel_wrapUnmodifiableByteDataRootIsolateTokenPlatformDispatcherSystemColorSystemColorPalette_PlatformConfiguration_ViewConfiguration
+FramePhase_FrameTimingInfoFrameTimingAppLifecycleStateAppExitResponseAppExitTypeViewPaddingWindowPaddingViewConstraintsDisplayFeatureDisplayFeatureTypeDisplayFeatureStateLocaleDartPerformanceModeSemanticsActionEventViewFocusChangeCallbackViewFocusEventViewFocusStateViewFocusDirection9dartuivoidonBeginFrameDateTimeDurationonReportTimingsListonPointerDataPacketPointerDataPacket	onKeyDataboolKeyDataonSemanticsActionEventsendPlatformMessageonPlatformMessageByteDataChannelBufferssetListener
+DeprecatedStringonErrorObject
+StackTracedoublepragmaasUnmodifiableViewint_NativeInt64symbolconfigurationinstanceZonerootcurrentFlutterViewdisplayIterableDisplayvaluesMapidViewofBuildContextviews_implicitViewId	identicalViewConfigurationWidgetsBindingObserver
+MediaQuerycontainsKey_invokeremove_invoke1clear_viewConfigurationfocusedforward	unfocused	undefinedviewIdstateindex	directionVoidSceneBuilderrenderscheduleFramemicrosecondsGestureBinding	Int64ListbytesPerElementlengthInBytesPointerDataiadd
+embedderIdgetInt64_kFakeHostEndian	timeStampchangePointerChangekindPointerDeviceKind
+signalKindPointerSignalKinddevicepointerIdentifier	physicalX
+getFloat64	physicalYphysicalDeltaXphysicalDeltaYbuttonsobscuredsynthesizedpressurepressureMinpressureMaxdistancedistanceMaxsizeradiusMajorradiusMinor	radiusMin	radiusMaxorientationtiltplatformDatascrollDeltaXscrollDeltaYpanXpanY	panDeltaX	panDeltaYscalerotationdataChannelCallbackkeyData	Uint8Listcallbackbuffer
+asByteDatapacketchannelBuffersclearListener	getUint64utf8decoderconvertasUint8ListtypeKeyEventTypephysicallogical	characterSchedulerBindingaddTimingsCallbackbuildDurationrasterDuration	totalSpanTimelineBoollength_dataLengthsublist	ExceptionHandleSendPort
+nativePortDartPluginRegistrantensureInitialized_tokenIntPtrrunUnaryGuardedkControlChannelNamehandleMessage_invoke3responseDatapushIntscheduleWarmUpFrameTimerrun
+beginFrame	drawFrameAccessibilityFeaturesaccessibilityFeaturescopyWithSemanticsUpdate_NativeSemanticsUpdatePointerisEmptyfromSubtagsfirstlocaleslanguageCodecountryCode
+scriptCode
+isNotEmptylocaleIndextoStringlifecycleStateshowTimePickeralwaysUse24HourFormattextScaleFactorEditableTextStateSpellCheckConfigurationAdaptiveTextSelectionToolbarEditableTextobscureText
+BrightnesslightplatformBrightnesssystemFontFamilyjsondecodenumtoDoubledark
+StateErrorvalueconfigurationIdsemanticsEnabled	FrameDataframeNumberSemanticsAction	fromIndexnodeId	arguments	runBinaryhandleUncaughtErroresrunApp	NavigatorSystemChannels
+navigationtextScalerOfisFinitefloorceillowerupper_getScaledFontSize	errorCodeDoubleUnsupportedErrorhighContrastaccentColor
+buttonTextColordefaultRouteNameSizezeroGestureSettings	_displaysboundshingecutoutfoldoverrideruntimeTypevsyncOverhead
+vsyncStart
+buildStartbuildFinishrasterStartrasterFinishrasterFinishWallTime
+timestampslayerCacheCountlayerCacheBytespictureCacheCountpictureCacheByteslastinMicrosecondsdetachedresumedinactivepausedAppLifecycleListenerdidChangeAppLifecycleStateUIKitactivityAppKithiddenonDrawFrameonExitRequesteddidRequestAppExitServicesBindingexitApplicationWidgetsBindingexitrequiredcancel
+viewInsetspadding
+EdgeInsetsScaffoldlefttoprightbottomBoxConstraintswidthheightinfinityminWidthmaxWidth	minHeight	maxHeighthashtoStringAsFixedpostureFlatpostureHalfOpenedunknownRectUnicodeIANAlocalekeepToStringStringBufferwriteSemanticsNodeSemanticsBindingperformSemanticsActiononViewFocusChangeViewFocusChange ñ!ÙôxW äüÃ±"   ÀeÎ ÀîœŒ <€†€¤€µ€¶€ü$%Z^«ñ‚7‚;‚ˆ‚Õƒ	ƒCƒDƒ|ƒ€ƒ­ƒò„>„…„Ô… …l…º…é…ü†@†A†}†Ê†Ë†ı‡‡N‡‚‡¹‡º‡ùˆLˆMˆˆƒˆËˆ÷‰@‰A‰‚‰†‰À‰ÍŠŠ:Š<Š^Š¹ŠºŠã‹#‹$‹T‹X‹¥‹Î‹ÒŒ"ŒpŒ¦ŒöŒ÷Dop«®ï)*DŸ Ìå	Wkl¼9h¢©ª‘‘4‘6‘7‘`‘d‘«‘¯‘û’’’k’š’’â“““\“¥“õ”B”Q”l”·”ì••B•F•G•q•w•»––X–^–¯–ı—K—•—æ˜˜˜c˜´˜à™0™~™—™Îššš_š`š–šœšêšù›P››¹›øœ(œ`œdœeœ‰œœßœå.4„Òìò<‹ÜŸ-ŸNŸªŸò ( ` a ¯ Æ Ì¡¡P¡¡¡Ú¡ë¢!¢"¢n¢¥¢«¢ø£C££‡£Ñ¤¤b¤ˆ¤¤Õ¥ ¥n¥¼¦¦Y¦¦¤¦´¦º¦í§:§S§u§®§í§ù¨.¨N¨¬¨÷¨ş©,©<©h©x©­©Ùªª!ª0ªYªˆªª£ª­ªÀªÄªÅªì«««l«ƒ«‰«Ù¬¬=¬C¬‘¬ ¬¦¬î­­	­­­i­¡­Ü®®:®d®•®·®á®å®æ¯¯¯R¯W¯£¯Î°°R°°Å°É°Ê°ö°û±± ±m±•±²²²$²2²8²{²’²È²Ì²Í³ ³P³T³U³¨³Ş´´<´=´O´P´}´‚´§´Ø´ïµµDµJµ€µ„µ…µ±µ¶µğ¶@¶ˆ¶Ä¶ú¶ş¶ÿ·[·a·±¸¸[¸ª¸û¹¹%¹w¹Åººaºgºº»»w»Ş¼¼
+¼\¼p¼v¼Â¼û½½O½U½e½k½ä¾(¾o¾¿¿¿6¿˜¿ÃÀ @ À @#À @NÀ @RÀ @SÀ @˜À @À @ôÀ ARÀ AzÀ A€À AÏÀ AøÀ AşÀ BNÀ B~À B„À B”À BšÀ BíÀ CÀ C&À CIÀ CtÀ C{À C¾À CÂÀ CÃÀ CòÀ D8À D<À D’À D“À DÊÀ DĞÀ EÀ EhÀ E‹À E‘À EâÀ F#À FpÀ F‘À FÅÀ FåÀ GÀ G9À GWÀ G}À GÀ G‚À G®À GÕÀ H4À H8À H9À H‚À HÂÀ HÈÀ IÀ I]À IÀ I¬À IÑÀ IıÀ JÀ J?À JCÀ JDÀ JpÀ J†À J²À J¶À J·À JøÀ JşÀ KOÀ K^À KdÀ KtÀ KzÀ KÇÀ KØÀ L&À LYÀ L†À LÇÀ LìÀ MÀ MÀ MÀ MJÀ MÀ M¦À MÉÀ MæÀ NÀ N2À N;À NAÀ NEÀ NFÀ N‘À NàÀ OÀ OÀ OYÀ OŒÀ OÔÀ PÀ P\À PÀ P·À PçÀ P÷À QÀ QUÀ Q¢À RÀ ReÀ RÆÀ RÜÀ S;À S„À SØÀ T&À TtÀ TÇÀ UÀ UdÀ U´À VÀ VTÀ V¤À VôÀ WAÀ W‘À WÚÀ X*À XzÀ XÈÀ YÀ YfÀ Y¯À YşÀ ZOÀ Z À ZéÀ [2À [€À [ÎÀ \À \eÀ \®À \¹À \ÂÀ \ıÀ ]À ]-À ]1À ]2À ]…À ]ÊÀ ]åÀ ^À ^8À ^mÀ ^˜À ^ÌÀ ^ÙÀ ^éÀ _À _À _ À _!À _^À _dÀ _µÀ _ÄÀ _ÊÀ `À `OÀ `À `À `ËÀ `æÀ aÀ agÀ atÀ a±À a·À a»À a¼À b	À bÀ b6À baÀ bÀ bÀ bÍÀ c À c3À c4À cHÀ cÀ cÍÀ cÜÀ cüÀ d[À dhÀ diÀ dÀ dïÀ eGÀ eÀ eÖÀ eòÀ fBÀ fIÀ fJÀ f^À fbÀ fcÀ f¬À fÅÀ fËÀ gÀ ghÀ g‰À gÀ gÛÀ h(À h[À haÀ h²À hÿÀ i@À iFÀ irÀ ixÀ iÅÀ jÀ j_À jŒÀ jÈÀ jíÀ kÀ kIÀ k…À kµÀ k»À kÜÀ lÀ l	À l
+À lDÀ lEÀ lÀ lŸÀ lÿÀ mAÀ mBÀ mnÀ m™À mÔÀ nÀ nXÀ n°À n¶À nùÀ nıÀ nşÀ o3À o9À o†À oÑÀ pÀ pXÀ p^À p¯À p½À q"À qRÀ q^À q•À q¡À q¨À qÁÀ qßÀ qåÀ qéÀ qêÀ r
+À rÀ rJÀ r^À r’À r“À rÇÀ s
+À sÀ s?À sPÀ sÀ s“À s˜À s™À sßÀ såÀ t5À t…À tÖÀ u%À urÀ u‘À uîÀ vKÀ vdÀ v‚À vˆÀ vŒÀ vÀ vêÀ w)À w*À wfÀ w­À w±À wæÀ w÷À xÀ xÀ x-À x2À x3À xÀ xÈÀ xâÀ yÀ yKÀ yzÀ y~À yÀ yäÀ z+À z,À zoÀ zuÀ z¾À zŞÀ zäÀ {4À {‚À {˜À {À {ïÀ |>À |RÀ |XÀ |©À |¸À |ÇÀ |ıÀ }8À }<À }„À }³À }ŞÀ }íÀ ~#À ~^À ~bÀ ~ŸÀ ~ÂÀ ~íÀ ~ñÀ ~òÀ À bÀ –À —À ÁÀ €	À €À €`À €aÀ €¬À €ğÀ AÀ pÀ vÀ ’À ¥À «À ¬À íÀ ‚À ‚À ‚<À ‚tÀ ‚{À ‚À ‚€À ‚ÂÀ ‚ÈÀ ƒ	À ƒRÀ ƒkÀ ƒºÀ ƒğÀ ƒüÀ „)À „;À „pÀ „xÀ „¤À „èÀ …À …#À …1À …?À …bÀ …¡À …¬À …µÀ …ÂÀ †À †@À †JÀ †PÀ †TÀ †UÀ †À †­À †³À ‡À ‡FÀ ‡LÀ ‡›À ‡ğÀ ˆ5À ˆ|À ˆ}À ˆİÀ ‰À ‰À ‰{À ‰À ‰ãÀ ŠÀ ŠÀ ŠqÀ Š¯À ŠÜÀ ŠàÀ ŠáÀ ‹DÀ ‹À ‹‚À ‹ÑÀ ŒÀ Œ	À ŒZÀ Œ«À ŒÙÀ ŒßÀ (À LÀ “À ”À õÀ .À /À €À ªÀ °À ÀÀ ÆÀ À 0À ~À À »À ¼À À 9À :À ‰À ÑÀ ×À ‘&À ‘vÀ ‘½À ’
+À ’[À ’mÀ ’sÀ ’©À ’×À ’İÀ “+À “vÀ “|À “ŒÀ “’À “ßÀ ”À ”bÀ ”¤À •À •LÀ •gÀ •zÀ •À •¦À •®À •²À •³À –À –2À –3À –€À –ÛÀ –ÜÀ —'À —6À —<À —À —œÀ —óÀ ˜$À ˜\À ˜›À ˜ËÀ ™À ™À ™À ™4À ™fÀ ™µÀ ™şÀ šDÀ šRÀ šXÀ š±À ›À ›UÀ ›YÀ ›ZÀ ›£À ›©À ›øÀ œBÀ œQÀ œWÀ œ¦À œÕÀ œçÀ 5À À €À ÏÀ À ;À BÀ tÀ ÀÀ ÁÀ ñÀ Ÿ0À Ÿ4À ŸˆÀ Ÿ‰À ŸÁÀ ŸÇÀ  À  VÀ  \À  ªÀ  âÀ  èÀ ¡4À ¡„À ¡­À ¢À ¢À ¢CÀ ¢IÀ ¢™À ¢ØÀ ¢ŞÀ £/À £zÀ £ŠÀ £À £ÜÀ £âÀ £òÀ £øÀ ¤CÀ ¤mÀ ¤£À ¤¤À ¤ÚÀ ¤àÀ ¥À ¥À ¥eÀ ¥kÀ ¥«À ¥êÀ ¦3À ¦oÀ ¦£À ¦ØÀ §À §?À §EÀ §FÀ §œÀ §À §ºÀ §ÛÀ §üÀ ¨5À ¨mÀ ¨vÀ ¨|À ¨À ¨‘À ¨’À ¨çÀ ©$À ©%À ©IÀ ©–À ©šÀ ©şÀ ©ÿÀ ªAÀ ªGÀ ª˜À ª§À ª­À ª½À ªÃÀ «À «>À «wÀ «™À «ÂÀ «òÀ ¬À ¬<À ¬@À ¬AÀ ¬mÀ ¬›À ¬¿À ¬şÀ ­GÀ ­wÀ ­ÄÀ ®À ®[À ®¨À ®©À ®¿À ®ÛÀ ¯À ¯]À ¯›À ¯¦À ¯¯À °À °2À °:À °@À °ZÀ °hÀ °nÀ °¸À ±
+À ±>À ±BÀ ±CÀ ±oÀ ±ŸÀ ± À ±éÀ ±ïÀ ²1À ²7À ²ˆÀ ²³À ²ØÀ ³À ³&À ³*À ³+À ³QÀ ³RÀ ³£À ³ñÀ ´	À ´8À ´9À ´eÀ ´™À ´ìÀ µÀ µ2À µXÀ µ^À µbÀ µcÀ µ³À µÁÀ µÇÀ µöÀ ¶@À ¶AÀ ¶gÀ ¶mÀ ¶¸À ¶ìÀ ¶òÀ ·>À ·MÀ ·SÀ ·cÀ ·iÀ ·´À ·ŞÀ ¸À ¸À ¸jÀ ¸pÀ ¸ÁÀ ¸ĞÀ ¸ÖÀ ¸æÀ ¸ìÀ ¹7À ¹gÀ ¹²À ¹İÀ ºÀ ºHÀ ºrÀ º¤À º¨À º©À ºõÀ ºûÀ »:À »}À »‘À »ßÀ ¼À ¼À ¼`À ¼fÀ ¼´À ½À ½À ½cÀ ½•À ½–À ½ãÀ ¾À ¾À ¾%À ¾+À ¾yÀ ¾’À ¾ÊÀ ¾îÀ ¾ïÀ ¿>À ¿ˆÀ ¿¢À ¿ìÀ ¿íÀ À;À ÀAÀ À’À À¡À À§À À·À À½À ÁÀ Á8À Á‰À Á·À ÁìÀ Â(À ÂUÀ ÂŠÀ ÂÀ ÂÀ ÂÚÀ ÃÀ ÃÀ ÃjÀ ÃpÀ ÃÁÀ ÃĞÀ ÃÖÀ ÃæÀ ÃìÀ Ä7À ÄgÀ Ä´À ÄàÀ ÅÀ ÅMÀ ÅxÀ Å«À Å¯À Å°À ÅÜÀ ÆÀ ÆcÀ Æ{À Æ‰À ÆÀ ÆÀ ÆáÀ Ç0À Ç’À ÇÄÀ ÈÀ ÈÀ ÈHÀ ÈNÀ ÈOÀ È‚À È½À ÈñÀ É=À ÉJÀ É{À ÉÀ É‚À É¡À ÉíÀ ÊÀ ÊFÀ ÊLÀ ÊœÀ Ê½À ÊàÀ Ë<À ËCÀ ËÀ ËÏÀ ÌÀ ÌCÀ Ì‹À ÌíÀ ÍÀ ÍiÀ ÍÎÀ ÍôÀ ÎÀ Î@À ÎdÀ Î‡À Î•À Î›À ÎĞÀ ÎøÀ Ï,À ÏZÀ Ï„À Ï¬À Ï³À ĞÀ Ğ'À ĞFÀ ĞÀ Ğ”À Ğ¹À ÑÀ ÑÀ Ñ0À ÑzÀ Ñ€À Ñ„À Ñ…À ÑÒÀ ÑıÀ ÒÀ ÒPÀ Ò_À ÒŸÀ Ò À ÒïÀ ÒõÀ Ó=À ÓUÀ Ó¢À ÓÎÀ ÔÀ Ô;À ÔfÀ Ô™À ÔÀ ÔÀ ÔÊÀ ÔùÀ ÕBÀ ÕÀ ÕÀ Õ“À ÕãÀ Ö5À Ö}À ÖÀ Ö‚À ÖÎÀ ÖóÀ ÖùÀ ×EÀ ×ŒÀ ×’À ×ÚÀ ×òÀ ØIÀ Ø‚À Ø²À ØùÀ Ù!À ÙQÀ ÙUÀ ÙVÀ Ù‚À Ù­À ÙØÀ ÚÀ ÚÀ ÚÀ ÚSÀ ÚÀ Ú‘À Ú’À ÚÆÀ ÚïÀ ÛÀ ÛÀ ÛhÀ Û§À ÛÌÀ ÛøÀ Ü+À ÜOÀ Ü{À ÜÀ Ü€À Ü¬À İÀ İ&À İDÀ İgÀ İƒÀ İµÀ İÍÀ İåÀ İşÀ ŞÀ ŞÀ ŞÀ ŞÀ Ş.À ŞDÀ ŞEÀ Ş‘À Ş À Ş¦À ŞõÀ ßFÀ ßÀ ß¿À ßÅÀ àÀ àeÀ àµÀ àÄÀ àÊÀ áÀ áiÀ áªÀ áÔÀ áıÀ âÀ â7À â;À â<À âyÀ â•À â©À â¯À âÑÀ âÒÀ ãÀ ã.À ã;À ãGÀ ã§À ã¾À ãïÀ äÀ äÀ äÀ äÀ äÀ äeÀ äuÀ ä{À äÅÀ äËÀ äÜÀ äâÀ äüÀ åoÀ åÀÀ æÀ æZÀ æ À æéÀ çTÀ çZÀ çgÀ çmÀ çƒÀ èÀ è\À è¬À èúÀ é!À é'À é7À é=À érÀ é¼À éáÀ êÀ êÀ êqÀ êŸÀ ê À êñÀ ëÀ ë!À ëqÀ ë¿À ìÀ ì[À ìoÀ ìuÀ ìÇÀ íÀ í^À ídÀ íµÀ îÀ îRÀ îaÀ î“À î¶À îİÀ îŞÀ ï À ïÀ ï%À ï&À ï^À ï”À ï½À ïÿÀ ğSÀ ğYÀ ğeÀ ğÀ ğ×À ğŞÀ ğßÀ ñ7À ñ{À ñ­À ñóÀ ñúÀ ñşÀ ñÿÀ ò=À òcÀ òÀ òĞÀ óÀ ó4À ó€À óœÀ ó¯À óµÀ óúÀ ôÀ ô9À ôSÀ ôYÀ ôZÀ ô¡À ôäÀ õÀ õÀ õ À õ9À õ‹À õ‘À õ©À õ¸À öÀ ö?À ö–À ö¹À ÷À ÷À ÷#À ÷'À ÷(À ÷qÀ ÷ŠÀ ÷À ÷ÖÀ ø"À øpÀ øÂÀ ùÀ ù_À ù¯À ùìÀ ú;À úXÀ ú]À ú­À úıÀ ûNÀ ûÀ ûÕÀ ü:À ü•À ü—À ü˜À üØÀ üÜÀ ı-À ıpÀ ı¹À ıôÀ ıøÀ ş-À ş~À şÍÀ ÿÀ ÿnÀ ÿ¼À ÿÓÀ ÿ×À 6À kÀ oÀ |À €À ŒÀ ¢À ¦À ÉÀ éÀÀqÀ´ÀÅÀÀÀÀÀXÀ^ÀfÀjÀxÀ|ÀºÀ ÀNÀhÀ•À›ÀúÀYÀ¾ÀÄÀÀ+ÀbÀcÀªÀ°ÀşÀNÀ“ÀÕÀüÀÀÀÀXÀmÀnÀ³À¹À	À(À>À?ÀÀ¡À§À·À½À		À	4À	]À	^À	¡À	§À	ñÀ	÷À
+À
+À
+[À
+”À
+•À
+ÆÀÀÀIÀ™À›ÀœÀ÷ÀûÀZÀÄÀåÀÀÀLÀkÀlÀ§ÀúÀşÀÿÀ/À5ÀEÀKÀ‹ÀÒÀÓÀÀÀÀ#ÀcÀ®À¯ÀŞÀäÀôÀúÀ:À€ÀÀ²À¸ÀÈÀÎÀÀVÀWÀ†ÀŒÀœÀ¢ÀâÀ(À)ÀXÀ^ÀnÀtÀ´ÀúÀûÀ&À,À<ÀBÀ‚ÀÄÀÅÀôÀúÀ
+ÀÀPÀ–À—ÀÁÀÇÀ×ÀİÀÀ^À_ÀÀ“À£À©ÀéÀ.À/À\ÀbÀrÀxÀ¸ÀüÀıÀ+À1ÀAÀGÀ‡ÀÌÀÍÀÿÀÀÀÀ[À¤À¥ÀÒÀØÀèÀîÀ.ÀrÀsÀœÀ¢À²À¸ÀøÀ8À9ÀfÀlÀ|À‚ÀÂÀÀÀ8À>ÀNÀTÀ”ÀÜÀİÀÀÀ(À.ÀnÀºÀ»ÀëÀñÀÀÀGÀÀÀ‘À´À¸ÀòÀÀ2ÀuÀÀÀÀğÀÀ5ÀPÀkÀ…À‹ÀŒÀ°ÀâÀ À À CÀ `À {À ™À ·À ÑÀ ØÀ ûÀ!MÀ!ŸÀ!âÀ"+À"kÀ"“À"ÖÀ#À#YÀ#`À#dÀ#eÀ#²À#çÀ#èÀ$8À$FÀ$jÀ$kÀ$¸À$ãÀ%À%À%RÀ%œÀ%¶À%İÀ%ŞÀ&À&$À&%À&eÀ&ƒÀ&„À&ÑÀ&áÀ'À'À'3À'UÀ'VÀ'“À'™À'çÀ(4À(€À(ÉÀ)À)À)`À)±À)ÿÀ*OÀ*™À*ÍÀ*ëÀ*íÀ*îÀ+À+.À+KÀ+lÀ+‡À+¯À+ØÀ,	À,.À,bÀ,—À,¯À,µÀ,¶À,ëÀ-À-(À-)À-XÀ-yÀ-zÀ-´À-ÇÀ-ÈÀ.À.hÀ.¶À.¼À/À/VÀ/vÀ/wÀ/ÆÀ0À0`À0¯À0ÀÀ0ÆÀ1À1aÀ1¡À1§À1öÀ2AÀ2bÀ2cÀ2²À2ÿÀ37À3=À3ˆÀ3ĞÀ4À47À48À4‡À4ÖÀ5!À5pÀ5À5‡À5ÖÀ6!À6>À6?À6‰À6À6ÜÀ7%À7@À7iÀ7jÀ7¯À7µÀ8 À8$À8*À8|À8ÕÀ9)À9{À9ËÀ:À:vÀ:|À:ÄÀ;À;JÀ;xÀ;yÀ;…À;›À;ÃÀ;ÇÀ;ÉÀ;ÊÀ<À<À<ZÀ<lÀ<³À<¹À<åÀ<óÀ<ôÀ=&À=,À=XÀ=fÀ=gÀ=›À=¡À=ÍÀ=ÜÀ=İÀ>À>À>IÀ>XÀ>YÀ>”À>šÀ>ÇÀ>×À>ØÀ? À?&À?sÀ?¨À?ÀÀ?ÂÀ?ÃÀ?ÛÀ@*À@=À@>À@†À@™À@šÀ@êÀ@ÿÀA ÀACÀAXÀAYÀA~ÀAÀAÀAÀAÁÀAÅÀBÀBRÀBŒÀBÔÀC)ÀCBÀCFÀC’ÀCãÀD2ÀDTÀDhÀD«ÀD±ÀDÿÀE=ÀECÀE„ÀEœÀE¹ÀEÖÀEôÀFÀF1ÀFXÀFuÀF’ÀF±ÀFĞÀFêÀFñÀGÀG#ÀG5ÀGHÀG[ÀGoÀG‹ÀG¢ÀG¹ÀGÒÀGëÀGşÀHÀH
+ÀHÀHNÀHTÀH•ÀH°ÀH¶ÀIÀI\ÀIŸÀI ÀIüÀIıÀJMÀJ—ÀJŞÀJßÀK8ÀK9ÀKÀK‘ÀKÉÀKÏÀLÀLmÀLšÀLÒÀLØÀMÀMÀM^ÀM¨ÀM¼ÀMÑÀNÀN?ÀNTÀNtÀNÆÀNÇÀOÀOÀOLÀO€ÀO¡ÀOõÀOöÀPFÀPSÀPsÀPÄÀPÅÀPÿÀQÀQUÀQpÀQ¤ÀQªÀQğÀRÀR_ÀR`ÀR¨ÀR®ÀRıÀSFÀSGÀS–ÀSœÀTÀTKÀTLÀTŸÀT¥ÀUÀUNÀUOÀU™ÀUŸÀUìÀV9ÀV:ÀV‹ÀV‘ÀV÷ÀWDÀWEÀWšÀW ÀXÀXMÀXNÀXŠÀX¯ÀX°ÀY
+ÀYÀY\ÀY]ÀYiÀYÀYÆÀYÿÀZ6ÀZeÀZ“ÀZÁÀZóÀ[%À[LÀ[PÀ[RÀ[SÀ[À[”À[åÀ\'À\YÀ\]À\©À\øÀ]À]À]mÀ]¸À]åÀ^GÀ^‹À^ëÀ_;À_tÀ_xÀ_¯À_ÿÀ`AÀ`pÀ`°À`´ÀaÀa	ÀaSÀaÀaìÀb8Àb<ÀbJÀbNÀbœÀbÇÀcÀc4ÀcPÀcÓÀcèÀdÀdaÀdvÀd•ÀdüÀeÀe*ÀeyÀeÀe•ÀeäÀf8ÀfHÀfNÀf›Àf§Àf­ÀgÀgGÀgSÀgTÀg ÀgñÀh ÀhÀhUÀhÚÀi)ÀivÀi†ÀiçÀjÀj’Àj¿Àk"Àk6Àk<ÀkŠÀkÀk©ÀkªÀkõÀl1Àl7Àl†ÀlÂÀlÈÀmÀmFÀmLÀm£ÀmòÀnCÀn‘Àn­Àn³ÀoÀoÀo€Ào¾Àp#ÀppÀp½ÀqÀq[Àq§ÀqøÀqşÀrJÀrsÀrÀr€ÀrĞÀs ÀspÀs¼ÀsÂÀtÀt^Àt¬ÀtùÀuIÀugÀuqÀurÀuÁÀuÖÀuÜÀv&ÀvsÀv„ÀvŠÀv¿ÀvÉÀvËÀvÌÀwÀwÀwaÀw­ÀwèÀwÿÀx*Àx2Àx3ÀxgÀxqÀxsÀxtÀx­ÀxÔÀxçÀy4ÀyÀyÈÀzÀziÀzwÀzxÀzÃÀzûÀ{À{QÀ{¢À{òÀ|BÀ|QÀ|]À|_À|`À|­À|ûÀ}GÀ}’À}§À}«À}ùÀ~À~À~#À~'À~qÀ~ À~ğÀ>ÀSÀgÀÀ—À®ÀÇÀáÀçÀèÀ€?À€TÀ€UÀ€«À€¿À€ÀÀÀ.À/ÀˆÀŸÀ ÀÓÀ‚2À‚3À‚?À‚UÀ‚§À‚«À‚­À‚®À‚îÀ‚òÀƒÀƒÀƒ<ÀƒtÀƒvÀƒ›ÀƒœÀƒÑÀƒÕÀ„$À„VÀ„ZÀ„‰À„»À„¿À„üÀ… À…;À…xÀ…|À…¹À…½À†À†$À†<À†wÀ†‘À†ªÀ†ÏÀ†éÀ‡À‡À‡À‡_À‡‚À‡ŸÀ‡¼À‡ÛÀ‡úÀ‡ûÀˆ3ÀˆLÀˆMÀˆ…Àˆ‹Àˆ­ÀˆÆÀˆÇÀ‰ À‰À‰À‰TÀ‰ZÀ‰|À‰–À‰—À‰ÏÀ‰ñÀŠÀŠ<ÀŠbÀŠ†ÀŠŠÀŠ‹ÀŠÓÀ‹À‹À‹eÀ‹“À‹¯À‹ÒÀ‹õÀŒÀŒ?ÀŒFÀŒJÀŒKÀŒWÀŒzÀŒœÀŒ¯ÀŒµÀŒáÀŒõÀŒûÀ"ÀHÀnÀ–À¼ÀÀÀÁÀÍÀÀÀ'À=À„À­À³ÀÌÀóÀÀ5ÀdÀjÀ¤À¼ÀíÀõÀ@ÀFÀGÀƒÀÂÀñÀõÀ÷ÀøÀ‘>À‘BÀ‘iÀ‘mÀ‘¾À’À’bÀ’fÀ’¼À“#À“QÀ“UÀ“ÙÀ“İÀ”_À”cÀ”éÀ”íÀ•:À•‰À•ØÀ–&À–qÀ–ˆÀ–õÀ—À—qÀ—À—¶À—ñÀ—úÀ—ûÀ˜\À˜bÀ˜µÀ™À™bÀ™™À™ŸÀ™ÜÀ™âÀš,ÀšzÀšÀšÀšÉÀšêÀšëÀ›;À›AÀ›zÀ›À›À›ªÀ›ÍÀ›ïÀœÀœÀœ4ÀœHÀœNÀœtÀœ–Àœ´ÀœÒÀœÖÀœ×ÀœãÀÀÀ(À>À†ÀŠÀŒÀÀÜÀúÀşÀIÀ—ÀÖÀŸÀŸÀŸ`ÀŸ§ÀŸşÀ )À -À ±À µÀ¡7À¡;À¡ÁÀ¡ÛÀ¢À¢'À¢(À¢dÀ¢jÀ¢ÄÀ¢ÌÀ¢ÍÀ£À£'À£(À£wÀ£À£ƒÀ£„À£ÓÀ£îÀ£òÀ¤;À¤{À¤ÕÀ¤ÙÀ¥*À¥=À¥‡À¥°À¥ËÀ¦À¦?À¦JÀ¦KÀ¦yÀ¦À¦½À¦ÌÀ¦ÍÀ§À§$À§tÀ§ÁÀ§ÖÀ§ØÀ§ÙÀ¨(À¨,À¨TÀ¨§À¨ğÀ¨ôÀ©DÀ©^À©ÁÀªÀª[ÀªŒÀªÀªÀª¢ÀªöÀ«À«À«SÀ«‘À«¹À«¿À«ÒÀ«ØÀ«æÀ¬À¬SÀ¬]À¬cÀ¬¬À¬ùÀ­7À­=À­‡À­ºÀ®À®zÀ®ÉÀ¯À¯OÀ¯¤À¯¹À¯¿À°	À°À°#À°3À°9À°À°“À°ËÀ°îÀ±À±À±+À±1À±pÀ±vÀ±ÇÀ±èÀ²HÀ²§À³À³KÀ³QÀ³ À³îÀ´2À´8À´…À´ØÀ´ŞÀµ(Àµ<ÀµœÀµ¾ÀµâÀ¶À¶#À¶EÀ¶FÀ¶xÀ¶~À¶ÆÀ¶ÌÀ·À·|À·ÌÀ·êÀ·ğÀ¸@À¸„À¸ÎÀ¹À¹BÀ¹HÀ¹–À¹©ÀºÀº
+ÀºÀº ÀºlÀº‡ÀºâÀ» À»À»?À»†À»ÚÀ¼À¼@À¼rÀ¼¥À¼ãÀ½À½HÀ½€À½¸À½ñÀ¾(À¾^À¾”À¾ÏÀ¿À¿8À¿tÀ¿¨À¿ÜÀÀÀÀRÀÀÀÀÂÀÀòÀÁ%ÀÁWÀÁ‰ÀÁºÀÁîÀÂ0ÀÂgÀÂ˜ÀÂØÀÃÀÃ>ÀÃrÀÃ®ÀÃéÀÄÀÄPÀÄ€ÀÄ¾ÀÄñÀÅ,ÀÅaÀÅ•ÀÅÇÀÅşÀÆ1ÀÆdÀÆ™ÀÆÔÀÇÀÇ5ÀÇhÀÇŸÀÇÑÀÈÀÈ<ÀÈvÀÈ¦ÀÈÙÀÉÀÉDÀÉyÀÉ´ÀÉêÀÊ*ÀÊ\ÀÊ—ÀÊËÀËÀË4ÀËhÀË›ÀËÛÀÌÀÌ<ÀÌAÀÌBÀÌjÀÌpÀÌ½ÀÌÃÀÍÀÍ6ÀÍÀÍ•ÀÍ¥ÀÍ«ÀÍ÷ÀÎÀÎ.ÀÎ/ÀÎWÀÎ]ÀÎªÀÎ°ÀÎüÀÏ`ÀÏ®ÀÏÌÀÏÒÀĞ ÀĞqÀĞºÀÑ
+ÀÑ-ÀÑ3ÀÑCÀÑIÀÑ•ÀÑ°ÀÒÀÒ%ÀÒ&ÀÒdÀÒ«ÀÒıÀÓ-ÀÓrÀÓ°ÀÓåÀÔ ÀÔPÀÔUÀÔVÀÔbÀÔ…ÀÔ§ÀÔºÀÔÀÀÔÜÀÔğÀÔöÀÕ'ÀÕ_ÀÕÀÕ¬ÀÕŞÀÕíÀÖÀÖIÀÖ\ÀÖ»À×À×À×À×*À×À×À×°À×ÖÀ××ÀØÀØÀØYÀØ©ÀØñÀÙÀÙÀÙ#ÀÙNÀÙjÀÙ™ÀÙŸÀÙÀÀÙÄÀÙÅÀÚ
+ÀÚÀÚZÀÚ¥ÀÚ´ÀÚãÀÚäÀÛÀÛGÀÛÀÛ©ÀÛ¯ÀÛİÀÜÀÜHÀÜNÀÜiÀÜmÀÜoÀÜpÀÜ·ÀÜ»ÀİÀİxÀİ“ÀİÊÀİÖÀİ×ÀŞ(ÀŞtÀŞÂÀŞàÀŞëÀŞìÀß>Àß‡Àß•Àß–ÀßèÀà
+ÀàÀàÀàÀàdÀàµÀàÆÀàÊÀáÀáÀáFÀáeÀá}Àá—Àá±ÀáÅÀáËÀáÌÀáöÀâÀâÀâeÀâ|ÀâÀâ‘ÀâİÀâñÀâòÀãÀã6Àã7ÀãpÀãqÀãÁÀãÑÀãóÀäÀäÀä0Àä`ÀägÀäˆÀä§ÀäÌÀäñÀåDÀåKÀåOÀåQÀåRÀåŒÀåÜÀåİÀæ'Àæ+ÀæÀæÀæ¬ÀæÏÀç-Àç.ÀçqÀç…Àç†Àç¨ÀçÆÀçÇÀçíÀèÀèÀè Àè6ÀèŠÀèÀèÀè‘ÀèÊÀèÎÀé$Àé(Àé~Àé‚Àé«Àé¯ÀéíÀê+Àê/Àê=ÀêAÀêƒÀêÚÀêğÀë*Àë7Àë8ÀëhÀësÀëuÀëvÀëÊÀëÎÀëÜÀëàÀì5ÀìŒÀì¦ÀìåÀìëÀí=ÀíWÀídÀíeÀí°Àí¶ÀíïÀíúÀíûÀîGÀîMÀîÀîšÀîœ        ‚• Ò+/// A token that represents a root isolate. ç ç÷øùø ú ÿ   ^ccK/// An enumeration representing the root isolate (0 if not a root isolate). n9))€—/// The token for the root isolate that is executing this Dart code.  If this
+/// Dart code is not executing on a root isolate [instance] will be null.4¤¥¦  ¬€‡‘‘   ¬­³Äº´ÂÃÅ‘ÌÆÎ ‘7À ë_‘7”Wƒ/// Platform event dispatcher singleton.
+///
+/// The most basic interface to the host operating system's interface.
+///
+/// This is the central entry point for platform messages and configuration
+/// events from the platform.
+///
+/// It exposes the core scheduler API, the input event callback, the graphics
+/// drawing API, and other such core services.
+///
+/// It manages the list of the application's [views] as well as the
+/// [configuration] of various platform attributes.
+///
+/// Consider avoiding static references to this singleton through
+/// [PlatformDispatcher.instance] and instead prefer using a binding for
+/// dependency resolution such as `WidgetsBinding.instance.platformDispatcher`.
+/// See [PlatformDispatcher.instance] for more information about why this is
+/// preferred. ”n€×”î• •••{/// Private constructor, since only dart:ui is supposed to create one of
+/// these. Use [instance] to access the singleton.  4™ĞB™ğ™ğ ™üšššššFš.š. š?šEš[š\›R-›`›`  ›ƒ4›ˆ›ˆ ›®›²›³ *4 B B  \ ] N [ O T¡R9¡n¡n ¡‰¡Š¡w¡ˆ¡x¡}ªÇ#ªÔªÔ  ªî+ªóªó «®®'®'  ®<&®A®A ®Y®]®^´?´D´D  ¿	+¿"¿"  ¿š'¿Ÿ¿Ÿ ¿¸¿¼¿½À FÇÀ FÖÀ FÖ  À Fç"À FìÀ Fì À G À GÀ GÀ IÀ IÀ I  À I®!À I³À I³ À IÆÀ IÊÀ IËÀ L(/À LCÀ LC  À L[)À L`À L` À L{À LÀ L€À Nâ-À NóÀ Nó À OÀ `À `’À `’  À bc(À btÀ bt À bŠÀ jÊ!À jÛÀ jÛ  À jï%À jôÀ jô À kÀ kÀ kÀ l6À l,À l,  À }†+À }ŸÀ }Ÿ  À }µ'À }ºÀ }º À }ÓÀ }×À }ØÀ —õ-À ˜À ˜  À ˜&4À ˜+À ˜+ À ˜QÀ ˜UÀ ˜VÀ «yÀ «‡À «‡  À «›%À « À «  À «·À «»À «¼À ³-"À ³9À ³9  À ³T€âÀ ´À ´€°/// Tracks if the initial state has been accessed. Once accessed, we will stop
+/// updating the [initialLifecycleState], as it is not the preferred way to
+/// access the state.À ´1À ¹´'À ¹ÂÀ ¹Â  À ¹ß.À ¹äÀ ¹ä À ºÀ ºÀ º	À »á,À »æÀ »æ À ¼À ½e.À ½jÀ ½j À ½À ¾Ì À ¾ÑÀ ¾Ñ À ¾èÀ Á‹*À Á™À Á™  À Á¹1À Á¾À Á¾ À ÁáÀ ÁåÀ ÁæÀ Ä¶(À ÄÄÀ ÄÄ  À Äâ/À ÄçÀ Äç À ÅÀ ÅÀ ÅÀ Ó¤(À Ó²À Ó²  À ÓĞ/À ÓÕÀ ÓÕ À ÓöÀ ÓúÀ ÓûÀ ØK5À ØiÀ Øi  À Ø„,À Ø‰À Ø‰ À Ø§À Ø«À Ø¬À Úñ*À ÚûÀ Úû À ÛÀ ÛÀ ÛÀ ÛÀ ÛÀ ÛÀ Û©!À Û·À Û·  À ÛÎ(À ÛÓÀ ÛÓ À ÛíÀ ÛñÀ ÛòÀ ŞÀ Ş$À Ş$  À Ş0À Ş6À Ş6  À ò?"À òQÀ òQ  %•I„„™·™·„)/// The [PlatformDispatcher] singleton.
+///
+/// Consider avoiding static references to this singleton through
+/// [PlatformDispatcher.instance] and instead prefer using a binding for
+/// dependency resolution such as `WidgetsBinding.instance.platformDispatcher`.
+///
+/// Static access of this object means that Flutter has few, if any options to
+/// fake or mock the given object in tests. Even in cases where Dart offers
+/// special language constructs to forcefully shadow such properties, those
+/// mechanisms would only be reasonable for tests and they would not be
+/// reasonable for a future of Flutter where we legitimately want to select an
+/// appropriate implementation at runtime.
+///
+/// The only place that `WidgetsBinding.instance.platformDispatcher` is
+/// inappropriate is if access to these APIs is required before the binding is
+/// initialized by invoking `runApp()` or
+/// `WidgetsFlutterBinding.instance.ensureInitialized()`. In that case, it is
+/// necessary (though unfortunate) to use the [PlatformDispatcher.instance]
+/// object statically.   šb€í››€/// Called when the platform configuration changes.
+///
+/// The engine invokes this callback in the same zone in which the callback
+/// was set.   œgƒÀ 
+ 
+‚Ê/// The current list of displays.
+///
+/// If any of their configurations change, [onMetricsChanged] will be called.
+///
+/// To get the display for a [FlutterView], use [FlutterView.display].
+///
+/// Platforms may limit what information is available to the application with
+/// regard to secondary displays and/or displays that do not have an active
+/// application window.
+///
+/// Presently, on Android and Web this collection will only contain the
+/// display that the current window is on. On iOS, it will only contains the
+/// main display on the phone or tablet. On Desktops other than Linux, it will
+/// contain only a main display with a valid refresh rate but invalid size and
+/// device pixel ratio values.    c€ì¡8¡8€²/// The current list of views, including top level platform windows used by
+/// the application.
+///
+/// If any of their configurations change, [onMetricsChanged] will be called.   ¢$ˆŸ§f§f„ş/// The [FlutterView] provided by the engine if the platform is unable to
+/// create windows, or, for backwards compatibility.
+///
+/// If the platform provides an implicit view, it can be used to bootstrap
+/// the framework. This is common for platforms designed for single-view
+/// applications like mobile devices with a single display.
+///
+/// Applications and libraries must not rely on this property being set
+/// as it may be null depending on the engine's configuration. Instead,
+/// consider using [View.of] to lookup the [FlutterView] the current
+/// [BuildContext] is drawing into.
+///
+/// While the properties on the referenced [FlutterView] may change,
+/// the reference itself is guaranteed to never change over the lifetime
+/// of the application: if this property is null at startup, it will remain
+/// so throughout the entire lifetime of the application. If it points to a
+/// specific [FlutterView], it will continue to point to the same view until
+/// the application is shut down (although the engine may replace or remove
+/// the underlying backing surface of the view at its discretion).
+///
+/// See also:
+///
+/// * [View.of], for accessing the current view.
+/// * [PlatformDispatcher.views] for a list of all [FlutterView]s provided
+///   by the platform.   «‚ø­ğ­ğ‚›/// A callback that is invoked whenever the [ViewConfiguration] of any of the
+/// [views] changes.
+///
+/// For example when the device is rotated or when the application is resized
+/// (e.g. when showing applications side-by-side on Android),
+/// `onMetricsChanged` is called.
+///
+/// The engine invokes this callback in the same zone in which the callback
+/// was set.
+///
+/// The framework registers with this callback and updates the layout
+/// appropriately.
+///
+/// See also:
+///
+/// * [WidgetsBindingObserver], for a mechanism at the widgets layer to
+///   register for notifications when this is called.
+/// * [MediaQuery.of], a simpler mechanism for the same.   ³W€ä´%´%€¾/// Opaque engine identifier for the engine running current isolate. Can be used
+/// in native code to retrieve the engine instance.
+/// The identifier is valid while the isolate is running.   ·ˆ¾Ş¾Ş‡{/// A callback invoked immediately after the focus is transitioned across [FlutterView]s.
+///
+/// When the platform moves the focus from one [FlutterView] to another, this
+/// callback is invoked indicating the new view that has focus and the direction
+/// in which focus was received. For example, if focus is moved to the [FlutterView]
+/// with ID 2 in the forward direction (could be the result of pressing tab)
+/// the callback receives a [ViewFocusEvent] with [ViewFocusState.focused] and
+/// [ViewFocusDirection.forward].
+///
+/// Typically, receivers of this event respond by moving the focus to the first
+/// focusable widget inside the [FlutterView] with ID 2. If a view receives
+/// focus in the backward direction (could be the result of pressing shift + tab),
+/// typically the last focusable widget inside that view is focused.
+///
+/// The platform may remove focus from a [FlutterView]. For example, on the web,
+/// the browser can move focus to another element, or to the browser's built-in UI.
+/// On desktop, the operating system can switch to another window (e.g. using Alt + Tab on Windows).
+/// In scenarios like these, [onViewFocusChange] will be invoked with [ViewFocusState.unfocused] and
+/// [ViewFocusDirection.undefined].
+///
+/// Receivers typically respond to this event by removing all focus indications
+/// from the app.
+///
+/// Apps can also programmatically request to move the focus to a desired
+/// [FlutterView] by calling [requestViewFocusChange].
+///
+/// The callback is invoked in the same zone in which the callback was set.
+///
+/// See also:
+///
+///   * [requestViewFocusChange] to programmatically instruct the platform to move focus to a different [FlutterView].
+///   * [ViewFocusState] for a list of allowed focus transitions.
+///   * [ViewFocusDirection] for a list of allowed focus directions.
+///   * [ViewFocusEvent], which is the event object provided to the callback.   À D•‚/À F¦À F¦é/// A callback invoked when any view begins a frame.
+///
+/// A callback that is invoked to notify the application that it is an
+/// appropriate time to provide a scene using the [SceneBuilder] API and the
+/// [FlutterView.render] method.
+///
+/// When possible, this is driven by the hardware VSync signal of the attached
+/// screen with the highest VSync rate. This is only called if
+/// [PlatformDispatcher.scheduleFrame] has been called since the last time
+/// this callback was invoked.   À H;RÀ IqÀ Iq/// A callback that is invoked for each frame after [onBeginFrame] has
+/// completed and after the microtask queue has been drained.
+///
+/// This can be used to implement a second phase of frame rendering that
+/// happens after any deferred work queued by the [onBeginFrame] phase.   À J¹lÀ KùÀ Kù/// A callback that is invoked when pointer data is available.
+///
+/// The framework invokes this callback in the same zone in which the callback
+/// was set.
+///
+/// See also:
+///
+///  * [GestureBinding], the Flutter framework class which manages pointer
+///    events.   À _#[À `fÀ `f/// A callback that is invoked when key data is available.
+///
+/// The framework invokes this callback in the same zone in which the callback
+/// was set.
+///
+/// The callback should return true if the key event has been handled by the
+/// framework and should not be propagated further.   À fe„bÀ j£À j£ƒş/// A callback that is invoked to report the [FrameTiming] of recently
+/// rasterized frames.
+///
+/// It's preferred to use [SchedulerBinding.addTimingsCallback] than to use
+/// [onReportTimings] directly because [SchedulerBinding.addTimingsCallback]
+/// allows multiple callbacks.
+///
+/// This can be used to see if the application has missed frames (through
+/// [FrameTiming.buildDuration] and [FrameTiming.rasterDuration]), or high
+/// latencies (through [FrameTiming.totalSpan]).
+///
+/// Unlike [Timeline], the timing information here is available in the release
+/// mode (additional to the profile and the debug mode). Hence this can be
+/// used to monitor the application's performance in the wild.
+///
+/// {@macro dart.ui.TimingsCallback.list}
+///
+/// If this is null, no additional work will be done. If this is not null,
+/// Flutter spends less than 0.1ms every 1 second to report the timings
+/// (measured on iPhone6S). The 0.1ms is about 0.6% of 16ms (frame budget for
+/// 60fps), or 0.01% CPU usage per second.   À z.ƒUÀ }[À }[‚m/// Deprecated. Migrate to [ChannelBuffers.setListener] instead.
+///
+/// Called whenever this platform dispatcher receives a message from a
+/// platform-specific plugin.
+///
+/// The `name` parameter determines which plugin sent the message. The `data`
+/// parameter is the payload and is typically UTF-8 encoded JSON but can be
+/// arbitrary data.
+///
+/// Message handlers must call the function given in the `callback` parameter.
+/// If the handler does not need to respond, the handler should pass null to
+/// the callback.
+///
+/// The framework invokes this callback in the same zone in which the callback
+/// was set.  À |ºÀ |»À |ÅÀ }:À |ËÀ }À –5€¥À –œÀ –œJ/// Additional accessibility features that may be enabled by the platform.   À –ŞÀ —°À —°€µ/// A callback that is invoked when the value of [accessibilityFeatures]
+/// changes.
+///
+/// The framework invokes this callback in the same zone in which the callback
+/// was set.   À Ÿ‹‚vÀ ¡ºÀ ¡º‚/// The system-reported default locale of the device.
+///
+/// This establishes the language and formatting conventions that application
+/// should, if possible, use to render their user interface.
+///
+/// This is the first locale selected by the user and is the user's primary
+/// locale (the locale the device UI is displayed in)
+///
+/// This is equivalent to `locales.first`, except that it will provide an
+/// undefined (using the language tag "und") non-null locale if the [locales]
+/// list has not been set or is empty.   À ¢‚À ¤€À ¤€‚K/// The full system-reported supported locales of the device.
+///
+/// This establishes the language and formatting conventions that application
+/// should, if possible, use to render their user interface.
+///
+/// The list is ordered in order of priority, with lower-indexed locales being
+/// preferred over higher-indexed ones. The first element is the primary
+/// [locale].
+///
+/// The [onLocaleChanged] callback is called whenever this value changes.
+///
+/// See also:
+///
+///  * [WidgetsBindingObserver], for a mechanism at the widgets layer to
+///    observe when this value changes.   À ªuÀ «RÀ «R,/// A callback that is invoked whenever [locale] changes value.
+///
+/// The framework invokes this callback in the same zone in which the callback
+/// was set.
+///
+/// See also:
+///
+///  * [WidgetsBindingObserver], for a mechanism at the widgets layer to
+///    observe when this callback is invoked.   À ±¢‡À ²ÀÀ ²À/// The lifecycle state immediately after dart isolate initialization.
+///
+/// This property will not be updated as the lifecycle changes.
+///
+/// It is used to initialize [SchedulerBinding.lifecycleState] at startup with
+/// any buffered lifecycle state events.   À µe€ÚÀ ¶À ¶€Š/// The setting indicating whether time should always be shown in the 24-hour
+/// format.
+///
+/// This option is used by [showTimePicker].   À ¶CÚÀ ·ëÀ ·ë„/// The system-reported text scale.
+///
+/// This establishes the text scaling factor to use when rendering text,
+/// according to the user's platform preferences.
+///
+/// The [onTextScaleFactorChanged] callback is called whenever this value
+/// changes.
+///
+/// See also:
+///
+///  * [WidgetsBindingObserver], for a mechanism at the widgets layer to
+///    observe when this value changes.   À ¸!À ¹{À ¹{5/// A callback that is invoked whenever [textScaleFactor] changes value.
+///
+/// The framework invokes this callback in the same zone in which the callback
+/// was set.
+///
+/// See also:
+///
+///  * [WidgetsBindingObserver], for a mechanism at the widgets layer to
+///    observe when this callback is invoked.   À º«3À »œÀ »œ€İ/// Whether the spell check service is supported on the current platform.
+///
+/// This option is used by [EditableTextState] to define its
+/// [SpellCheckConfiguration] when a default spell check service
+/// is requested.   À ¼PÀ ½À ½€ö/// Whether showing system context menu is supported on the current platform.
+///
+/// This option is used by [AdaptiveTextSelectionToolbar] to decide whether
+/// to show system context menu, or to fallback to the default Flutter context
+/// menu.   À ½˜1À ¾À ¾€í/// Whether briefly displaying the characters as you type in obscured text
+/// fields is enabled in system settings.
+///
+/// See also:
+///
+///  * [EditableText.obscureText], which when set to true hides the text in
+///    the text field.   À ¾ñ€úÀ ¿³À ¿³€¬/// The setting indicating the current brightness mode of the host platform.
+/// If the platform has no preference, [platformBrightness] defaults to
+/// [Brightness.light].   À ¿ï™À ÁLÀ ÁL8/// A callback that is invoked whenever [platformBrightness] changes value.
+///
+/// The framework invokes this callback in the same zone in which the callback
+/// was set.
+///
+/// See also:
+///
+///  * [WidgetsBindingObserver], for a mechanism at the widgets layer to
+///    observe when this callback is invoked.   À Â‘€‹À ÂèÀ ÂèH/// The setting indicating the current system font of the host platform.   À Ã “À Ä{À Ä{6/// A callback that is invoked whenever [systemFontFamily] changes value.
+///
+/// The framework invokes this callback in the same zone in which the callback
+/// was set.
+///
+/// See also:
+///
+///  * [WidgetsBindingObserver], for a mechanism at the widgets layer to
+///    observe when this callback is invoked.   À Ñ‡À ÒjÀ Òj€Ï/// Whether the user has requested that updateSemantics be called when the
+/// semantic contents of a view changes.
+///
+/// The [onSemanticsEnabledChanged] callback is called whenever this value
+/// changes.   À Ò¢€ÿÀ ÓiÀ Ói€¬/// A callback that is invoked when the value of [semanticsEnabled] changes.
+///
+/// The framework invokes this callback in the same zone in which the
+/// callback was set.   À Ö„ÄÀ ØÀ Ø_/// A callback that is invoked whenever the user requests an action to be
+/// performed on a semantics node.
+///
+/// This callback is used when the user expresses the action they wish to
+/// perform based on the semantics node supplied by updateSemantics.
+///
+/// The framework invokes this callback in the same zone in which the
+/// callback was set.   À Ú”ZÀ ÚÖÀ ÚÖ1/// The [FrameData] object for the current frame.   À Û €†À Û|À Û|G/// A callback that is invoked when the window updates the [FrameData].   À ŞGƒŒÀ á¿À á¿ƒD/// A callback that is invoked when an unhandled error occurs in the root
+/// isolate.
+///
+/// This callback must return `true` if it has handled the error. Otherwise,
+/// it must return `false` and a fallback mechanism such as printing to stderr
+/// will be used, as configured by the specific platform embedding via
+/// `Settings::unhandled_exception_callback`.
+///
+/// The VM or the process may exit or become unresponsive after calling this
+/// callback. The callback will not be called for exceptions that cause the VM
+/// or process to terminate or become unresponsive before the callback can be
+/// invoked.
+///
+/// This callback is not directly invoked by errors in child isolates of the
+/// root isolate. Programs that create new isolates must listen for errors on
+/// those isolates and forward the errors to the root isolate.   À ä…üÀ éîÀ éî…Œ/// The route or path that the embedder requested when the application was
+/// launched.
+///
+/// This will be the string "`/`" if no particular route was requested.
+///
+/// ## Android
+///
+/// On Android, calling
+/// [`FlutterView.setInitialRoute`](/javadoc/io/flutter/view/FlutterView.html#setInitialRoute-java.lang.String-)
+/// will set this value. The value must be set sufficiently early, i.e. before
+/// the [runApp] call is executed in Dart, for this to have any effect on the
+/// framework. The `createFlutterView` method in your `FlutterActivity`
+/// subclass is a suitable time to set the value. The application's
+/// `AndroidManifest.xml` file must also be updated to have a suitable
+/// [`<intent-filter>`](https://developer.android.com/guide/topics/manifest/intent-filter-element.html).
+///
+/// ## iOS
+///
+/// On iOS, calling
+/// [`FlutterViewController.setInitialRoute`](/ios-embedder/interface_flutter_view_controller.html#a7f269c2da73312f856d42611cc12a33f)
+/// will set this value. The value must be set sufficiently early, i.e. before
+/// the [runApp] call is executed in Dart, for this to have any effect on the
+/// framework. The `application:didFinishLaunchingWithOptions:` method is a
+/// suitable time to set this value.
+///
+/// See also:
+///
+///  * [Navigator], a widget that handles routing.
+///  * [SystemChannels.navigation], which handles subsequent navigation
+///    requests from the embedder.   ›»€¨›¿›¿  ›Ş›í›ì   ®f~®j®j  ®{®Š®‰   ¿Å€Œ¿É¿É  ¿Û!¿õ¿ô   À GsÀ GÀ G  À GÀ G.À G-   À IÓoÀ I×À I×  À IãÀ IòÀ Iñ   À Lˆ€”À LŒÀ LŒ  À L #À L¼À L»   À ` À `¤À `¤  À `®À `ÀÀ `¿   À k€ğÀ kÀ k  À k,À k>À k=   À }àÀ ~hÀ ~h  À ~z!À ~”À ~“  À }àÀ }áÀ }ëÀ ~`À }ñÀ ~'À ˜^€¨À ˜bÀ ˜b  À ˜À ˜À ˜   À «Ä{À «ÈÀ «È  À «ØÀ «çÀ «æ   À º€–À ºÀ º  À º.À º=À º<   À Áî€ŸÀ ÁòÀ Áò  À ÂÀ ÂÀ Â   À Å€™À ÅÀ Å  À Å3À ÅBÀ ÅA   À Ô€™À ÔÀ Ô  À Ô!À Ô0À Ô/   À Ø´€ À Ø¸À Ø¸  À ØÏ&À ØîÀ Øí   À Ûú€„À ÛşÀ Ûş  À ÜÀ Ü À Ü   À áÖdÀ áÚÀ áÚ  À áâÀ áòÀ áñ   9¡€¡ú¡úX/// Returns the [FlutterView] with the provided ID if one exists, or null
+/// otherwise. ¢ ¢¢   ¯Ğ€ø¯Õ¯Õ  ¯Ş¯ã¯â  ¯æ$¯ú¯ù   ±—4±œ±œ  ±¨±­±¬   ²Ï€„²Ô²Ô  ²è²ø²÷   ´©€Ú´®´®  ´¾´Í´Ì   µòµ÷µ÷  ¶
+¶¶  ¶$¶,¶+   À @UƒlÀ BôÀ Bô‚{/// Requests a focus change of the [FlutterView] with ID [viewId].
+///
+/// If an app would like to request the engine to move focus, in forward direction,
+/// to the [FlutterView] with ID 1 it should call this method with [ViewFocusState.focused]
+/// and [ViewFocusDirection.forward].
+///
+/// There is no need to call this method if the view in question already has
+/// focus as it won't have any effect.
+///
+/// A call to this method will lead to the engine calling [onViewFocusChange]
+/// if the request is successfully fulfilled.
+///
+/// See also:
+///
+///  * [onViewFocusChange], a callback to subscribe to view focus change events. À CÀ CÀ C  À C*À CCÀ CB  À CM%À CjÀ Ci   À CÅ€ÌÀ DSÀ DS  À Dk
+À DpÀ Do  À Dw	À D|À D{  À D‚À D‡À D†  À CÅÀ CÆÀ CÌÀ CïÀ CÒÀ CÍÀ CÚÀ CîÀ CÛÀ CâÀ CéÀ CğÀ D:À CüÀ CöÀ CşÀ G°€‡À GµÀ Gµ  À GÁÀ GÆÀ GÅ   À JrCÀ JwÀ Jw    À ML€øÀ MQÀ MQ  À MlÀ MvÀ Mu   À OÀ O-À O-  À OFÀ OPÀ OO   À ]4ëÀ ]KÀ ]K  À ]\À ]mÀ ]l  À ]w	À ]}À ]|   À bÏƒ’À bŞÀ bŞ  À bíÀ b÷À bö   À lGVÀ lLÀ lL  À li
+À loÀ ln   À l¡€ŸÀ mÀ m  À m4
+À m:À m9  À l¡À l¢À l¨À l¼À l®À l©À l¶À l»À l·À l½À lıÀ lÄÀ l¾À lÆÀ mpŒÀ muÀ mu  À m„À mÀ m   À o ‚èÀ pÄÀ pÄ¬/// Sends a message to a platform-specific plugin.
+///
+/// The `name` parameter determines which plugin receives the message. The
+/// `data` parameter contains the message payload and is typically UTF-8
+/// encoded JSON but can be arbitrary data. If the plugin replies to the
+/// message, `callback` will be called with the response.
+///
+/// The framework invokes [callback] in the same zone in which this method was
+/// called. À pØÀ pàÀ pß  À påÀ pğÀ pï  À põ)À qÀ q   À qì€¥À qôÀ qô  À rÀ rÀ r  À r)À rAÀ r@  À rNÀ rYÀ rX   À r•À s(À s(  À sCÀ sKÀ sJ  À sT)À svÀ su  À sƒÀ sÀ s  À r•À r–À rœÀ rÄÀ r¤À rÀ r¬À rÃÀ r­À rµÀ r½À rÅÀ sÀ rÑÀ rËÀ rÓÀ s›‚ğÀ u˜À u˜ç/// Sends a message to a platform-specific plugin via a [SendPort].
+///
+/// This operates similarly to [sendPlatformMessage] but is used when sending
+/// messages from background isolates. The [port] parameter allows Flutter to
+/// know which isolate to send the result to. The [name] parameter is the name
+/// of the channel communication will happen on. The [data] parameter is the
+/// payload of the message. The [identifier] parameter is a unique integer
+/// assigned to the message. À u°À u¸À u·  À u½À uÈÀ uÇ  À uÍÀ uÒÀ uÑ  À uİÀ uçÀ uæ   À v€™À v—À v—  À v°À v¸À v·  À v½À vÂÀ vÁ  À vÍÀ vÒÀ vÑ  À v×À vâÀ vá   À w,À wËÀ wË  À wêÀ wòÀ wñ  À wûÀ x À wÿ  À xÀ xÀ x  À xÀ x(À x'  À w,À w-À w3À wcÀ w;À w4À wCÀ wbÀ wDÀ wLÀ wTÀ w\À wdÀ w¯À wpÀ wjÀ wrÀ x5HÀ xéÀ xé€¨/// Registers the current isolate with the isolate identified with by the
+/// [token]. This is required if platform channels are to be used on a
+/// background isolate. À yÀ yÀ y   À y€©À yûÀ yû  À zÀ zÀ z  À yÀ y‚À yˆÀ yÀ yÀ y‰À y–À yœÀ y—À yÀ yâÀ y¥À yŸÀ y§À ~ô€¡À %À %)/// Called by [_dispatchPlatformMessage]. À ?À DÀ C  À OÀ ZÀ Y   À ™€ÆÀ €$À €$  À €?À €DÀ €C  À €OÀ €ZÀ €Y  À ™À šÀ  À ¾À ¦À ¡À ®À ½À ¯À ·À ¿À €À ËÀ ÅÀ ÍÀ €c‚À À €Š/// Wraps the given [callback] in another callback that ensures that the
+/// original callback is called in the zone it was registered in. À E)À gÀ f   À ‚‚ƒÑÀ ƒrÀ ƒr€à/// Send a message to the framework using the [ChannelBuffers].
+///
+/// This method constructs the appropriate callback to respond
+/// with the given `responseId`. It should only be called for messages
+/// from the platform. À ƒ‹À ƒ“À ƒ’  À ƒ˜À ƒ£À ƒ¢  À ƒ¨À ƒ­À ƒ¬   À †W‚$À ˆ<À ˆ<Í/// Set the debug name associated with this platform dispatcher's root
+/// isolate.
+///
+/// Normally debug names are automatically generated from the Dart port, entry
+/// point, and source file. For example: `main.dart$main-1234`.
+///
+/// This can be combined with flutter tools `--isolate-filter` flag to debug
+/// specific root isolates. For example: `flutter attach --isolate-filter=[name]`.
+/// Note that this does not rename any child isolates of the root. À ˆPÀ ˆXÀ ˆW   À ˆ€—À ˆôÀ ˆô  À ‰	À ‰À ‰  À ˆÀ ˆ€À ˆ†À ˆœÀ ˆŒÀ ˆ‡À ˆ”À ˆ›À ˆ•À ˆÀ ˆÛÀ ˆ¤À ˆÀ ˆ¦À ‰ÅÀ ŠxÀ ŠxL/// Requests the Dart VM to adjusts the GC heuristics based on the requested `performance_mode`.
+///
+/// This operation is a no-op of web. The request to change a performance may be ignored by the
+/// engine or not resolve in a predictable way.
+///
+/// See [DartPerformanceMode] for more information on individual performance modes. À Š“À Š¨À Š§   À Šã€À ‹ZÀ ‹Z  À ‹vÀ ‹{À ‹z  À ŠãÀ ŠäÀ ŠêÀ ŠüÀ ŠïÀ ŠëÀ Š÷À ŠûÀ ŠøÀ ŠıÀ ‹BÀ ‹À ŠşÀ ‹À ‹„‚À XÀ X·/// The embedder can specify data that the isolate can request synchronously
+/// on launch. This accessor fetches that data.
+///
+/// This data is persistent for the duration of the Flutter application and is
+/// available even after isolate restarts. Because of this lifecycle, the size
+/// of this data must be kept to a minimum.
+///
+/// For asynchronous communication between the embedder and isolate, a
+/// platform channel may be used.   À –€—À À    À –À —À À ¯À ¥À À ­À ®À °À óÀ ·À ±À ¹À 1‰À –À –M/// Requests that, at the next appropriate opportunity, the [onBeginFrame] and
+/// [onDrawFrame] callbacks be invoked.
+///
+/// See also:
+///
+///  * [SchedulerBinding], the Flutter framework class which manages the
+///    scheduling of frames.
+///  * [scheduleWarmUpFrame], which should only be used to schedule warm up
+///    frames.   À ¾zÀ 'À '   À ¾À ¿À ÅÀ ÕÀ ËÀ ÆÀ ÓÀ ÔÀ ÖÀ À İÀ ×À ßÀ <…uÀ ”«À ”«„=/// Schedule a frame to run as soon as possible, rather than waiting for the
+/// engine to request a frame in response to a system "Vsync" signal.
+///
+/// The application can call this method as soon as it starts up so that the
+/// first frame (which is likely to be quite expensive) can start a few extra
+/// milliseconds earlier. Using it in other situations might lead to
+/// unintended results, such as screen tearing. Depending on platforms and
+/// situations, the warm up frame might or might not be actually rendered onto
+/// the screen.
+///
+/// For more introduction to the warm up frame, see
+/// [SchedulerBinding.scheduleWarmUpFrame].
+///
+/// This method uses the provided callbacks as the begin frame callback and
+/// the draw frame callback instead of [onBeginFrame] and [onDrawFrame].
+///
+/// See also:
+///
+///  * [SchedulerBinding.scheduleWarmUpFrame], which uses this method, and
+///    introduces the warm up frame in more details.
+///  * [scheduleFrame], which schedules the frame at the next appropriate
+///    opportunity and should be used to render regular frames. À ”À À ”×À ”Ö  À ”âÀ ”ùÀ ”ø   À •µ|À –À –   À •µÀ •¶À •¼À •ÌÀ •ÂÀ •½À •ÊÀ •ËÀ •ÍÀ –À •ÔÀ •ÎÀ •ÖÀ ™6‚"À ™;À ™;  À ™X
+À ™]À ™\   À ›\ƒcÀ IÀ Ij/// Change the retained semantics data about this platform dispatcher.
+///
+/// If [semanticsEnabled] is true, the user has requested that this function
+/// be called whenever the semantic content of this platform dispatcher
+/// changes.
+///
+/// In either case, this function disposes the given update, which means the
+/// semantics update cannot be used further. À YÀ jÀ i  À œ×À œØÀ œâÀ @À œãÀ Ã€ÄÀ ŸKÀ ŸK  À Ÿ\
+À ŸaÀ Ÿ`  À ŸhÀ Ÿ€À Ÿ  À ÃÀ ÄÀ ÊÀ îÀ ĞÀ ËÀ ØÀ íÀ ÙÀ àÀ çÀ ìÀ èÀ ïÀ Ÿ2À ûÀ õÀ ıÀ ¤¦ƒêÀ ¥ôÀ ¥ô5/// Performs the platform-native locale resolution.
+///
+/// Each platform may return different results.
+///
+/// If the platform fails to resolve a locale, then this will return null.
+///
+/// This method returns synchronously and is a direct call to
+/// platform specific APIs without invoking method channels. À ¦À ¦ À ¦   À ¨”€À ¨¡À ¨¡  À ¨À"À ¨ÏÀ ¨Î   À ©'€ÖÀ ©¹À ©¹  À ©Ù"À ©èÀ ©ç  À ©'À ©(À ©.À ©FÀ ©6À ©/À ©>À ©EÀ ©?À ©GÀ ©˜À ©SÀ ©MÀ ©UÀ ¬o„ÒÀ ¬tÀ ¬t  À ¬ƒÀ ¬‘À ¬   À ±q-À ±xÀ ±x    À ´g€úÀ ´lÀ ´l  À ´‰À ´‘À ´   À ÅŞ‹¥À ÅãÀ Åã  À ÅûÀ ÆÀ Æ   À ÔÌ´À ÔÑÀ ÔÑ  À ÔéÀ ÔïÀ Ôî   À Ù„À Ù‰À Ù‰  À ÙšÀ ÙŸÀ Ù   À Ü®cÀ Ü³À Ü³  À ÜÌ
+À ÜÑÀ ÜĞ  À ÜØ
+À ÜİÀ ÜÜ  À Üä
+À ÜéÀ Üè  À ÜğÀ ÜûÀ Üú   À â>ØÀ âCÀ âC  À âRÀ âZÀ âY  À â`À âlÀ âk   À ê€„À êŠÀ êŠ   À êÀ êÀ ê!À ê3À ê)À ê"À ê1À ê2À ê4À êoÀ ê;À ê5À ê=À ê¢‡[À îjÀ îjƒ/// Computes the scaled font size from the given `unscaledFontSize`, according
+/// to the user's platform preferences.
+///
+/// Many platforms allow users to scale text globally for better readability.
+/// Given the font size the app developer specified in logical pixels, this
+/// method converts it to the preferred font size (also in logical pixels) that
+/// accounts for platform-wide text scaling. The return value is always
+/// non-negative.
+///
+/// The scaled value of the same font size input may change if the user changes
+/// the text scaling preference (in system settings for example). The
+/// [onTextScaleFactorChanged] callback can be used to monitor such changes.
+///
+/// Instead of directly calling this method, applications should typically use
+/// [MediaQuery.textScalerOf] to retrive the scaled font size in a widget tree,
+/// so text in the app resizes properly when the text scaling preference
+/// changes. À îxÀ î€À î   À òŸ„‡À ò§À ò§  À ò¸À ò½À ò¼   À û×€½À üSÀ üS  À üfÀ ünÀ üm  À üÀ ü„À üƒ  À û×À ûØÀ ûŞÀ ûûÀ ûæÀ ûßÀ ûîÀ ûúÀ ûïÀ û÷À ûüÀ ü8À üÀ ûıÀ ü À ü˜À ü˜ÀZ†µ/// A color specified in the operating system UI color palette.
+///
+/// As of the current release, system colors are supported on web only. To check
+/// if the current platform supports system colors, use the static
+/// [platformProvidesSystemColors] field. If the field is `false`, other
+/// functions in this class will throw [UnsupportedError].
+///
+/// This class is typically used in conjunction with
+/// [AccessibilityFeatures.highContrast]. In particular, on Windows, when a user
+/// enables high-contrast mode, they may also pick specific colors that should
+/// be used by application user interfaces. While it is common for applications
+/// to use custom color themes and design languages, in high-contrast mode it is
+/// recommended that widgets use system-specified colors to make content more
+/// legible for users.
+///
+/// The "light" system colors are available through [SystemColor.light], and the "dark" system
+/// colors are available through [SystemColor.dark].
+///
+/// Example:
+///
+/// ```dart
+/// import 'dart:ui';
+///
+/// Color getSystemAccentColor() {
+///   Color? systemAccentColor;
+///   if (SystemColor.platformProvidesSystemColors) {
+///     if (PlatformDispatcher.instance.platformBrightness == Brightness.light) {
+///       systemAccentColor = SystemColor.light.accentColor.value;
+///     } else {
+///       systemAccentColor = SystemColor.dark.accentColor.value;
+///     }
+///   }
+///
+///   return systemAccentColor ?? const Color(0xFF007AFF);
+/// }
+/// ```
+///
+/// See also:
+///
+///   * https://drafts.csswg.org/css-color/#css-system-colors
+///   * https://developer.mozilla.org/en-US/docs/Web/CSS/system-color
+///   * https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors Àj÷À3 À3À> ²/// Creates an instance of a system color.
+///
+/// [name] is the name of the color. System colors provided by [SystemColorPalette], such as
+/// [SystemColorPalette.accentColor] and [SystemColorPalette.buttonText], use standard names
+/// defined by the [W3C CSS specification](https://drafts.csswg.org/css-color/#css-system-colors).
+///
+/// [value] is the color value, if this color name is supported, and null if
+/// it's unsupported.À@ÀOÀN  ÀT
+ÀZÀY   Àe‚ÀgÀgŞ/// Standard system color name, as defined by W3C CSS specification.
+///
+/// System color names in Flutter are case-sensitive. This is so that color
+/// names can be easily used as [Map] keys. This is in contrast to CSS, where
+/// system color names are not case-sensitive. That is, specifying
+/// `background-color: aCcEnTcOlOr` is equivalent to specifying
+/// `background-color: AccentColor`.
+///
+/// See also:
+///
+///   * https://drafts.csswg.org/css-color/#css-system-colors Àp€ÌÀ7À7€±/// The color value used for the color named [name], if supported.
+///
+/// If [isSupported] is false, the [value] is null. If [isSupported] is true,
+/// the [value] is not null. À
+—À
+èÀ
+è./// A palette of system colors for light mode.À
+ğÀÀÀÀÀÀÀÀ|ÀkÀk-/// A palette of system colors for dark mode.ÀrÀ„À…À†À–À‡À‘À’ÀAÀ	?À	?€æ/// Returns true if the current platform provides the system color with the
+/// given [name].
+///
+/// See also:
+///
+///   * [platformProvidesSystemColors], which returns whether the current
+///     platform provides system colors.   À	`3À
+mÀ
+m€î/// Returns true if the current platform provides system colors.
+///
+/// As of the current release, system colors are supported on web only.
+///
+/// See also:
+///
+///   * [isSupported], which returns whether a specific color is supported.      Àœ‘óÀœÀĞ'/// A palette of system colors specified in the operating system for a given [brightness].
+///
+/// The getters in this class, such as [accentColor] and [buttonText], provide standard system
+/// colors defined by the [W3C CSS specification](https://drafts.csswg.org/css-color/#css-system-colors). Àç&ÀçÀùÀúÀûÀú ÀüÀÀ   ÀXÀ_À_:/// The brightness mode for which this palette is defined. À€ĞÀÀ€/// Returns system color named "AccentColor".
+///
+/// See also:
+///
+///   * https://drafts.csswg.org/css-color/#css-system-colors   ÀÕ€ØÀuÀu€…/// Returns system color named "AccentColorText".
+///
+/// See also:
+///
+///   * https://drafts.csswg.org/css-color/#css-system-colors   À±€ÎÀLÀL€€/// Returns system color named "ActiveText".
+///
+/// See also:
+///
+///   * https://drafts.csswg.org/css-color/#css-system-colors   Àƒ€ÒÀ À €‚/// Returns system color named "ButtonBorder".
+///
+/// See also:
+///
+///   * https://drafts.csswg.org/css-color/#css-system-colors   ÀY€ÎÀôÀô€€/// Returns system color named "ButtonFace".
+///
+/// See also:
+///
+///   * https://drafts.csswg.org/css-color/#css-system-colors   À+€ÎÀÆÀÆ€€/// Returns system color named "ButtonText".
+///
+/// See also:
+///
+///   * https://drafts.csswg.org/css-color/#css-system-colors   Àı€ÆÀ”À”|/// Returns system color named "Canvas".
+///
+/// See also:
+///
+///   * https://drafts.csswg.org/css-color/#css-system-colors   ÀÇ€ÎÀbÀb€€/// Returns system color named "CanvasText".
+///
+/// See also:
+///
+///   * https://drafts.csswg.org/css-color/#css-system-colors   À™€ÄÀ/À/{/// Returns system color named "Field".
+///
+/// See also:
+///
+///   * https://drafts.csswg.org/css-color/#css-system-colors   Àa€ÌÀûÀû/// Returns system color named "FieldText".
+///
+/// See also:
+///
+///   * https://drafts.csswg.org/css-color/#css-system-colors   À1€ÊÀÊÀÊ~/// Returns system color named "GrayText".
+///
+/// See also:
+///
+///   * https://drafts.csswg.org/css-color/#css-system-colors   Àÿ€ÌÀ™À™/// Returns system color named "Highlight".
+///
+/// See also:
+///
+///   * https://drafts.csswg.org/css-color/#css-system-colors   ÀÏ€ÔÀmÀm€ƒ/// Returns system color named "HighlightText".
+///
+/// See also:
+///
+///   * https://drafts.csswg.org/css-color/#css-system-colors   À§€ÊÀ@À@~/// Returns system color named "LinkText".
+///
+/// See also:
+///
+///   * https://drafts.csswg.org/css-color/#css-system-colors   Àu€ÂÀ
+À
+z/// Returns system color named "Mark".
+///
+/// See also:
+///
+///   * https://drafts.csswg.org/css-color/#css-system-colors   À;€ÊÀÔÀÔ~/// Returns system color named "MarkText".
+///
+/// See also:
+///
+///   * https://drafts.csswg.org/css-color/#css-system-colors   À	€ÒÀ¦À¦€‚/// Returns system color named "SelectedItem".
+///
+/// See also:
+///
+///   * https://drafts.csswg.org/css-color/#css-system-colors   Àß€ÚÀ€À€€†/// Returns system color named "SelectedItemText".
+///
+/// See also:
+///
+///   * https://drafts.csswg.org/css-color/#css-system-colors   À½€ĞÀYÀY€/// Returns system color named "VisitedText".
+///
+/// See also:
+///
+///   * https://drafts.csswg.org/css-color/#css-system-colors    Àn€À†À†     À‘[À‘Àø`/// Configuration of the platform.
+///
+/// Immutable class (but can't use @immutable in dart:ui) ÀwÀ ÀÀ/  	À6=À<À;  Ày"ÀÀ~  À¡À§À¦  ÀÄ*ÀÊÀÉ  ÀôÀúÀù  ÀÀÀ  À9À?À>  ÀTÀZÀY  ÀoÀuÀt  ÀSÀYÀnÀoÀpÀrÀqÀ–À¹ÀŞÀèÀéÀÀ#À1À2À)À0À*	À#g~À#ĞÀ#ĞJ/// Additional accessibility features that may be enabled by the platform. À#ê~À$SÀ$SY/// The setting indicating whether time should always be shown in the 24-hour
+/// format. À$m€“À$ğÀ$ğs/// Whether the user has requested that updateSemantics be called when the
+/// semantic contents of a view changes. À%€ÖÀ%ÉÀ%É€¬/// The setting indicating the current brightness mode of the host platform.
+/// If the platform has no preference, [platformBrightness] defaults to
+/// [Brightness.light]. À%àBÀ&À&#/// The system-reported text scale. À&'ZÀ&zÀ&z=/// The full system-reported supported locales of the device. À&†{À&ñÀ&ñX/// The route or path that the embedder requested when the application was
+/// launched. À'MÀ'CÀ'C,/// The system-reported default font family. À'Xƒ‘À*ÚÀ*ÚƒZ/// A unique identifier for this [_PlatformConfiguration].
+///
+/// This unique identifier is optionally assigned by the platform embedder.
+/// Dart code that runs on the Flutter UI thread and synchronously invokes
+/// platform APIs can use this identifier to tell the embedder to use the
+/// configuration that matches the current [_PlatformConfiguration] in
+/// dart:ui. See the [_getScaledFontSize] function for an example.
+///
+/// This field's nullability also indicates whether the platform supports
+/// nonlinear text scaling (as it's the only feature that requires synchronous
+/// invocation of platform APIs). This field is always null if the platform
+/// does not use nonlinear text scaling, or when dart:ui has not received any
+/// configuration updates from the embedder yet. The _getScaledFontSize
+/// function should not be called in either case.   ÀƒÕÀ¥À¥  	À´,ÀÌÀË  ÀæÀíÀì  À À À   À #À 0À /  À GÀ PÀ O  À dÀ sÀ r  À À ˆÀ ‡  À À ¦À ¥  À »À ÁÀ À    À*îÚÀ*îÀ+$/// An immutable view configuration. À+0„À+6 À+6À+H  	À+OÀ+UÀ+T  À+pÀ+vÀ+u  À+‹"À+‘À+  À+³#À+¹À+¸  À+Ü+À+âÀ+á  À,À,À,  À,2.À,8À,7  À,f/À,lÀ,k  À,›À,¡À,   À+gÀ+|À+€À+À+À+¨À+©À+ÆÀ+ÑÀ+ÒÀ+÷À,À,À,À,'À,(À,IÀ,OÀ,^À,_À,}À,“À,”À,ƒÀ,’À,„À,¬	À,¸nÀ-À-V/// The identifier for a display for this view, in
+/// [PlatformDispatcher._displays]. À-+LÀ-gÀ-g,/// The pixel density of the output surface. À-|IÀ-ÁÀ-Á7/// The size requested for the view in physical pixels. À-ÊªÀ/jÀ/j/// The number of physical pixels on each side of the display rectangle into
+/// which the view can render, but over which the operating system will likely
+/// place system UI, such as the keyboard, that fully obscures any content.
+///
+/// The relationship between this [viewInsets], [viewPadding], and [padding]
+/// are described in more detail in the documentation for [FlutterView]. À/y‚çÀ2UÀ2U‚±/// The number of physical pixels on each side of the display rectangle into
+/// which the view can render, but which may be partially obscured by system
+/// UI (such as the system notification area), or physical intrusions in
+/// the display (e.g. overscan regions on television screens or phone sensor
+/// housings).
+///
+/// Unlike [padding], this value does not change relative to [viewInsets].
+/// For example, on an iPhone X, it will not change in response to the soft
+/// keyboard being visible or hidden, whereas [padding] will.
+///
+/// The relationship between this [viewInsets], [viewPadding], and [padding]
+/// are described in more detail in the documentation for [FlutterView]. À2eĞÀ4"À4"œ/// The number of physical pixels on each side of the display rectangle into
+/// which the view can render, but where the operating system will consume
+/// input gestures for the sake of system navigation.
+///
+/// For example, an operating system might use the vertical edges of the
+/// screen, where swiping inwards from the edges takes users backward
+/// through the history of screens they previously visited. À4:‚À65À65Ø/// The number of physical pixels on each side of the display rectangle into
+/// which the view can render, but which may be partially obscured by system
+/// UI (such as the system notification area), or physical intrusions in
+/// the display (e.g. overscan regions on television screens or phone sensor
+/// housings).
+///
+/// The relationship between this [viewInsets], [viewPadding], and [padding]
+/// are described in more detail in the documentation for [FlutterView]. À6A&À7XÀ7X€ö/// Additional configuration for touch gestures performed on this view.
+///
+/// For example, the touch slop defined in physical pixels may be provided
+/// by the gesture settings and should be preferred over the framework
+/// touch slop constant. À7l„
+À;gÀ;gƒ¿/// Areas of the display that are obstructed by hardware features.
+///
+/// This list is populated only on Android. If the device has no display
+/// features, this list is empty.
+///
+/// The coordinate space in which the [DisplayFeature.bounds] are defined spans
+/// across the screens currently in use. This means that the space between the screens
+/// is virtually part of the Flutter view space, with the [DisplayFeature.bounds]
+/// of the display feature as an obstructed area. The [DisplayFeature.type] can
+/// be used to determine if this display feature obstructs the screen or not.
+/// For example, [DisplayFeatureType.hinge] and [DisplayFeatureType.cutout] both
+/// obstruct the display, while [DisplayFeatureType.fold] is a crease in the display.
+///
+/// Folding [DisplayFeature]s like the [DisplayFeatureType.hinge] and
+/// [DisplayFeatureType.fold] also have a [DisplayFeature.state] which can be
+/// used to determine the posture the device is in.   À;{KÀ;À;   À;{À;| ÀA™ÁÀAÀDZ‚Ã/// Time-related performance metrics of a frame.
+///
+/// If you're using the whole Flutter framework, please use
+/// [SchedulerBinding.addTimingsCallback] to get this. It's preferred over using
+/// [PlatformDispatcher.onReportTimings] directly because
+/// [SchedulerBinding.addTimingsCallback] allows multiple callbacks. If
+/// [SchedulerBinding] is unavailable, then see [PlatformDispatcher.onReportTimings]
+/// for how to get this.
+///
+/// The metrics in debug mode (`flutter run` without any flags) may be very
+/// different from those in profile and release modes due to the debug overhead.
+/// Therefore it's recommended to only monitor and analyze performance metrics
+/// in profile and release modes. ÀDjƒŸÀE ÀEÀE™ /// Construct [FrameTiming] with raw timestamps in microseconds.
+///
+/// This constructor is used for unit test only. Real [FrameTiming]s should
+/// be retrieved from [PlatformDispatcher.onReportTimings].
+///
+/// If the [frameNumber] is not provided, it defaults to `-1`.ÀE ÀE®ÀE­  ÀE½ÀEËÀEÊ  ÀEÚÀEèÀEç  ÀEøÀFÀF  ÀFÀF$ÀF#  ÀF5!ÀFCÀFB  ÀF\ÀFaÀF`  ÀFyÀF~ÀF}  ÀF–ÀF›ÀFš  ÀFµÀFºÀF¹  ÀFÔÀFÙÀFØ  ÀFrÀFÀF®ÀFÍÀFæÀFçÀH‘ÀI^ÀIiÀIjÀIkÀIjB/// Construct [FrameTiming] with raw timestamps in microseconds.
+///
+/// List [timestamps] must have the same number of elements as
+/// [FramePhase.values].
+///
+/// This constructor is usually only called by the Flutter engine, or a test.
+/// To get the [FrameTiming] of your app, see [PlatformDispatcher.onReportTimings].ÀIl
+ÀIrÀIq  ÀIzÀI€ÀIœÀIÀIÀI†ÀI‡ÀI‘ÀI¢XÀI³ÀI³ ÀIÚÀIÁÀIËÀIÌÀIÒÀIÓÀIÜÀIìÀIíÀIóÀIôÀX²ÀXÂÀXÂ  ÀK“ƒ2ÀNcÀNc‚¢/// The duration to build the frame on the UI thread.
+///
+/// The build starts approximately when [PlatformDispatcher.onBeginFrame] is
+/// called. The [Duration] in the [PlatformDispatcher.onBeginFrame] callback
+/// is exactly the `Duration(microseconds:
+/// timestampInMicroseconds(FramePhase.buildStart))`.
+///
+/// The build finishes when [FlutterView.render] is called.
+///
+/// {@template dart.ui.FrameTiming.fps_smoothness_milliseconds}
+/// To ensure smooth animations of X fps, this should not exceed 1000/X
+/// milliseconds.
+/// {@endtemplate}
+/// {@template dart.ui.FrameTiming.fps_milliseconds}
+/// That's about 16ms for 60fps, and 8ms for 120fps.
+/// {@endtemplate}   ÀNÉ+ÀOÀO€°/// The duration to rasterize the frame on the raster thread.
+///
+/// {@macro dart.ui.FrameTiming.fps_smoothness_milliseconds}
+/// {@macro dart.ui.FrameTiming.fps_milliseconds}   ÀOø€ËÀPbÀPbX/// The duration between receiving the vsync signal and starting building the
+/// frame.   ÀPÇ—ÀQÿÀQÿ/// The timespan between vsync start and raster finish.
+///
+/// To achieve the lowest latency on an X fps display, this should not exceed
+/// 1000/X milliseconds.
+/// {@macro dart.ui.FrameTiming.fps_milliseconds}
+///
+/// See also [vsyncOverhead], [buildDuration] and [rasterDuration].   ÀRb€ãÀSÀS€–/// The number of layers stored in the raster cache during the frame.
+///
+/// See also [layerCacheBytes], [pictureCacheCount] and [pictureCacheBytes].   ÀSIÀTÀT€´/// The number of bytes of image data used to cache layers during the frame.
+///
+/// See also [layerCacheCount], [layerCacheMegabytes], [pictureCacheCount] and [pictureCacheBytes].   ÀTN€ÿÀUÀU€´/// The number of megabytes of image data used to cache layers during the frame.
+///
+/// See also [layerCacheCount], [layerCacheBytes], [pictureCacheCount] and [pictureCacheBytes].   ÀUQ€çÀUöÀUö€–/// The number of pictures stored in the raster cache during the frame.
+///
+/// See also [layerCacheCount], [layerCacheBytes] and [pictureCacheBytes].   ÀV<ÀWÀW€¶/// The number of bytes of image data used to cache pictures during the frame.
+///
+/// See also [layerCacheCount], [layerCacheBytes], [pictureCacheCount] and [pictureCacheMegabytes].   ÀWGÀXÀX€¶/// The number of megabytes of image data used to cache pictures during the frame.
+///
+/// See also [layerCacheCount], [layerCacheBytes], [pictureCacheCount] and [pictureCacheBytes].   ÀXP^ÀX”ÀX”9/// The frame key associated with this frame measurement.    ÀIÿ€ŞÀJÀJ€•/// This is a raw timestamp in microseconds from some epoch. The epoch in all
+/// [FrameTiming] is the same, but it may not match [DateTime]'s epoch. ÀJµÀJÁÀJÀ   ÀJáVÀJêÀJê  ÀJ÷ÀKÀK   ÀK;TÀK?ÀK?  ÀKHÀKZÀKY   ÀYNÀYÀY  ÀYÀY(ÀY'   ÀY_ğÀYrÀYr   ÀY_ÀY` À|`†LÀ|`ÀY‚ò/// A representation of distances for each of the four edges of a rectangle,
+/// used to encode the view insets and padding that applications should place
+/// around their user interface, as exposed by [FlutterView.viewInsets] and
+/// [FlutterView.padding]. View insets and padding are preferably read via
+/// [MediaQuery.of].
+///
+/// For a generic class that represents distances around a rectangle, see the
+/// [EdgeInsets] class.
+///
+/// See also:
+///
+///  * [WidgetsBindingObserver], for a widgets layer mechanism to receive
+///    notifications when the padding changes.
+///  * [MediaQuery.of], for the preferred mechanism for accessing these values.
+///  * [Scaffold], which automatically applies the padding in material design
+///    applications. Ài}ÀoÀzÀ{À|À{ ÀƒÀ’À‘  À›ÀªÀ©  À²ÀÁÀÀ  ÀËÀÚÀÙ   ÀêhÀ€NÀ€NT/// The distance from the left edge to the first unpadded pixel, in physical pixels. À€WfÀ€ºÀ€ºS/// The distance from the top edge to the first unpadded pixel, in physical pixels. À€ÂjÀ'À'U/// The distance from the right edge to the first unpadded pixel, in physical pixels. À1lÀ—À—V/// The distance from the bottom edge to the first unpadded pixel, in physical pixels. À¢€ÀîÀî0/// A view padding that has zeros for each edge.ÀõÀ‚ À‚À‚À‚/À‚À‚À‚	À‚À‚À‚À‚À‚À‚À‚*À‚$À‚,  À‚5uÀ‚HÀ‚H   À‚5À‚6 ÀƒœZÀƒœÀ†*‚‡/// Immutable layout constraints for [FlutterView]s.
+///
+/// Similar to [BoxConstraints], a [Size] respects a [ViewConstraints] if, and
+/// only if, all of the following relations hold:
+///
+/// * [minWidth] <= [Size.width] <= [maxWidth]
+/// * [minHeight] <= [Size.height] <= [maxHeight]
+///
+/// The constraints themselves must satisfy these relations:
+///
+/// * 0.0 <= [minWidth] <= [maxWidth] <= [double.infinity]
+/// * 0.0 <= [minHeight] <= [maxHeight] <= [double.infinity]
+///
+/// For each constraint, [double.infinity] is a legal value.
+///
+/// For a generic class that represents these kind of constraints, see the
+/// [BoxConstraints] class. À†>€ÖÀ† À†À† 8/// Creates view constraints with the given constraints.À†•À†›À†š  À†®À†´À†³  À†ÓÀ†ÙÀ†Ø  À†í À†óÀ†ò  À†¥À†¾À†ÄÀ†ÅÀ†äÀ†şÀ‡À‡À‡€áÀ‡aÀ‡pÀ‡qÀ‡vÀ‡qF/// Creates view constraints that is respected only by the given size.À‡w	À‡}À‡|  À‡‘À‡ˆÀ‡“À‡—À‡˜À‡®À‡¥À‡°À‡´À‡µÀ‡ÌÀ‡ÂÀ‡ÎÀ‡ÒÀ‡ÓÀ‡ëÀ‡áÀ‡íÀ‡ñÀ‡òÀ‡ıMÀˆBÀˆB5/// The minimum width that satisfies the constraints. ÀˆOuÀˆ¼Àˆ¼Y/// The maximum width that satisfies the constraints.
+///
+/// Might be [double.infinity]. ÀˆÉOÀ‰À‰6/// The minimum height that satisfies the constraints. À‰wÀ‰‹À‰‹Z/// The maximum height that satisfies the constraints.
+///
+/// Might be [double.infinity]. ÀŠ€‹ÀŠŞÀŠŞE/// Whether there is exactly one size that satisfies the constraints.   ÀÃVÀ×À×   ÀÃÀÄ À‰™€ğÀ‰ÖÀ‰Ö5/// Whether the given size satisfies the constraints. À‰ä	À‰êÀ‰é   À‹-À‹€À‹€H/// Scales each constraint parameter by the inverse of the given factor. À‹‚À‹ŠÀ‹‰   ÀŒMrÀŒgÀŒg  ÀŒjÀŒrÀŒq  ÀŒMÀŒNÀ‚×À0À0   ÀÀ ÀøŒ“ÀøÀ–w…x/// Area of the display that may be obstructed by a hardware feature.
+///
+/// This is populated only on Android.
+///
+/// The [bounds] are measured in logical pixels. On devices with two screens the
+/// coordinate system starts with (0,0) in the top-left corner of the left or top screen
+/// and expands to include both screens and the visual space between them.
+///
+/// The [type] describes the behaviour and if [DisplayFeature] obstructs the display.
+/// For example, [DisplayFeatureType.hinge] and [DisplayFeatureType.cutout] both obstruct the display,
+/// while [DisplayFeatureType.fold] does not.
+///
+/// ![Device with a hinge display feature](https://flutter.github.io/assets-for-api-docs/assets/hardware/display_feature_hinge.png)
+///
+/// ![Device with a fold display feature](https://flutter.github.io/assets-for-api-docs/assets/hardware/display_feature_fold.png)
+///
+/// ![Device with a cutout display feature](https://flutter.github.io/assets-for-api-docs/assets/hardware/display_feature_cutout.png)
+///
+/// The [state] contains information about the posture for foldable features
+/// ([DisplayFeatureType.hinge] and [DisplayFeatureType.fold]). The posture is
+/// the shape of the display, for example [DisplayFeatureState.postureFlat] or
+/// [DisplayFeatureState.postureHalfOpened]. For [DisplayFeatureType.cutout],
+/// the state is not used and has the [DisplayFeatureState.unknown] value. À—€ŞÀ—! À—!À—/  À—1À—@À—?  À—GÀ—VÀ—U  À—[À—jÀ—i  À—wÀ—}À—÷À—³À—‡À—ˆÀ—‘À—±À—’À—˜À—ªÀ—«À—ÂÀ—ËÀ—îÀ—ÌÀ—ÓÀ—æÀ—çÀ—ı‚Àš‡Àš‡‚h/// The area of the flutter view occupied by this display feature, measured in logical pixels.
+///
+/// On devices with two screens, the Flutter view spans from the top-left corner
+/// of the left or top screen to the bottom-right corner of the right or bottom screen,
+/// including the visual area occupied by any display feature. Bounds of display
+/// features are reported in this coordinate system.
+///
+/// For example, on a dual screen device in portrait mode:
+///
+/// * [Rect.left] gives you the size of left screen, in logical pixels.
+/// * [Rect.right] gives you the size of the left screen + the hinge width. Àš’VÀšäÀšä6/// Type of display feature, e.g. hinge, fold, cutout. Àší€®À›–À›–€ˆ/// Posture of display feature, which is populated only for folds and hinges.
+///
+/// For cutouts, this is [DisplayFeatureState.unknown] ÀœÙAÀœíÀœí   ÀœÙÀœÚ À› 5À›ºÀ›º  À›½À›ÅÀ›Ä  À› À›¡ÀkÀ1À1   ÀÀ À§Ù´•À§ÙÀ«ƒ-/// An identifier used to select a user's language and formatting preferences.
+///
+/// This represents a [Unicode Language
+/// Identifier](https://www.unicode.org/reports/tr35/#Unicode_language_identifier)
+/// (i.e. without Locale extensions), except variants are not supported.
+///
+/// Locales are canonicalized according to the "preferred value" entries in the
+/// [IANA Language Subtag
+/// Registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry).
+/// For example, `const Locale('he')` and `const Locale('iw')` are equal and
+/// both have the [languageCode] `he`, because `iw` is a deprecated language
+/// subtag that was replaced by the subtag `he`.
+///
+/// See also:
+///
+///  * [PlatformDispatcher.locale], which specifies the system's currently selected
+///    [Locale]. À«…îÀ°› À°›À°¡ …</// Creates a new Locale object. The first argument is the
+/// primary language subtag, the second is the region (also
+/// referred to as 'country') subtag.
+///
+/// For example:
+///
+/// ```dart
+/// const Locale swissFrench = Locale('fr', 'CH');
+/// const Locale canadianFrench = Locale('fr', 'CA');
+/// ```
+///
+/// The primary language subtag must not be null. The region subtag is
+/// optional. When there is no region/country subtag, the parameter should
+/// be omitted or passed `null` instead of an empty-string.
+///
+/// The subtag values are _case sensitive_ and must be one of the valid
+/// subtags according to CLDR supplemental data:
+/// [language](https://github.com/unicode-org/cldr/blob/master/common/validity/language.xml),
+/// [region](https://github.com/unicode-org/cldr/blob/master/common/validity/region.xml). The
+/// primary language subtag must be at least two and at most eight lowercase
+/// letters, but not four letters. The region subtag must be two
+/// uppercase letters or three digits. See the [Unicode Language
+/// Identifier](https://www.unicode.org/reports/tr35/#Unicode_language_identifier)
+/// specification.
+///
+/// Validity is not checked by default, but some methods may throw away
+/// invalid data.
+///
+/// See also:
+///
+///  * [Locale.fromSubtags], which also allows a [scriptCode] to be
+///    specified.À°¢À°¨À°§  À°·À°½À°¼  	À°ÑÀ°×À°ëÀ°æÀ°ØÀ°éÀ°ÿÀ°ôÀ±À±
+…:ÀµDÀµJÀµKÀµVÀµK„/// Creates a new Locale object.
+///
+/// The keyword arguments specify the subtags of the Locale.
+///
+/// The subtag values are _case sensitive_ and must be valid subtags according
+/// to CLDR supplemental data:
+/// [language](https://github.com/unicode-org/cldr/blob/master/common/validity/language.xml),
+/// [script](https://github.com/unicode-org/cldr/blob/master/common/validity/script.xml) and
+/// [region](https://github.com/unicode-org/cldr/blob/master/common/validity/region.xml) for
+/// each of languageCode, scriptCode and countryCode respectively.
+///
+/// The [languageCode] subtag is optional. When there is no language subtag,
+/// the parameter should be omitted or set to "und". When not supplied, the
+/// [languageCode] defaults to "und", an undefined language code.
+///
+/// The [countryCode] subtag is optional. When there is no country subtag,
+/// the parameter should be omitted or passed `null` instead of an empty-string.
+///
+/// Validity is not checked by default, but some methods may throw away
+/// invalid data.ÀµXÀµ`Àµ_  ÀµuÀµ{Àµz  Àµ†ÀµÀµ  ÀµnÀµ¢Àµ¨Àµ»Àµ¶Àµ©Àµ¹ÀµÒÀµÄÀµÔÀµèÀµîÀµÿÀµúÀµïÀµıÀ¶À¶À¶ À¶À¶À¶À¶6À¶)À¶8ÀºäÀºñÀºñ  À»ˆ·À»©À»© €ğÀ»ØÀÌ>À»ÈÀ»×À»ÉÀ»ÑÀ»âÀ»ŞÀ»äÀ¼À¼À¼À¼HÀ¼DÀ¼JÀ¼zÀ¼vÀ¼|À¼­À¼©À¼¯À¼ìÀ¼çÀ¼îÀ½!À½À½#À½QÀ½LÀ½SÀ½‰À½„À½‹À½ÁÀ½¼À½ÃÀ½úÀ½õÀ½üÀ¾1À¾,À¾3À¾gÀ¾bÀ¾iÀ¾À¾˜À¾ŸÀ¾ØÀ¾ÓÀ¾ÚÀ¿À¿À¿À¿AÀ¿<À¿CÀ¿}À¿xÀ¿À¿±À¿¬À¿³À¿åÀ¿àÀ¿çÀÀÀÀÀÀÀÀ[ÀÀVÀÀ]ÀÀ–ÀÀ‘ÀÀ˜ÀÀËÀÀÆÀÀÍÀÀûÀÀöÀÀıÀÁ.ÀÁ)ÀÁ0ÀÁ`ÀÁ[ÀÁbÀÁ’ÀÁÀÁ”ÀÁÃÀÁ¾ÀÁÅÀÁ÷ÀÁòÀÁùÀÂ9ÀÂ4ÀÂ;ÀÂpÀÂkÀÂrÀÂ¡ÀÂœÀÂ£ÀÂáÀÂÜÀÂãÀÃÀÃÀÃÀÃGÀÃBÀÃIÀÃ{ÀÃvÀÃ}ÀÃ·ÀÃ²ÀÃ¹ÀÃòÀÃíÀÃôÀÄ'ÀÄ"ÀÄ)ÀÄYÀÄTÀÄ[ÀÄ‰ÀÄ„ÀÄ‹ÀÄÇÀÄÂÀÄÉÀÄúÀÄõÀÄüÀÅ5ÀÅ0ÀÅ7ÀÅjÀÅeÀÅlÀÅÀÅ™ÀÅ ÀÅĞÀÅËÀÅÒÀÆÀÆÀÆ	ÀÆ:ÀÆ5ÀÆ<ÀÆmÀÆhÀÆoÀÆ¢ÀÆÀÆ¤ÀÆİÀÆØÀÆßÀÇÀÇÀÇÀÇ>ÀÇ9ÀÇ@ÀÇqÀÇlÀÇsÀÇ¨ÀÇ£ÀÇªÀÇÚÀÇÕÀÇÜÀÈ
+ÀÈÀÈÀÈEÀÈ@ÀÈGÀÈÀÈzÀÈÀÈ¯ÀÈªÀÈ±ÀÈâÀÈİÀÈäÀÉÀÉÀÉÀÉMÀÉHÀÉOÀÉ‚ÀÉ}ÀÉ„ÀÉ½ÀÉ¸ÀÉ¿ÀÉóÀÉîÀÉõÀÊ3ÀÊ.ÀÊ5ÀÊeÀÊ`ÀÊgÀÊ ÀÊ›ÀÊ¢ÀÊÔÀÊÏÀÊÖÀËÀËÀËÀË=ÀË8ÀË?ÀËqÀËlÀËsÀË¤ÀËŸÀË¦ÀËäÀËßÀËæÀÌÀÌÀÌÀÌDèÀÎ"ÀÎ"·/// The script subtag for the locale.
+///
+/// This may be null, indicating that there is no specified script subtag.
+///
+/// This must be a valid Unicode Language Identifier script subtag as listed
+/// in [Unicode CLDR supplemental
+/// data](https://github.com/unicode-org/cldr/blob/master/common/validity/script.xml).
+///
+/// See also:
+///
+///  * [Locale.fromSubtags], which describes the conventions for creating
+///    [Locale] objects. ÀÒ	ÀÒÀÒ  ÀÒ­¦ÀÒÎÀÒÎ ÀÒûÀÔRÀÒëÀÒúÀÒìÀÒôÀÓÀÓÀÓÀÓ5ÀÓ1ÀÓ7ÀÓzÀÓvÀÓ|ÀÓ¸ÀÓ´ÀÓºÀÓíÀÓéÀÓïÀÔ(ÀÔ$ÀÔ*À×’À×¡À×¡  À×²"À×ÁÀ×Á  À¶H„™Àº”Àº”„/// The primary language subtag for the locale.
+///
+/// This must not be null. It may be 'und', representing 'undefined'.
+///
+/// This is expected to be string registered in the [IANA Language Subtag
+/// Registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry)
+/// with the type "language". The string specified must match the case of the
+/// string in the registry.
+///
+/// Language subtags that are deprecated in the registry and have a preferred
+/// code are changed to their preferred code. For example, `const
+/// Locale('he')` and `const Locale('iw')` are equal, and both have the
+/// [languageCode] `he`, because `iw` is a deprecated language subtag that was
+/// replaced by the subtag `he`.
+///
+/// This must be a valid Unicode Language subtag as listed in [Unicode CLDR
+/// supplemental
+/// data](https://github.com/unicode-org/cldr/blob/master/common/validity/language.xml).
+///
+/// See also:
+///
+///  * [Locale.fromSubtags], which describes the conventions for creating
+///    [Locale] objects.   ÀÎ1ƒÕÀÑ¾ÀÑ¾ƒZ/// The region subtag for the locale.
+///
+/// This may be null, indicating that there is no specified region subtag.
+///
+/// This is expected to be string registered in the [IANA Language Subtag
+/// Registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry)
+/// with the type "region". The string specified must match the case of the
+/// string in the registry.
+///
+/// Region subtags that are deprecated in the registry and have a preferred
+/// code are changed to their preferred code. For example, `const Locale('de',
+/// 'DE')` and `const Locale('de', 'DD')` are equal, and both have the
+/// [countryCode] `DE`, because `DD` is a deprecated language subtag that was
+/// replaced by the subtag `DE`.
+///
+/// See also:
+///
+///  * [Locale.fromSubtags], which describes the conventions for creating
+///    [Locale] objects.   À× nÀ×4À×4   À× À×! ÀÔX‚ÄÀÔrÀÔr  ÀÔuÀÔ}ÀÔ|  ÀÔXÀÔYÀ×ÙêÀÙÀÙ/// Returns a string representing the locale.
+///
+/// This identifier happens to be a valid Unicode Locale Identifier using
+/// underscores as separator, however it is intended to be used for debugging
+/// purposes only. For parsable results, use [toLanguageTag] instead.  ÀØóÀØôÀÙÀÙÀÙÇÀÚ½ÀÚ½€ä/// Returns a syntactically valid Unicode BCP47 Locale Identifier.
+///
+/// Some examples of such identifiers: "en", "es-419", "hi-Deva-IN" and
+/// "zh-Hans-CN". See http://www.unicode.org/reports/tr35/ for technical
+/// details.   ÀÚæ†ÀÚíÀÚí  ÀÚúÀÛÀÛ    Àà…9ÀàÀá€é/// An event to request a [SemanticsAction] of [type] to be performed on the
+/// [SemanticsNode] identified by [nodeId] owned by the [FlutterView] identified
+/// by [viewId].
+///
+/// Used by [SemanticsBinding.performSemanticsAction]. Àá €ªÀáN ÀáNÀáb %/// Creates a [SemanticsActionEvent].ÀáiÀáxÀáw  ÀáÀáÀá  Àá›ÀáªÀá©  ÀáµÀá»Àáº   ÀáÎDÀâÀâ'/// The type of action to be performed. ÀâwÀâˆÀâˆb/// The id of the [FlutterView] the [SemanticsNode] identified by [nodeId] is
+/// associated with. Àâ“\ÀâéÀâéI/// The id of the [SemanticsNode] on which the action is to be performed. Àâô@Àã+Àã+&/// Optional arguments for the action. Àã95ÀãMÀãM ÀãfÀãlÀãm  ÀãsÛÀãèÀãè[/// Create a clone of the [SemanticsActionEvent] but with provided parameters
+/// replaced. Àã÷Àä	Àä  ÀäÀäÀä  Àä#Àä)Àä(  Àä4*Àä=Àä<  ÀäH Àåİ‚²ÀåİÀæ›€±/// An event for the engine to communicate view focus changes to the app.
+///
+/// This value will be typically passed to the [PlatformDispatcher.onViewFocusChange]
+/// callback. Àæ®~Àæ× Àæ×Àæå  /// Creates a [ViewFocusChange].ÀæçÀæöÀæõ  ÀæıÀçÀç  ÀçÀç!Àç    Àç0SÀç}Àç}@/// The ID of the [FlutterView] that experienced a focus change. Àçˆ<Àç¿Àç¿/// The state focus changed to. ÀçÉHÀèÀè#/// The direction focus changed to.   ÀèwÀè)Àè)   ÀèÀè  
+À;Êƒ÷À;ÊÀ<_€/// Various important time points in the lifetime of a frame.
+///
+/// [FrameTiming] records a timestamp of each phase for performance analysis.  À<n€ƒÀ<çÀ<çr/// The timestamp of the vsync signal given by the operating system.
+///
+/// See also [FrameTiming.vsyncOverhead]. À<önÀ=ZÀ=Z]/// When the UI thread starts building a frame.
+///
+/// See also [FrameTiming.buildDuration]. À=iqÀ=ÏÀ=Ï_/// When the UI thread finishes building a frame.
+///
+/// See also [FrameTiming.buildDuration]. À=ßwÀ>KÀ>Ke/// When the raster thread starts rasterizing a frame.
+///
+/// See also [FrameTiming.rasterDuration]. À>[zÀ>ÉÀ>Ég/// When the raster thread finishes rasterizing a frame.
+///
+/// See also [FrameTiming.rasterDuration]. À>Ú€äÀ?ªÀ?ª€Ç/// When the raster thread finished rasterizing a frame in wall-time.
+///
+/// This is useful for correlating time raster finish time with the system
+/// clock to integrate with other profiling tools.     À?ÃËÀ?ÃÀ?È   À?İ^À@,À@,L/// The number of engine layers cached in the raster cache during the frame. À@@WÀ@ˆÀ@ˆE/// The number of bytes used to cache engine layers during the frame. À@œaÀ@ìÀ@ìM/// The number of picture layers cached in the raster cache during the frame. ÀATÀAEÀAE@/// The number of bytes used to cache pictures during the frame. ÀA[0ÀA€ÀA€"/// The frame number of the frame.     À[S›wÀ[SÀe‰½/// States that an application can be in once it is running.
+///
+/// States not supported on a platform will be synthesized by the framework when
+/// transitioning between states which are supported, so that all
+/// implementations share the same state machine.
+///
+/// The initial value for the state is the [detached] state, updated to the
+/// current state (usually [resumed]) as soon as the first lifecycle update is
+/// received from the platform.
+///
+/// For historical and name collision reasons, Flutter's application state names
+/// do not correspond one to one with the state names on all platforms. On
+/// Android, for instance, when the OS calls
+/// [`Activity.onPause`](https://developer.android.com/reference/android/app/Activity#onPause()),
+/// Flutter will enter the [inactive] state, but when Android calls
+/// [`Activity.onStop`](https://developer.android.com/reference/android/app/Activity#onStop()),
+/// Flutter enters the [paused] state. See the individual state's documentation
+/// for descriptions of what they mean on each platform.
+///
+/// The current application state can be obtained from
+/// [SchedulerBinding.instance.lifecycleState], and changes to the state can be
+/// observed by creating an [AppLifecycleListener], or by using a
+/// [WidgetsBindingObserver] by overriding the
+/// [WidgetsBindingObserver.didChangeAppLifecycleState] method.
+///
+/// Applications should not rely on always receiving all possible notifications.
+///
+/// For example, if the application is killed with a task manager, a kill
+/// signal, the user pulls the power from the device, or there is a rapid
+/// unscheduled disassembly of the device, no notification will be sent before
+/// the application is suddenly terminated, and some states may be skipped.
+///
+/// See also:
+///
+/// * [AppLifecycleListener], an object used observe the lifecycle state that
+///   provides state transition callbacks.
+/// * [WidgetsBindingObserver], for a mechanism to observe the lifecycle state
+///   from the widgets layer.
+/// * iOS's [UIKit activity
+///   lifecycle](https://developer.apple.com/documentation/uikit/app_and_environment/managing_your_app_s_life_cycle?language=objc)
+///   documentation.
+/// * Android's [activity
+///   lifecycle](https://developer.android.com/guide/components/activities/activity-lifecycle)
+///   documentation.
+/// * macOS's [AppKit activity
+///   lifecycle](https://developer.apple.com/documentation/appkit/nsapplicationdelegate?language=objc)
+///   documentation.  Àe,‚%ÀgIÀgI‚/// The application is still hosted by a Flutter engine but is detached from
+/// any host views.
+///
+/// The application defaults to this state before it initializes, and can be
+/// in this state (applicable on Android, iOS, and web) after all views have been
+/// detached.
+///
+/// When the application is in this state, the engine is running without a
+/// view.
+///
+/// This state is only entered on iOS, Android, and web, although on all platforms
+/// it is the default state before the application begins running. ÀgV„QÀk Àk „%/// On all platforms, this state indicates that the application is in the
+/// default running mode for a running application that has input focus and is
+/// visible.
+///
+/// On Android, this state corresponds to the Flutter host view having focus
+/// ([`Activity.onWindowFocusChanged`](https://developer.android.com/reference/android/app/Activity#onWindowFocusChanged(boolean))
+/// was called with true) while in Android's "resumed" state. It is possible
+/// for the Flutter app to be in the [inactive] state while still being in
+/// Android's
+/// ["onResume"](https://developer.android.com/guide/components/activities/activity-lifecycle)
+/// state if the app has lost focus
+/// ([`Activity.onWindowFocusChanged`](https://developer.android.com/reference/android/app/Activity#onWindowFocusChanged(boolean))
+/// was called with false), but hasn't had
+/// [`Activity.onPause`](https://developer.android.com/reference/android/app/Activity#onPause())
+/// called on it.
+///
+/// On iOS and macOS, this corresponds to the app running in the foreground
+/// active state. Àk¬†ÑÀruÀru†/// At least one view of the application is visible, but none have input
+/// focus. The application is otherwise running normally.
+///
+/// On non-web desktop platforms, this corresponds to an application that is
+/// not in the foreground, but still has visible windows.
+///
+/// On the web, this corresponds to an application that is running in a
+/// window or tab that does not have input focus.
+///
+/// On iOS and macOS, this state corresponds to the Flutter host view running in the
+/// foreground inactive state. Apps transition to this state when in a phone
+/// call, when responding to a TouchID request, when entering the app switcher
+/// or the control center, or when the UIViewController hosting the Flutter
+/// app is transitioning.
+///
+/// On Android, this corresponds to the Flutter host view running in Android's
+/// paused state (i.e.
+/// [`Activity.onPause`](https://developer.android.com/reference/android/app/Activity#onPause())
+/// has been called), or in Android's "resumed" state (i.e.
+/// [`Activity.onResume`](https://developer.android.com/reference/android/app/Activity#onResume())
+/// has been called) but does not have window focus. Examples of when apps
+/// transition to this state include when the app is partially obscured or
+/// another activity is focused, a app running in a split screen that isn't
+/// the current app, an app interrupted by a phone call, a picture-in-picture
+/// app, a system dialog, another view. It will also be inactive when the
+/// notification window shade is down, or the application switcher is visible.
+///
+/// On Android and iOS, apps in this state should assume that they may be
+/// [hidden] and [paused] at any time. Àr‚‚íÀuiÀui‚Ğ/// All views of an application are hidden, either because the application is
+/// about to be paused (on iOS and Android), or because it has been minimized
+/// or placed on a desktop that is no longer visible (on non-web desktop), or
+/// is running in a window or tab that is no longer visible (on the web).
+///
+/// On iOS and Android, in order to keep the state machine the same on all
+/// platforms, a transition to this state is synthesized before the [paused]
+/// state is entered when coming from [inactive], and before the [inactive]
+/// state is entered when coming from [paused]. This allows cross-platform
+/// implementations that want to know when an app is conceptually "hidden" to
+/// only write one handler. ÀutSÀvÁÀvÁ</// The application is not currently visible to the user, and not responding
+/// to user input.
+///
+/// When the application is in this state, the engine will not call the
+/// [PlatformDispatcher.onBeginFrame] and [PlatformDispatcher.onDrawFrame]
+/// callbacks.
+///
+/// This state is only entered on iOS and Android.     ÀvÌ¦ÀvÌÀwí/// The possible responses to a request to exit the application.
+///
+/// The request is typically responded to by creating an [AppLifecycleListener]
+/// and supplying an [AppLifecycleListener.onExitRequested] callback, or by
+/// overriding [WidgetsBindingObserver.didRequestAppExit].  Àx/Àx,Àx,(/// Exiting the application can proceed. Àx5:ÀxiÀxi1/// Cancel the exit: do not exit the application.     ÀxtƒêÀxtÀxÙ_/// The type of application exit to perform when calling
+/// [ServicesBinding.exitApplication].  ÀxéŒÀzkÀzkw/// Requests that the application start an orderly exit, sending a request
+/// back to the framework through the [WidgetsBinding]. If that responds
+/// with [AppExitResponse.exit], then proceed with the same steps as a
+/// [required] exit. If that responds with [AppExitResponse.cancel], then the
+/// exit request is canceled and the application continues executing normally. ÀzzáÀ|SÀ|SÈ/// A non-cancelable orderly exit request. The engine will shut down the
+/// engine and call the native UI toolkit's exit API.
+///
+/// If you need an even faster and more dangerous exit, then call `dart:io`'s
+/// `exit()` directly, and even the native toolkit's exit API won't be called.
+/// This is quite dangerous, though, since it's possible that the engine will
+/// crash because it hasn't been properly shut down, causing the app to crash
+/// on exit.     À…õÀÀ¡Æ„3/// Type of [DisplayFeature], describing the [DisplayFeature] behaviour and if
+/// it obstructs the display.
+///
+/// Some types of [DisplayFeature], like [DisplayFeatureType.fold], can be
+/// reported without actually impeding drawing on the screen. They are useful
+/// for knowing where the display is bent or has a crease. The
+/// [DisplayFeature.bounds] can be 0-width in such cases.
+///
+/// The shape formed by the screens for types [DisplayFeatureType.fold] and
+/// [DisplayFeatureType.hinge] is called the posture and is exposed in
+/// [DisplayFeature.state]. For example, the [DisplayFeatureState.postureFlat] posture
+/// means the screens form a flat surface.
+///
+/// ![Device with a hinge display feature](https://flutter.github.io/assets-for-api-docs/assets/hardware/display_feature_hinge.png)
+///
+/// ![Device with a fold display feature](https://flutter.github.io/assets-for-api-docs/assets/hardware/display_feature_fold.png)
+///
+/// ![Device with a cutout display feature](https://flutter.github.io/assets-for-api-docs/assets/hardware/display_feature_cutout.png)  À¡İHÀ¢À¢>/// [DisplayFeature] type is new and not yet known to Flutter. À¢*€ À¢ÆÀ¢Æ€•/// A fold in the flexible screen without a physical gap.
+///
+/// The bounds for this display feature type indicate where the display makes a crease. À¢ÏVÀ£ À£ N/// A physical separation with a hinge that allows two display panels to fold. À£*UÀ£yÀ£yL/// A non-displaying area of the screen, usually housing cameras or sensors.     À£„„SÀ£„À¥µ‚+/// State of the display feature, which contains information about the posture
+/// for foldable features.
+///
+/// The posture is the shape made by the parts of the flexible screen or
+/// physical screen panels. They are inspired by and similar to
+/// [Android Postures](https://developer.android.com/guide/topics/ui/foldables#postures).
+///
+/// * For [DisplayFeatureType.fold]s & [DisplayFeatureType.hinge]s, the state is
+///   the posture.
+/// * For [DisplayFeatureType.cutout]s, the state is not used and has the
+/// [DisplayFeatureState.unknown] value.  À¥Í{À¦AÀ¦Ao/// The display feature is a [DisplayFeatureType.cutout] or this state is new
+/// and not yet known to Flutter. À¦M}À¦¿À¦¿k/// The foldable device is completely open.
+///
+/// The screen space that is presented to the user is flat. À¦ÏÀ§ÃÀ§Ã€ë/// Fold angle is in an intermediate position between opened and closed state.
+///
+/// There is a non-flat angle between parts of the flexible screen or between
+/// physical screen panels such that the screens start to face each other.     ÀÜpƒ¥ÀÜpÀİ}/// Various performance modes for tuning the Dart VM's GC performance.
+///
+/// For the editor of this enum, please keep the order in sync with `Dart_PerformanceMode`
+/// in [dart_api.h](https://github.com/dart-lang/sdk/blob/main/runtime/include/dart_api.h#L1302).  Àİ•?ÀİÌÀİÌ4/// This is the default mode that the Dart VM is in. ÀİÙÀŞâÀŞâ /// Optimize for low latency, at the expense of throughput and memory overhead
+/// by performing work in smaller batches (requiring more overhead) or by
+/// delaying work (requiring more memory). An embedder should not remain in
+/// this mode indefinitely. ÀŞî€¥Àß‰Àß‰€–/// Optimize for high throughput, at the expense of latency and memory overhead
+/// by performing work in larger batches with more intervening growth. Àß˜zÀàÀào/// Optimize for low memory, at the expensive of throughput and latency by more
+/// frequently performing work.     Àè‘‚ãÀè‘Àêß‚H/// Represents the focus state of a given [FlutterView].
+///
+/// When focus is lost, the view's focus state changes to [ViewFocusState.unfocused].
+///
+/// When focus is gained, the view's focus state changes to [ViewFocusState.focused].
+///
+/// Valid transitions within a view are:
+///
+/// - [ViewFocusState.focused] to [ViewFocusState.unfocused].
+/// - [ViewFocusState.unfocused] to [ViewFocusState.focused].
+///
+/// See also:
+///
+///   * [ViewFocusDirection], that specifies the focus direction.
+///   * [ViewFocusEvent], that conveys information about a [FlutterView] focus change.  ÀêòCÀë,Àë,7/// Specifies that a view does not have platform focus. Àë:7ÀëjÀëj-/// Specifies that a view has platform focus.     Àëvƒ%ÀëvÀì‘/// Represents the direction in which the focus transitioned across [FlutterView]s.
+///
+/// See also:
+///
+///   * [ViewFocusState], that specifies the current focus state of a [FlutterView].
+///   * [ViewFocusEvent], that conveys information about a [FlutterView] focus change.  Àì¨€ºÀíYÀíY€¨/// Indicates the focus transition did not have a direction.
+///
+/// This is typically associated with focus being programmatically requested or
+/// when focus is lost. Àíg€‘ÀíñÀíñ€ƒ/// Indicates the focus transition was performed in a forward direction.
+///
+/// This is typically result of the user pressing tab. Àíı€›ÀîÀî€Œ/// Indicates the focus transition was performed in a backward direction.
+///
+/// This is typically result of the user pressing shift + tab.         *t*N  hsr  *+1B2 €¶m€¶E/// Signature of callbacks that have no arguments and return no data.    %‚%ƒã/// Signature for [PlatformDispatcher.onBeginFrame].
+///
+/// The `duration` argument is the point at which the current frame interval
+/// began, expressed as a duration since some epoch. The epoch in all
+/// frames will be the same, but it may not match [DateTime]'s epoch.
+///
+/// For any two frames `a` and `b` such that the frame number of `a` is less
+/// than the frame number of `b`, the duration argument for `a` will be less
+/// than or equal to the duration argument for `b`.  ƒ/ƒ9ƒ8   ƒD‚ûƒD†‚·/// Signature for [PlatformDispatcher.onReportTimings].
+///
+/// {@template dart.ui.TimingsCallback.list}
+/// The callback takes a list of [FrameTiming] because it may not be
+/// immediately triggered after each frame. Instead, Flutter tries to batch
+/// frames together and send all their timings at once to decrease the
+/// overhead (as this is available in the release mode). The list is sorted in
+/// ascending order of time (earliest frame first). The timing of any frame
+/// will be sent within about 1 second (100ms if in the profile/debug mode)
+/// even if there are no later frames to batch. The timing of the first frame
+/// will be sent immediately without batching.
+/// {@endtemplate}  †$†7†6   †A€ˆ†A†…;/// Signature for [PlatformDispatcher.onPointerDataPacket].  †¯†Â†Á   †Ë€í†Ë‡Š€¶/// Signature for [PlatformDispatcher.onKeyData].
+///
+/// The callback should return true if the key event has been handled by the
+/// framework and should not be propagated further.  ‡ª‡³‡²   ‡º€‘‡ºˆ>/// Signature for [PlatformDispatcher.onSemanticsActionEvent].  ˆ.ˆDˆC   ˆM€òˆMˆÿ€©/// Signature for responses to platform messages.
+///
+/// Used as a parameter to [PlatformDispatcher.sendPlatformMessage] and
+/// [PlatformDispatcher.onPlatformMessage].  ‰/‰:‰9   ‰Aw‰AŠD~/// Deprecated. Migrate to [ChannelBuffers.setListener] instead.
+///
+/// Signature for [PlatformDispatcher.onPlatformMessage].  ŠpŠxŠw  Š}ŠˆŠ‡  Š)Š¯Š®  ‰À‰Á‰ËŠ:‰ÏŠŠã?ŠãŠë   ‹
+‹‹   ‹$Ñ‹$Œ®/// Signature for [PlatformDispatcher.onError].
+///
+/// If this method returns false, the engine may use some fallback method to
+/// provide information about the error.
+///
+/// After calling this method, the process or the VM may terminate. Some severe
+/// unhandled errors may not be able to call this method either, such as Dart
+/// compilation errors or process terminating errors.  ŒÌŒÔŒÓ  ŒŞŒêŒé   À‚®€ìÀ‚®Àƒ~b/// Deprecated. Will be removed in a future version of Flutter.
+///
+/// Use [ViewPadding] instead.   ÀƒÀƒÀƒÀƒtÀƒ Àƒ>ÀåR€‰ÀåRÀå”9/// Signature for [PlatformDispatcher.onViewFocusChange].  Àå¼ÀåÌÀåË    D)QQ ijï8üü   Œ <€†€¤€µ€¶€ü$%Z^«ñ‚7‚;‚ˆ‚Õƒ	ƒCƒDƒ|ƒ€ƒ­ƒò„>„…„Ô… …l…º…é…ü†@†A†}†Ê†Ë†ı‡‡N‡‚‡¹‡º‡ùˆLˆMˆˆƒˆËˆ÷‰@‰A‰‚‰†‰À‰ÍŠŠ:Š<Š^Š¹ŠºŠã‹#‹$‹T‹X‹¥‹Î‹ÒŒ"ŒpŒ¦ŒöŒ÷Dop«®ï)*DŸ Ìå	Wkl¼9h¢©ª‘‘4‘6‘7‘`‘d‘«‘¯‘û’’’k’š’’â“““\“¥“õ”B”Q”l”·”ì••B•F•G•q•w•»––X–^–¯–ı—K—•—æ˜˜˜c˜´˜à™0™~™—™Îššš_š`š–šœšêšù›P››¹›øœ(œ`œdœeœ‰œœßœå.4„Òìò<‹ÜŸ-ŸNŸªŸò ( ` a ¯ Æ Ì¡¡P¡¡¡Ú¡ë¢!¢"¢n¢¥¢«¢ø£C££‡£Ñ¤¤b¤ˆ¤¤Õ¥ ¥n¥¼¦¦Y¦¦¤¦´¦º¦í§:§S§u§®§í§ù¨.¨N¨¬¨÷¨ş©,©<©h©x©­©Ùªª!ª0ªYªˆªª£ª­ªÀªÄªÅªì«««l«ƒ«‰«Ù¬¬=¬C¬‘¬ ¬¦¬î­­	­­­i­¡­Ü®®:®d®•®·®á®å®æ¯¯¯R¯W¯£¯Î°°R°°Å°É°Ê°ö°û±± ±m±•±²²²$²2²8²{²’²È²Ì²Í³ ³P³T³U³¨³Ş´´<´=´O´P´}´‚´§´Ø´ïµµDµJµ€µ„µ…µ±µ¶µğ¶@¶ˆ¶Ä¶ú¶ş¶ÿ·[·a·±¸¸[¸ª¸û¹¹%¹w¹Åººaºgºº»»w»Ş¼¼
+¼\¼p¼v¼Â¼û½½O½U½e½k½ä¾(¾o¾¿¿¿6¿˜¿ÃÀ @ À @#À @NÀ @RÀ @SÀ @˜À @À @ôÀ ARÀ AzÀ A€À AÏÀ AøÀ AşÀ BNÀ B~À B„À B”À BšÀ BíÀ CÀ C&À CIÀ CtÀ C{À C¾À CÂÀ CÃÀ CòÀ D8À D<À D’À D“À DÊÀ DĞÀ EÀ EhÀ E‹À E‘À EâÀ F#À FpÀ F‘À FÅÀ FåÀ GÀ G9À GWÀ G}À GÀ G‚À G®À GÕÀ H4À H8À H9À H‚À HÂÀ HÈÀ IÀ I]À IÀ I¬À IÑÀ IıÀ JÀ J?À JCÀ JDÀ JpÀ J†À J²À J¶À J·À JøÀ JşÀ KOÀ K^À KdÀ KtÀ KzÀ KÇÀ KØÀ L&À LYÀ L†À LÇÀ LìÀ MÀ MÀ MÀ MJÀ MÀ M¦À MÉÀ MæÀ NÀ N2À N;À NAÀ NEÀ NFÀ N‘À NàÀ OÀ OÀ OYÀ OŒÀ OÔÀ PÀ P\À PÀ P·À PçÀ P÷À QÀ QUÀ Q¢À RÀ ReÀ RÆÀ RÜÀ S;À S„À SØÀ T&À TtÀ TÇÀ UÀ UdÀ U´À VÀ VTÀ V¤À VôÀ WAÀ W‘À WÚÀ X*À XzÀ XÈÀ YÀ YfÀ Y¯À YşÀ ZOÀ Z À ZéÀ [2À [€À [ÎÀ \À \eÀ \®À \¹À \ÂÀ \ıÀ ]À ]-À ]1À ]2À ]…À ]ÊÀ ]åÀ ^À ^8À ^mÀ ^˜À ^ÌÀ ^ÙÀ ^éÀ _À _À _ À _!À _^À _dÀ _µÀ _ÄÀ _ÊÀ `À `OÀ `À `À `ËÀ `æÀ aÀ agÀ atÀ a±À a·À a»À a¼À b	À bÀ b6À baÀ bÀ bÀ bÍÀ c À c3À c4À cHÀ cÀ cÍÀ cÜÀ cüÀ d[À dhÀ diÀ dÀ dïÀ eGÀ eÀ eÖÀ eòÀ fBÀ fIÀ fJÀ f^À fbÀ fcÀ f¬À fÅÀ fËÀ gÀ ghÀ g‰À gÀ gÛÀ h(À h[À haÀ h²À hÿÀ i@À iFÀ irÀ ixÀ iÅÀ jÀ j_À jŒÀ jÈÀ jíÀ kÀ kIÀ k…À kµÀ k»À kÜÀ lÀ l	À l
+À lDÀ lEÀ lÀ lŸÀ lÿÀ mAÀ mBÀ mnÀ m™À mÔÀ nÀ nXÀ n°À n¶À nùÀ nıÀ nşÀ o3À o9À o†À oÑÀ pÀ pXÀ p^À p¯À p½À q"À qRÀ q^À q•À q¡À q¨À qÁÀ qßÀ qåÀ qéÀ qêÀ r
+À rÀ rJÀ r^À r’À r“À rÇÀ s
+À sÀ s?À sPÀ sÀ s“À s˜À s™À sßÀ såÀ t5À t…À tÖÀ u%À urÀ u‘À uîÀ vKÀ vdÀ v‚À vˆÀ vŒÀ vÀ vêÀ w)À w*À wfÀ w­À w±À wæÀ w÷À xÀ xÀ x-À x2À x3À xÀ xÈÀ xâÀ yÀ yKÀ yzÀ y~À yÀ yäÀ z+À z,À zoÀ zuÀ z¾À zŞÀ zäÀ {4À {‚À {˜À {À {ïÀ |>À |RÀ |XÀ |©À |¸À |ÇÀ |ıÀ }8À }<À }„À }³À }ŞÀ }íÀ ~#À ~^À ~bÀ ~ŸÀ ~ÂÀ ~íÀ ~ñÀ ~òÀ À bÀ –À —À ÁÀ €	À €À €`À €aÀ €¬À €ğÀ AÀ pÀ vÀ ’À ¥À «À ¬À íÀ ‚À ‚À ‚<À ‚tÀ ‚{À ‚À ‚€À ‚ÂÀ ‚ÈÀ ƒ	À ƒRÀ ƒkÀ ƒºÀ ƒğÀ ƒüÀ „)À „;À „pÀ „xÀ „¤À „èÀ …À …#À …1À …?À …bÀ …¡À …¬À …µÀ …ÂÀ †À †@À †JÀ †PÀ †TÀ †UÀ †À †­À †³À ‡À ‡FÀ ‡LÀ ‡›À ‡ğÀ ˆ5À ˆ|À ˆ}À ˆİÀ ‰À ‰À ‰{À ‰À ‰ãÀ ŠÀ ŠÀ ŠqÀ Š¯À ŠÜÀ ŠàÀ ŠáÀ ‹DÀ ‹À ‹‚À ‹ÑÀ ŒÀ Œ	À ŒZÀ Œ«À ŒÙÀ ŒßÀ (À LÀ “À ”À õÀ .À /À €À ªÀ °À ÀÀ ÆÀ À 0À ~À À »À ¼À À 9À :À ‰À ÑÀ ×À ‘&À ‘vÀ ‘½À ’
+À ’[À ’mÀ ’sÀ ’©À ’×À ’İÀ “+À “vÀ “|À “ŒÀ “’À “ßÀ ”À ”bÀ ”¤À •À •LÀ •gÀ •zÀ •À •¦À •®À •²À •³À –À –2À –3À –€À –ÛÀ –ÜÀ —'À —6À —<À —À —œÀ —óÀ ˜$À ˜\À ˜›À ˜ËÀ ™À ™À ™À ™4À ™fÀ ™µÀ ™şÀ šDÀ šRÀ šXÀ š±À ›À ›UÀ ›YÀ ›ZÀ ›£À ›©À ›øÀ œBÀ œQÀ œWÀ œ¦À œÕÀ œçÀ 5À À €À ÏÀ À ;À BÀ tÀ ÀÀ ÁÀ ñÀ Ÿ0À Ÿ4À ŸˆÀ Ÿ‰À ŸÁÀ ŸÇÀ  À  VÀ  \À  ªÀ  âÀ  èÀ ¡4À ¡„À ¡­À ¢À ¢À ¢CÀ ¢IÀ ¢™À ¢ØÀ ¢ŞÀ £/À £zÀ £ŠÀ £À £ÜÀ £âÀ £òÀ £øÀ ¤CÀ ¤mÀ ¤£À ¤¤À ¤ÚÀ ¤àÀ ¥À ¥À ¥eÀ ¥kÀ ¥«À ¥êÀ ¦3À ¦oÀ ¦£À ¦ØÀ §À §?À §EÀ §FÀ §œÀ §À §ºÀ §ÛÀ §üÀ ¨5À ¨mÀ ¨vÀ ¨|À ¨À ¨‘À ¨’À ¨çÀ ©$À ©%À ©IÀ ©–À ©šÀ ©şÀ ©ÿÀ ªAÀ ªGÀ ª˜À ª§À ª­À ª½À ªÃÀ «À «>À «wÀ «™À «ÂÀ «òÀ ¬À ¬<À ¬@À ¬AÀ ¬mÀ ¬›À ¬¿À ¬şÀ ­GÀ ­wÀ ­ÄÀ ®À ®[À ®¨À ®©À ®¿À ®ÛÀ ¯À ¯]À ¯›À ¯¦À ¯¯À °À °2À °:À °@À °ZÀ °hÀ °nÀ °¸À ±
+À ±>À ±BÀ ±CÀ ±oÀ ±ŸÀ ± À ±éÀ ±ïÀ ²1À ²7À ²ˆÀ ²³À ²ØÀ ³À ³&À ³*À ³+À ³QÀ ³RÀ ³£À ³ñÀ ´	À ´8À ´9À ´eÀ ´™À ´ìÀ µÀ µ2À µXÀ µ^À µbÀ µcÀ µ³À µÁÀ µÇÀ µöÀ ¶@À ¶AÀ ¶gÀ ¶mÀ ¶¸À ¶ìÀ ¶òÀ ·>À ·MÀ ·SÀ ·cÀ ·iÀ ·´À ·ŞÀ ¸À ¸À ¸jÀ ¸pÀ ¸ÁÀ ¸ĞÀ ¸ÖÀ ¸æÀ ¸ìÀ ¹7À ¹gÀ ¹²À ¹İÀ ºÀ ºHÀ ºrÀ º¤À º¨À º©À ºõÀ ºûÀ »:À »}À »‘À »ßÀ ¼À ¼À ¼`À ¼fÀ ¼´À ½À ½À ½cÀ ½•À ½–À ½ãÀ ¾À ¾À ¾%À ¾+À ¾yÀ ¾’À ¾ÊÀ ¾îÀ ¾ïÀ ¿>À ¿ˆÀ ¿¢À ¿ìÀ ¿íÀ À;À ÀAÀ À’À À¡À À§À À·À À½À ÁÀ Á8À Á‰À Á·À ÁìÀ Â(À ÂUÀ ÂŠÀ ÂÀ ÂÀ ÂÚÀ ÃÀ ÃÀ ÃjÀ ÃpÀ ÃÁÀ ÃĞÀ ÃÖÀ ÃæÀ ÃìÀ Ä7À ÄgÀ Ä´À ÄàÀ ÅÀ ÅMÀ ÅxÀ Å«À Å¯À Å°À ÅÜÀ ÆÀ ÆcÀ Æ{À Æ‰À ÆÀ ÆÀ ÆáÀ Ç0À Ç’À ÇÄÀ ÈÀ ÈÀ ÈHÀ ÈNÀ ÈOÀ È‚À È½À ÈñÀ É=À ÉJÀ É{À ÉÀ É‚À É¡À ÉíÀ ÊÀ ÊFÀ ÊLÀ ÊœÀ Ê½À ÊàÀ Ë<À ËCÀ ËÀ ËÏÀ ÌÀ ÌCÀ Ì‹À ÌíÀ ÍÀ ÍiÀ ÍÎÀ ÍôÀ ÎÀ Î@À ÎdÀ Î‡À Î•À Î›À ÎĞÀ ÎøÀ Ï,À ÏZÀ Ï„À Ï¬À Ï³À ĞÀ Ğ'À ĞFÀ ĞÀ Ğ”À Ğ¹À ÑÀ ÑÀ Ñ0À ÑzÀ Ñ€À Ñ„À Ñ…À ÑÒÀ ÑıÀ ÒÀ ÒPÀ Ò_À ÒŸÀ Ò À ÒïÀ ÒõÀ Ó=À ÓUÀ Ó¢À ÓÎÀ ÔÀ Ô;À ÔfÀ Ô™À ÔÀ ÔÀ ÔÊÀ ÔùÀ ÕBÀ ÕÀ ÕÀ Õ“À ÕãÀ Ö5À Ö}À ÖÀ Ö‚À ÖÎÀ ÖóÀ ÖùÀ ×EÀ ×ŒÀ ×’À ×ÚÀ ×òÀ ØIÀ Ø‚À Ø²À ØùÀ Ù!À ÙQÀ ÙUÀ ÙVÀ Ù‚À Ù­À ÙØÀ ÚÀ ÚÀ ÚÀ ÚSÀ ÚÀ Ú‘À Ú’À ÚÆÀ ÚïÀ ÛÀ ÛÀ ÛhÀ Û§À ÛÌÀ ÛøÀ Ü+À ÜOÀ Ü{À ÜÀ Ü€À Ü¬À İÀ İ&À İDÀ İgÀ İƒÀ İµÀ İÍÀ İåÀ İşÀ ŞÀ ŞÀ ŞÀ ŞÀ Ş.À ŞDÀ ŞEÀ Ş‘À Ş À Ş¦À ŞõÀ ßFÀ ßÀ ß¿À ßÅÀ àÀ àeÀ àµÀ àÄÀ àÊÀ áÀ áiÀ áªÀ áÔÀ áıÀ âÀ â7À â;À â<À âyÀ â•À â©À â¯À âÑÀ âÒÀ ãÀ ã.À ã;À ãGÀ ã§À ã¾À ãïÀ äÀ äÀ äÀ äÀ äÀ äeÀ äuÀ ä{À äÅÀ äËÀ äÜÀ äâÀ äüÀ åoÀ åÀÀ æÀ æZÀ æ À æéÀ çTÀ çZÀ çgÀ çmÀ çƒÀ èÀ è\À è¬À èúÀ é!À é'À é7À é=À érÀ é¼À éáÀ êÀ êÀ êqÀ êŸÀ ê À êñÀ ëÀ ë!À ëqÀ ë¿À ìÀ ì[À ìoÀ ìuÀ ìÇÀ íÀ í^À ídÀ íµÀ îÀ îRÀ îaÀ î“À î¶À îİÀ îŞÀ ï À ïÀ ï%À ï&À ï^À ï”À ï½À ïÿÀ ğSÀ ğYÀ ğeÀ ğÀ ğ×À ğŞÀ ğßÀ ñ7À ñ{À ñ­À ñóÀ ñúÀ ñşÀ ñÿÀ ò=À òcÀ òÀ òĞÀ óÀ ó4À ó€À óœÀ ó¯À óµÀ óúÀ ôÀ ô9À ôSÀ ôYÀ ôZÀ ô¡À ôäÀ õÀ õÀ õ À õ9À õ‹À õ‘À õ©À õ¸À öÀ ö?À ö–À ö¹À ÷À ÷À ÷#À ÷'À ÷(À ÷qÀ ÷ŠÀ ÷À ÷ÖÀ ø"À øpÀ øÂÀ ùÀ ù_À ù¯À ùìÀ ú;À úXÀ ú]À ú­À úıÀ ûNÀ ûÀ ûÕÀ ü:À ü•À ü—À ü˜À üØÀ üÜÀ ı-À ıpÀ ı¹À ıôÀ ıøÀ ş-À ş~À şÍÀ ÿÀ ÿnÀ ÿ¼À ÿÓÀ ÿ×À 6À kÀ oÀ |À €À ŒÀ ¢À ¦À ÉÀ éÀÀqÀ´ÀÅÀÀÀÀÀXÀ^ÀfÀjÀxÀ|ÀºÀ ÀNÀhÀ•À›ÀúÀYÀ¾ÀÄÀÀ+ÀbÀcÀªÀ°ÀşÀNÀ“ÀÕÀüÀÀÀÀXÀmÀnÀ³À¹À	À(À>À?ÀÀ¡À§À·À½À		À	4À	]À	^À	¡À	§À	ñÀ	÷À
+À
+À
+[À
+”À
+•À
+ÆÀÀÀIÀ™À›ÀœÀ÷ÀûÀZÀÄÀåÀÀÀLÀkÀlÀ§ÀúÀşÀÿÀ/À5ÀEÀKÀ‹ÀÒÀÓÀÀÀÀ#ÀcÀ®À¯ÀŞÀäÀôÀúÀ:À€ÀÀ²À¸ÀÈÀÎÀÀVÀWÀ†ÀŒÀœÀ¢ÀâÀ(À)ÀXÀ^ÀnÀtÀ´ÀúÀûÀ&À,À<ÀBÀ‚ÀÄÀÅÀôÀúÀ
+ÀÀPÀ–À—ÀÁÀÇÀ×ÀİÀÀ^À_ÀÀ“À£À©ÀéÀ.À/À\ÀbÀrÀxÀ¸ÀüÀıÀ+À1ÀAÀGÀ‡ÀÌÀÍÀÿÀÀÀÀ[À¤À¥ÀÒÀØÀèÀîÀ.ÀrÀsÀœÀ¢À²À¸ÀøÀ8À9ÀfÀlÀ|À‚ÀÂÀÀÀ8À>ÀNÀTÀ”ÀÜÀİÀÀÀ(À.ÀnÀºÀ»ÀëÀñÀÀÀGÀÀÀ‘À´À¸ÀòÀÀ2ÀuÀÀÀÀğÀÀ5ÀPÀkÀ…À‹ÀŒÀ°ÀâÀ À À CÀ `À {À ™À ·À ÑÀ ØÀ ûÀ!MÀ!ŸÀ!âÀ"+À"kÀ"“À"ÖÀ#À#YÀ#`À#dÀ#eÀ#²À#çÀ#èÀ$8À$FÀ$jÀ$kÀ$¸À$ãÀ%À%À%RÀ%œÀ%¶À%İÀ%ŞÀ&À&$À&%À&eÀ&ƒÀ&„À&ÑÀ&áÀ'À'À'3À'UÀ'VÀ'“À'™À'çÀ(4À(€À(ÉÀ)À)À)`À)±À)ÿÀ*OÀ*™À*ÍÀ*ëÀ*íÀ*îÀ+À+.À+KÀ+lÀ+‡À+¯À+ØÀ,	À,.À,bÀ,—À,¯À,µÀ,¶À,ëÀ-À-(À-)À-XÀ-yÀ-zÀ-´À-ÇÀ-ÈÀ.À.hÀ.¶À.¼À/À/VÀ/vÀ/wÀ/ÆÀ0À0`À0¯À0ÀÀ0ÆÀ1À1aÀ1¡À1§À1öÀ2AÀ2bÀ2cÀ2²À2ÿÀ37À3=À3ˆÀ3ĞÀ4À47À48À4‡À4ÖÀ5!À5pÀ5À5‡À5ÖÀ6!À6>À6?À6‰À6À6ÜÀ7%À7@À7iÀ7jÀ7¯À7µÀ8 À8$À8*À8|À8ÕÀ9)À9{À9ËÀ:À:vÀ:|À:ÄÀ;À;JÀ;xÀ;yÀ;…À;›À;ÃÀ;ÇÀ;ÉÀ;ÊÀ<À<À<ZÀ<lÀ<³À<¹À<åÀ<óÀ<ôÀ=&À=,À=XÀ=fÀ=gÀ=›À=¡À=ÍÀ=ÜÀ=İÀ>À>À>IÀ>XÀ>YÀ>”À>šÀ>ÇÀ>×À>ØÀ? À?&À?sÀ?¨À?ÀÀ?ÂÀ?ÃÀ?ÛÀ@*À@=À@>À@†À@™À@šÀ@êÀ@ÿÀA ÀACÀAXÀAYÀA~ÀAÀAÀAÀAÁÀAÅÀBÀBRÀBŒÀBÔÀC)ÀCBÀCFÀC’ÀCãÀD2ÀDTÀDhÀD«ÀD±ÀDÿÀE=ÀECÀE„ÀEœÀE¹ÀEÖÀEôÀFÀF1ÀFXÀFuÀF’ÀF±ÀFĞÀFêÀFñÀGÀG#ÀG5ÀGHÀG[ÀGoÀG‹ÀG¢ÀG¹ÀGÒÀGëÀGşÀHÀH
+ÀHÀHNÀHTÀH•ÀH°ÀH¶ÀIÀI\ÀIŸÀI ÀIüÀIıÀJMÀJ—ÀJŞÀJßÀK8ÀK9ÀKÀK‘ÀKÉÀKÏÀLÀLmÀLšÀLÒÀLØÀMÀMÀM^ÀM¨ÀM¼ÀMÑÀNÀN?ÀNTÀNtÀNÆÀNÇÀOÀOÀOLÀO€ÀO¡ÀOõÀOöÀPFÀPSÀPsÀPÄÀPÅÀPÿÀQÀQUÀQpÀQ¤ÀQªÀQğÀRÀR_ÀR`ÀR¨ÀR®ÀRıÀSFÀSGÀS–ÀSœÀTÀTKÀTLÀTŸÀT¥ÀUÀUNÀUOÀU™ÀUŸÀUìÀV9ÀV:ÀV‹ÀV‘ÀV÷ÀWDÀWEÀWšÀW ÀXÀXMÀXNÀXŠÀX¯ÀX°ÀY
+ÀYÀY\ÀY]ÀYiÀYÀYÆÀYÿÀZ6ÀZeÀZ“ÀZÁÀZóÀ[%À[LÀ[PÀ[RÀ[SÀ[À[”À[åÀ\'À\YÀ\]À\©À\øÀ]À]À]mÀ]¸À]åÀ^GÀ^‹À^ëÀ_;À_tÀ_xÀ_¯À_ÿÀ`AÀ`pÀ`°À`´ÀaÀa	ÀaSÀaÀaìÀb8Àb<ÀbJÀbNÀbœÀbÇÀcÀc4ÀcPÀcÓÀcèÀdÀdaÀdvÀd•ÀdüÀeÀe*ÀeyÀeÀe•ÀeäÀf8ÀfHÀfNÀf›Àf§Àf­ÀgÀgGÀgSÀgTÀg ÀgñÀh ÀhÀhUÀhÚÀi)ÀivÀi†ÀiçÀjÀj’Àj¿Àk"Àk6Àk<ÀkŠÀkÀk©ÀkªÀkõÀl1Àl7Àl†ÀlÂÀlÈÀmÀmFÀmLÀm£ÀmòÀnCÀn‘Àn­Àn³ÀoÀoÀo€Ào¾Àp#ÀppÀp½ÀqÀq[Àq§ÀqøÀqşÀrJÀrsÀrÀr€ÀrĞÀs ÀspÀs¼ÀsÂÀtÀt^Àt¬ÀtùÀuIÀugÀuqÀurÀuÁÀuÖÀuÜÀv&ÀvsÀv„ÀvŠÀv¿ÀvÉÀvËÀvÌÀwÀwÀwaÀw­ÀwèÀwÿÀx*Àx2Àx3ÀxgÀxqÀxsÀxtÀx­ÀxÔÀxçÀy4ÀyÀyÈÀzÀziÀzwÀzxÀzÃÀzûÀ{À{QÀ{¢À{òÀ|BÀ|QÀ|]À|_À|`À|­À|ûÀ}GÀ}’À}§À}«À}ùÀ~À~À~#À~'À~qÀ~ À~ğÀ>ÀSÀgÀÀ—À®ÀÇÀáÀçÀèÀ€?À€TÀ€UÀ€«À€¿À€ÀÀÀ.À/ÀˆÀŸÀ ÀÓÀ‚2À‚3À‚?À‚UÀ‚§À‚«À‚­À‚®À‚îÀ‚òÀƒÀƒÀƒ<ÀƒtÀƒvÀƒ›ÀƒœÀƒÑÀƒÕÀ„$À„VÀ„ZÀ„‰À„»À„¿À„üÀ… À…;À…xÀ…|À…¹À…½À†À†$À†<À†wÀ†‘À†ªÀ†ÏÀ†éÀ‡À‡À‡À‡_À‡‚À‡ŸÀ‡¼À‡ÛÀ‡úÀ‡ûÀˆ3ÀˆLÀˆMÀˆ…Àˆ‹Àˆ­ÀˆÆÀˆÇÀ‰ À‰À‰À‰TÀ‰ZÀ‰|À‰–À‰—À‰ÏÀ‰ñÀŠÀŠ<ÀŠbÀŠ†ÀŠŠÀŠ‹ÀŠÓÀ‹À‹À‹eÀ‹“À‹¯À‹ÒÀ‹õÀŒÀŒ?ÀŒFÀŒJÀŒKÀŒWÀŒzÀŒœÀŒ¯ÀŒµÀŒáÀŒõÀŒûÀ"ÀHÀnÀ–À¼ÀÀÀÁÀÍÀÀÀ'À=À„À­À³ÀÌÀóÀÀ5ÀdÀjÀ¤À¼ÀíÀõÀ@ÀFÀGÀƒÀÂÀñÀõÀ÷ÀøÀ‘>À‘BÀ‘iÀ‘mÀ‘¾À’À’bÀ’fÀ’¼À“#À“QÀ“UÀ“ÙÀ“İÀ”_À”cÀ”éÀ”íÀ•:À•‰À•ØÀ–&À–qÀ–ˆÀ–õÀ—À—qÀ—À—¶À—ñÀ—úÀ—ûÀ˜\À˜bÀ˜µÀ™À™bÀ™™À™ŸÀ™ÜÀ™âÀš,ÀšzÀšÀšÀšÉÀšêÀšëÀ›;À›AÀ›zÀ›À›À›ªÀ›ÍÀ›ïÀœÀœÀœ4ÀœHÀœNÀœtÀœ–Àœ´ÀœÒÀœÖÀœ×ÀœãÀÀÀ(À>À†ÀŠÀŒÀÀÜÀúÀşÀIÀ—ÀÖÀŸÀŸÀŸ`ÀŸ§ÀŸşÀ )À -À ±À µÀ¡7À¡;À¡ÁÀ¡ÛÀ¢À¢'À¢(À¢dÀ¢jÀ¢ÄÀ¢ÌÀ¢ÍÀ£À£'À£(À£wÀ£À£ƒÀ£„À£ÓÀ£îÀ£òÀ¤;À¤{À¤ÕÀ¤ÙÀ¥*À¥=À¥‡À¥°À¥ËÀ¦À¦?À¦JÀ¦KÀ¦yÀ¦À¦½À¦ÌÀ¦ÍÀ§À§$À§tÀ§ÁÀ§ÖÀ§ØÀ§ÙÀ¨(À¨,À¨TÀ¨§À¨ğÀ¨ôÀ©DÀ©^À©ÁÀªÀª[ÀªŒÀªÀªÀª¢ÀªöÀ«À«À«SÀ«‘À«¹À«¿À«ÒÀ«ØÀ«æÀ¬À¬SÀ¬]À¬cÀ¬¬À¬ùÀ­7À­=À­‡À­ºÀ®À®zÀ®ÉÀ¯À¯OÀ¯¤À¯¹À¯¿À°	À°À°#À°3À°9À°À°“À°ËÀ°îÀ±À±À±+À±1À±pÀ±vÀ±ÇÀ±èÀ²HÀ²§À³À³KÀ³QÀ³ À³îÀ´2À´8À´…À´ØÀ´ŞÀµ(Àµ<ÀµœÀµ¾ÀµâÀ¶À¶#À¶EÀ¶FÀ¶xÀ¶~À¶ÆÀ¶ÌÀ·À·|À·ÌÀ·êÀ·ğÀ¸@À¸„À¸ÎÀ¹À¹BÀ¹HÀ¹–À¹©ÀºÀº
+ÀºÀº ÀºlÀº‡ÀºâÀ» À»À»?À»†À»ÚÀ¼À¼@À¼rÀ¼¥À¼ãÀ½À½HÀ½€À½¸À½ñÀ¾(À¾^À¾”À¾ÏÀ¿À¿8À¿tÀ¿¨À¿ÜÀÀÀÀRÀÀÀÀÂÀÀòÀÁ%ÀÁWÀÁ‰ÀÁºÀÁîÀÂ0ÀÂgÀÂ˜ÀÂØÀÃÀÃ>ÀÃrÀÃ®ÀÃéÀÄÀÄPÀÄ€ÀÄ¾ÀÄñÀÅ,ÀÅaÀÅ•ÀÅÇÀÅşÀÆ1ÀÆdÀÆ™ÀÆÔÀÇÀÇ5ÀÇhÀÇŸÀÇÑÀÈÀÈ<ÀÈvÀÈ¦ÀÈÙÀÉÀÉDÀÉyÀÉ´ÀÉêÀÊ*ÀÊ\ÀÊ—ÀÊËÀËÀË4ÀËhÀË›ÀËÛÀÌÀÌ<ÀÌAÀÌBÀÌjÀÌpÀÌ½ÀÌÃÀÍÀÍ6ÀÍÀÍ•ÀÍ¥ÀÍ«ÀÍ÷ÀÎÀÎ.ÀÎ/ÀÎWÀÎ]ÀÎªÀÎ°ÀÎüÀÏ`ÀÏ®ÀÏÌÀÏÒÀĞ ÀĞqÀĞºÀÑ
+ÀÑ-ÀÑ3ÀÑCÀÑIÀÑ•ÀÑ°ÀÒÀÒ%ÀÒ&ÀÒdÀÒ«ÀÒıÀÓ-ÀÓrÀÓ°ÀÓåÀÔ ÀÔPÀÔUÀÔVÀÔbÀÔ…ÀÔ§ÀÔºÀÔÀÀÔÜÀÔğÀÔöÀÕ'ÀÕ_ÀÕÀÕ¬ÀÕŞÀÕíÀÖÀÖIÀÖ\ÀÖ»À×À×À×À×*À×À×À×°À×ÖÀ××ÀØÀØÀØYÀØ©ÀØñÀÙÀÙÀÙ#ÀÙNÀÙjÀÙ™ÀÙŸÀÙÀÀÙÄÀÙÅÀÚ
+ÀÚÀÚZÀÚ¥ÀÚ´ÀÚãÀÚäÀÛÀÛGÀÛÀÛ©ÀÛ¯ÀÛİÀÜÀÜHÀÜNÀÜiÀÜmÀÜoÀÜpÀÜ·ÀÜ»ÀİÀİxÀİ“ÀİÊÀİÖÀİ×ÀŞ(ÀŞtÀŞÂÀŞàÀŞëÀŞìÀß>Àß‡Àß•Àß–ÀßèÀà
+ÀàÀàÀàÀàdÀàµÀàÆÀàÊÀáÀáÀáFÀáeÀá}Àá—Àá±ÀáÅÀáËÀáÌÀáöÀâÀâÀâeÀâ|ÀâÀâ‘ÀâİÀâñÀâòÀãÀã6Àã7ÀãpÀãqÀãÁÀãÑÀãóÀäÀäÀä0Àä`ÀägÀäˆÀä§ÀäÌÀäñÀåDÀåKÀåOÀåQÀåRÀåŒÀåÜÀåİÀæ'Àæ+ÀæÀæÀæ¬ÀæÏÀç-Àç.ÀçqÀç…Àç†Àç¨ÀçÆÀçÇÀçíÀèÀèÀè Àè6ÀèŠÀèÀèÀè‘ÀèÊÀèÎÀé$Àé(Àé~Àé‚Àé«Àé¯ÀéíÀê+Àê/Àê=ÀêAÀêƒÀêÚÀêğÀë*Àë7Àë8ÀëhÀësÀëuÀëvÀëÊÀëÎÀëÜÀëàÀì5ÀìŒÀì¦ÀìåÀìëÀí=ÀíWÀídÀíeÀí°Àí¶ÀíïÀíúÀíûÀîGÀîMÀîÀîšÀîœ  dart.ui€¬ _kUnsetGestureSetting_kFlutterKeyDataChannel_wrapUnmodifiableByteDataRootIsolateTokenPlatformDispatcherSystemColorSystemColorPalette_PlatformConfiguration_ViewConfiguration
+FramePhase_FrameTimingInfoFrameTimingAppLifecycleStateAppExitResponseAppExitTypeViewPaddingViewConstraintsDisplayFeatureDisplayFeatureTypeDisplayFeatureStateLocaleDartPerformanceModeSemanticsActionEventViewFocusEventViewFocusStateViewFocusDirectiondart.ui.TimingsCallback.list‚The callback takes a list of [FrameTiming] because it may not be
+immediately triggered after each frame. Instead, Flutter tries to batch
+frames together and send all their timings at once to decrease the
+overhead (as this is available in the release mode). The list is sorted in
+ascending order of time (earliest frame first). The timing of any frame
+will be sent within about 1 second (100ms if in the profile/debug mode)
+even if there are no later frames to batch. The timing of the first frame
+will be sent immediately without batching./dart.ui.FrameTiming.fps_smoothness_millisecondsQTo ensure smooth animations of X fps, this should not exceed 1000/X
+milliseconds.$dart.ui.FrameTiming.fps_milliseconds0That's about 16ms for 60fps, and 8ms for 120fps. Ü

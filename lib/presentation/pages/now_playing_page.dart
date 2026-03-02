@@ -85,8 +85,8 @@ class _NowPlayingPageState extends ConsumerState<NowPlayingPage> {
                 _ProgressBar(
                   currentTime: current.offset,
                   totalTime: current.duration,
-                  // 🔧 只有当歌曲名为空时才禁用进度条，避免加载过程中无法操作
-                  disabled: current.curMusic.isEmpty,
+                  // 🔧 只有当歌曲名为空时或设备不支持 seek 时才禁用进度条
+                  disabled: current.curMusic.isEmpty || !playback.seekEnabled,
                   isLocalMode: playback.isLocalMode, // 🎵 传递播放模式信息
                 )
               else

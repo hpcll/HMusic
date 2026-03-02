@@ -1,0 +1,557 @@
+Ä´	childSizechildPaintTransformoverlaySizebuilderopaque_opaquemaintainState_maintainStatecanSizeOverlaymounted_overlayEntryStateNotifieraddListenerremoveListener_overlay_keyremovemarkNeedsBuild_didUnmount_disposedByOwnerdisposetoStringentryoverlayStatetickerEnabledcreateState_theater_sortedTheaterSiblings_add_remove_paintOrderIterable_hitTestOrderIterable_createChildIterable	initStatedidUpdateWidgetbuild_markNeedsBuildwrapinitialEntriesclipBehaviorofmaybeOf_entries_insertionIndex_debugCanInsertEntryinsert	insertAll_debugVerifyInsertPosition	rearrange
+_markDirtydebugIsVisible_didChangeEntryOpacitydebugFillPropertieschild_entry	skipCountcreateElementcreateRenderObjectupdateRenderObjectrenderObjectinsertRenderObjectChildmoveRenderObjectChilddebugVisitOnstageChildrentheater_childrenInPaintOrder_childrenInHitTestOrdersetupParentDatacomputeDistanceToActualBaselinebaselineForChildlayoutChildhitTestChildrenpaintoverlayEntrypaintOrderIteratorhitTestOrderIterator(visitOverlayPortalChildrenOnOverlayEntryattach_detachChilddetachredepthChildren_alignmentCache_resolvedAlignment_markNeedResolutiontextDirection_textDirection
+_skipCount_clipBehavior_skipMarkNeedsLayout_addDeferredChild_removeDeferredChildmarkNeedsLayout_firstOnstageChild_lastOnstageChildcomputeMinIntrinsicWidthcomputeMaxIntrinsicWidthcomputeMinIntrinsicHeightcomputeMaxIntrinsicHeightcomputeDryBaselinecomputeDryLayoutsizedByParent_layingOutSizeDeterminingChildperformLayout_findSizeDeterminingChild_clipRectLayervisitChildrenvisitChildrenForSemanticsdescribeApproximatePaintClipdebugDescribeChildren_attachTarget_zOrderIndex_debugLabel	_wallTime_nowshowhide	isShowingtoggle
+controlleroverlayChildBuilder_targetRootOverlay_childModelMayHaveChanged_locationCache_isTheSameLocation_getLocation_setupControllerdidChangeDependenciesactivate_childModel_overlayChildRenderBox_addToChildModel_removeFromChildModel	_addChild_removeChild
+_moveChild	_activate_deactivate_debugIsLocationValid#_debugMarkLocationInvalidStackTrace_debugMarkLocationInvalidoverlayEntryWidgetStateupdateShouldNotify_rootRenderTheaterMarkerOfoverlayChildoverlayLocation_overlayChild_childmountupdateforgetChild
+deactivateremoveRenderObjectChildgetLayoutParentstackParentData_layoutSurrogateneedsLayout_needsLayoutsemanticsParentdebugLayoutParent_doingLayoutFromTreeWalk_doLayoutFromlayoutperformResize_debugMutationsLockedapplyPaintTransform_deferredLayoutChild
+layoutInfo_layoutInfo_computeNewLayoutInfolayoutCallback_callbackId_speculativeLayoutErrorMessage_frameCallbackOverlayChildLayoutBuilderOverlayChildLayoutInfoOverlayEntry_OverlayEntryWidget_OverlayEntryWidgetStateOverlayOverlayState_WrappingOverlay_WrappingOverlayState_Theater_TheaterElement_RenderTheaterMixin_TheaterParentData_RenderTheaterOverlayPortalControllerOverlayPortal_OverlayPortalState_OverlayEntryLocation_RenderTheaterMarker_OverlayPortal_OverlayPortalElement_DeferredLayout_RenderDeferredLayoutBox_RenderLayoutSurrogateProxyBox_OverlayChildLayoutBuilder_RenderLayoutBuilderÅioverlayChildLayoutBuilderWidgetBuildContextSizeMatrix4child_info$1$2$3insert	insertAllofStack
+PositionedAnimatedPositioned	DraggableStatesetState
+Listenable
+WidgetsAppMaterialAppbooldebugMaybeDispatchCreatedWidgetBuilder_didChangeEntryOpacity	NavigatorRouteFutureBoxConstraintsvalueValueNotifieroverridevoidVoidCallbackaddListenerremoveListener	GlobalKeymounted_entriesremoveSchedulerBindinginstanceschedulerPhaseSchedulerPhasepersistentCallbacksaddPostFrameCallbackDuration
+_markDirty
+debugLabelcurrentState_markNeedsBuilddisposedebugMaybeDispatchDisposedStringdescribeIdentityStatefulWidgetKey
+LinkedListcontainsisEmptylast_zOrderIndexpreviousaddFirstinsertAfterIterablereversedfirst_overlayChildRenderBoxnext	initStatewidgetentry_overlayEntryStateNotifiercontextfindAncestorRenderObjectOfTypedidUpdateWidgetoverlayState_didUnmount
+TickerModeenabledtickerEnabledtheateroverlayEntryWidgetStatebuilderCupertinoAppDirectionalitydirectional
+MediaQuerysizeOfNavigationBarCliphardEdgekeyclipBehaviorListLookupBoundarymaybeOfrootOverlay debugIsHidingAncestorStateOfTypeDiagnosticsNodeErrorSummaryErrorDescriptiondebugRequiredForruntimeType	ErrorHintDiagnosticsPropertystyleDiagnosticsTreeStyleerrorPropertydescribeElementFlutterError	fromPartsfindRootAncestorStateOfTypefindAncestorStateOfTypeTickerProviderStateMixin	protectedinitialEntriesintindexOflength_overlay	identicalabovebelowevery
+newEntriestoListgrowablelastIndexOf
+listEqualsLinkedHashSetclearaddAll	removeAlliopaqueadd_keymaintainState	skipCountchildrenDiagnosticPropertiesBuilderdebugFillPropertiescanSizeOverlaymarkNeedsBuildMultiChildRenderObjectWidgettextDirectionIntPropertyMultiChildRenderObjectElementrenderObject	RenderBoxIndexedSlotElementinsertRenderObjectChild
+parentDataoverlayEntryindexmoveRenderObjectChildElementVisitorskipforEachStackParentDatadoubleTextBaselinedebugNeedsLayoutBaselineOffset
+noBaseline_childrenInPaintOrderminOfgetDistanceToActualBaselineoffsetdy	AlignmentisPositionedpositionedChildConstraintsgetDryBaselinetopheightbottomgetDryLayoutalongOffsetOffset_resolvedAlignmentlayoutparentUsesSizezeroRenderStacklayoutPositionedChildsizeBoxHitTestResultIterator_childrenInHitTestOrderiteratormoveNextcurrenthitTestpositionaddWithPaintOffsetPaintingContext
+paintChild
+ModalRoute_paintOrderIterable_hitTestOrderIterableRenderObjectVisitorContainerRenderObjectMixinTextDirectionPipelineOwnerattach
+firstChildpaintOrderIteratornextSiblingRenderObjectdetach(visitOverlayPortalChildrenOnOverlayEntryredepthChildAlignmentDirectionaltopStartresolvemarkNeedsPaintmarkNeedsSemanticsUpdate
+adoptChild_layoutSurrogatemarkNeedsLayout	dropChild
+childCounttoSkip	lastChildgetIntrinsicDimensiongetMinIntrinsicWidthgetMaxIntrinsicWidthgetMinIntrinsicHeightgetMaxIntrinsicHeightbiggestisFinitetightbaselineForChildhitTestOrderIteratorpreviousSiblingconstraintslayoutChildLayerHandleClipRectLayernonelayerpushClipRectneedsCompositingpaintoldLayerRect	antiAliasantiAliasWithSaveLayerEnumPropertytoDiagnosticsNodenameoffstage
+isNotEmptymessageshowhidekIsWebobjectRuntimeTypeInheritedWidgetThemeDefaultTextStyle	TextStyleListView	KeepAliveoverlayChildBuilderCompositedTransformFollowerCompositedTransformTarget
+controller_childModel_theatertargetRootOverlay_debugIsLocationValid_debugMarkLocationInvalid_attachTargetStatefulElementdebugIsActivedidChangeDependencies_targetRootOverlayactivateoverlayLocationoverlayChildBuilderLinkedListEntry_addmarkNeedsCompositingBitsUpdate_sortedTheaterSiblings_remove_addDeferredChildparent_removeDeferredChild_removeFromChildModel
+StateError
+StackTracemustCallSuper	shortHashInheritedElement'getElementForInheritedWidgetOfExactTypedependOnInheritedElement"dependOnInheritedWidgetOfExactTypedescribeMissingAncestorexpectedAncestorTypevisitAncestorElementselementRenderObjectWidgetRenderObjectElementObjectmountupdateChildupdateforgetChildattached_deferredLayoutChildslot	_activate_deactivate
+deactivate	_addChild
+_moveChild_removeChilddefaultValueSingleChildRenderObjectWidgetRenderProxyBoxemptygenerateredepthChildrenConstraintsinvokeLayoutCallbackisTightBoxParentDatatranslateByDoubledxperformLayout_layingOutSizeDeterminingChild_doLayoutFromvisitChildrenForSemanticsAbstractLayoutBuilder RenderAbstractLayoutBuilderMixin#RenderObjectWithLayoutCallbackMixinnodeRenderFollowerLayerdescribeForErrordepthhasSizegetTransformTo
+isIdentity_visibleForOverridinglayoutCallbackrunLayoutCallbackscheduleFrameCallbackscheduleNewFramedebugCannotComputeDryLayoutreasondebugDisposedcancelFrameCallbackWithId
+callbackId
+ListenableStatefulWidgetStateTickerProviderStateMixinMultiChildRenderObjectWidgetMultiChildRenderObjectElement	RenderBoxStackParentDataContainerRenderObjectMixin_RenderTheaterMixinLinkedListEntryInheritedWidgetRenderObjectWidgetRenderObjectElementSingleChildRenderObjectWidgetRenderProxyBoxAbstractLayoutBuilder#RenderObjectWithLayoutCallbackMixin RenderAbstractLayoutBuilderMixinÒ5,[,83íÿ ¶ÿîo‡  	  Ç=   dart:collection  ÇX   package:flutter/foundation.dart  ÇÇ   package:flutter/rendering.dart  Ç´   package:flutter/scheduler.dart  Ç’   
+basic.dart  ÇÍ   framework.dart  É   layout_builder.dart  É!   lookup_boundary.dart  É@   ticker_provider.dart¿ ∞ ¿ì&äÓ <ÄÜÄ§Ä•Ä÷ÅÅ
+Å%ÅHÅsÅñÅ∑Å’Å¯ÇÇ2Ç;Ç<ÇVÇWÇÅÇ™Ç”Ç‘ÇÈÉÉ É?É^É_ÉòÉ«ÉÎÑ3Ñ4ÑkÑ£ÑÃÖÖÖXÖzÖ{Ö…Ö‹ÜÜÜKÜoÜqÜrÜäÜ®Ü©Ü ÜÀáááCáêáﬂáÌáÒàBàâàçà’â!â.â2âÉâ‘ä ädä¥ã ãLãôã®ã¨ã¸åMåôåÈç:çâç÷ç⁄é&éqéæèè[èßè´è‰èËèˆè˙êCênê∂êÓë<ëmëºë˚í&íFíLíñí„ìì%ì@ìYìyìöì≥ì€î#î'î(îyîïîõîÈî˛ïïïTïZï®ïˆñññ/ñJñiñÖñìñôñÆñ÷ñ⁄ñ€ó*óIóOó°óÙòBòîòÁô8ôáôçô›ö+öuö°ö∏ö⁄ö˘õõ*õ0õLõjõíõñõóõ‡õÒõ˜ú?úéúﬂù+ùwùªû
+û[ûaû≤û û–ü"üRüoüpü∫ü¿†	†J†K†£†Ï°"°#°/°[°z°±°µ°∂°¬°Ò¢+¢/¢0¢J¢§¢•¢œ¢’¢¸££Q£†£Ó§;§å§«§Ÿ§˜••B•W•s•Å•á•à•´¶¶P¶n¶û¶´¶«¶Õ¶—¶“ßßßgßÅß†ß ßŒßœßÊß¸®®E®n®t®x®y®ö®õ®’®€©$©F©L©ö©Ï™:™à™î™ö™Ÿ™Ï´´´/´â´ê´æ´€´Ô¨<¨Ö¨ô¨∆¨Ô¨ı¨˘¨˙≠≠≠ó≠ô≠ö≠Õ≠ÎÆÆ Æ@Æ_ÆeÆfÆÇÆ•Æ¡Æ¬ÆŒØØØØ]Ø}Ø~Øœ∞∞o∞∫∞ﬂ∞‰±9±ä±ÿ≤*≤o≤Ø≤Ï≤Ì≥;≥â≥—≥¸¥¥c¥ê¥∑µµeµïµõµΩµ›µÍ∂∂∂?∂C∂D∂r∂û∂Ô∑∑∑∑a∑§∑©∑Ù∏B∏ã∏”π/πDπIπãπ◊∫5∫I∫N∫O∫û∫’ª1ªÅª±ªøª≈ºº7ºãºÕºÏΩΩΩΩΩΩ$Ω9ΩPΩãΩ’æææææJæpæ¡øø@øyø‹¿ @¿ @¿ @%¿ @)¿ @*¿ @6¿ @I¿ @Ñ¿ @§¿ @«¿ @‹¿ @‡¿ @·¿ @Ì¿ A¿ A+¿ AP¿ As¿ Aé¿ Aµ¿ A„¿ AÏ¿ AÛ¿ A˜¿ A¯¿ B¿ B%¿ BZ¿ Bb¿ Bf¿ Bh¿ Bi¿ B£¿ Bß¿ BÙ¿ CC¿ Cç¿ C©¿ C≠¿ C¸¿ DJ¿ Dë¿ DØ¿ D≥¿ D˛¿ EN¿ Eù¿ EÓ¿ EÚ¿ F@¿ F¿ F¶¿ F™¿ F˘¿ GH¿ Gb¿ Gf¿ Gz¿ GÀ¿ G‹¿ G‡¿ H&¿ H6¿ H:¿ HH¿ HL¿ Hû¿ HÎ¿ IB¿ Iö¿ IÛ¿ J8¿ J_¿ Jy¿ J¿ Jœ¿ JÙ¿ J˙¿ KD¿ Kç¿ K∂¿ K»¿ K◊¿ L	¿ L0¿ L6¿ L7¿ LÜ¿ L∆¿ LÃ¿ M¿ Mh¿ Mõ¿ M¯¿ NI¿ NM¿ NN¿ NÖ¿ Nã¿ N‹¿ O-¿ O_¿ Oe¿ O´¿ O˚¿ P4¿ P{¿ Põ¿ P°¿ PË¿ Q¿ Q¿ QJ¿ QP¿ Qs¿ Qé¿ Qè¿ Q›¿ R.¿ RT¿ RZ¿ R•¿ Rˆ¿ SE¿ Sè¿ S‡¿ T,¿ T;¿ TA¿ Td¿ Tj¿ Tx¿ T™¿ T¥¿ T∫¿ U	¿ UX¿ UÖ¿ Uã¿ UÀ¿ U—¿ U·¿ UÁ¿ V0¿ VP¿ Vj¿ VÜ¿ V§¿ V¬¿ V…¿ W¿ W&¿ WB¿ Wß¿ W∫¿ W≈¿ X
+¿ X"¿ Xâ¿ Xñ¿ X∂¿ X‘¿ Y0¿ Y?¿ Y[¿ Y◊¿ Y‰¿ Y˘¿ Zî¿ Z°¿ Z…¿ ZÚ¿ [:¿ [Z¿ [ì¿ [¢¿ [‘¿ [˘¿ \N¿ \]¿ \h¿ \i¿ \ú¿ \§¿ \∑¿ \¡¿ \’¿ \Ÿ¿ \⁄¿ ](¿ ]m¿ ]s¿ ]ñ¿ ]ú¿ ]™¿ ]‚¿ ]Ï¿ ]Ú¿ ^A¿ ^ê¿ ^Ω¿ ^√¿ _¿ _	¿ _¿ _¿ _o¿ _°¿ _¢¿ _ı¿ `¿ `X¿ `°¿ `•¿ `¶¿ `≤¿ `‚¿ `‰¿ `Â¿ a¿ a¿ a[¿ av¿ a¿¿ a¯¿ a˘¿ b¿ b¿ b'¿ b>¿ bd¿ bh¿ bi¿ b´¿ b◊¿ b¿ c¿ c¿ c5¿ c_¿ ce¿ cÅ¿ cÖ¿ cÜ¿ c∏¿ d¿ d*¿ dJ¿ dY¿ då¿ dï¿ dæ¿ e¿ e¿ eC¿ eL¿ eS¿ eT¿ eh¿ eû¿ e˚¿ f¿ f%¿ f+¿ f,¿ fe¿ f•¿ f¶¿ f∆¿ g¿ gJ¿ g°¿ g¡¿ gÁ¿ h/¿ h<¿ hQ¿ h∏¿ i¿ i#¿ iI¿ iv¿ i¨¿ i»¿ iˇ¿ j¿ j¿ j¿ j¿ j?¿ jR¿ jX¿ jY¿ jç¿ j„¿ k¿ k*¿ k\¿ kt¿ kß¿ k∞¿ k¡¿ l$¿ l~¿ lá¿ lè¿ lì¿ lî¿ l√¿ l…¿ m¿ mY¿ mà¿ mé¿ m»¿ n¿ nN¿ nw¿ ní¿ n§¿ n·¿ nÈ¿ nÌ¿ nÓ¿ o"¿ o(¿ os¿ oæ¿ o¿ oˆ¿ p0¿ pè¿ p≈¿ pˆ¿ q¿ q¿ q%¿ qU¿ q{¿ qò¿ qû¿ q∞¿ qÚ¿ q˙¿ q˛¿ qˇ¿ r"¿ r;¿ rV¿ r~¿ rÖ¿ rÊ¿ rÚ¿ s	¿ s.¿ sX¿ sé¿ t¿ t¿ t)¿ t@¿ te¿ tè¿ t≈¿ uM¿ uT¿ ue¿ ui¿ uj¿ u∏¿ u„¿ uÈ¿ v8¿ vV¿ v\¿ vß¿ vˆ¿ w=¿ wz¿ wÄ¿ w ¿ x¿ x_¿ xl¿ xr¿ x¨¿ y¿ y]¿ yr¿ y†¿ yÚ¿ y˛¿ z¿ zl¿ zu¿ zÀ¿ z“¿ zﬁ¿ z˙¿ {R¿ {[¿ {ß¿ {Æ¿ {–¿ {ﬁ¿ {‰¿ |¿ |"¿ |(¿ |~¿ |µ¿ |‘¿ |⁄¿ |Ï¿ }¿ }+¿ }P¿ }é¿ }ñ¿ }ö¿ }õ¿ }±¿ }ƒ¿ }€¿ }·¿ }Â¿ }Ê¿ ~5¿ ~J¿ ~P¿ ~û¿ ~Î¿ /¿ [¿ t¿ ö¿ ™¿ „¿ Ä¿ Ä9¿ ÄR¿ Äc¿ Äm¿ Äç¿ Äû¿ Ä®¿ Ä∞¿ Ä√¿ ÄÕ¿ Ä‡¿ Ä‰¿ ÄÂ¿ Å¿ Å¿ Åh¿ Åà¿ Åê¿ Åî¿ Åï¿ Å¢¿ ÅÆ¿ Å’¿ Ç¿ Ç9¿ ÇÅ¿ Çö¿ Ç¥¿ ÇÓ¿ É¿ É¿ É|¿ Éò¿ É≥¿ ÉΩ¿ ÉÂ¿ É˚¿ Ñ¿ Ñ7¿ ÑW¿ Ñq¿ Ñì¿ Ñ†¿ Ñ´¿ Ñ≥¿ Ñπ¿ ÑŒ¿ Ñˇ¿ Ö(¿ Öc¿ Öj¿ Ön¿ Öo¿ Ö|¿ Öà¿ ÖÕ¿ Ö¯¿ Ü8¿ Ü~¿ Ü–¿ Ü‘¿ Ü÷¿ Ü◊¿ á¿ áf¿ ág¿ áÇ¿ áò¿ áô¿ á•¿ áÈ¿ áÎ¿ áÏ¿ à*¿ à[¿ àu¿ àá¿ à≠¿ à»¿ àœ¿ à‘¿ à’¿ à·¿ â¿ â<¿ âY¿ â]¿ â^¿ âj¿ â}¿ âà¿ âô¿ â¨¿ â¡¿ â≈¿ â∆¿ â“¿ â˘¿ äX¿ ä\¿ ä^¿ ä_¿ ä™¿ äƒ¿ ä»¿ ã¿ ã<¿ ãO¿ ãg¿ ãé¿ ã≈¿ ã‰¿ å¿ å¿ å)¿ å*¿ åE¿ åF¿ åR¿ åé¿ åè¿ åõ¿ å◊¿ åÚ¿ ç¿ ç?¿ ça¿ çh¿ çl¿ çm¿ çy¿ ç»¿ çŸ¿ ç˜¿ é*¿ éO¿ éS¿ éT¿ é`¿ é•¿ é–¿ è	¿ è¿ è¿ è¿ èN¿ èx¿ èy¿ èÖ¿ è–¿ è—¿ è›¿ ê+¿ ê[¿ êÆ¿ êÃ¿ ë¿ ëK¿ ëO¿ ëP¿ ë\¿ ëz¿ ëè¿ ë≤¿ ë’¿ ë€¿ í¿ í%¿ íz¿ í§¿ í˚¿ ì4¿ ìG¿ ìQ¿ ìU¿ ìV¿ ìb¿ ìù¿ ìŒ¿ î ¿ î7¿ î;¿ î=¿ î>¿ îå¿ î—¿ î˙¿ ï¿ ï¿ ïH¿ ïy¿ ïz¿ ïÜ¿ ï∞¿ ï‡¿ ñ¿ ñ¿ ñ¿ ñ¿ ñ#¿ ñf¿ ñÖ¿ ñƒ¿ ó¿ ó(¿ ó|¿ ó©¿ ò
+¿ ò¿ ò¿ ò;¿ ò?¿ ò@¿ òc¿ òx¿ òé¿ ò¿¿ òŸ¿ òÙ¿ ò˙¿ ôL¿ ôï¿ ô◊¿ ö ¿ öU¿ öw¿ öä¿ öê¿ ö¿¿ öÚ¿ õ"¿ õu¿ õê¿ õ¿ õ˜¿ ú¿ ú¿ ú¿ úo¿ ú¡¿ ú˝¿ ù&¿ ùo¿ ùõ¿ ù®¿ ù∂¿ ù‚¿ û-¿ û6¿ ûà¿ ûé¿ ûø¿ û√¿ ûƒ¿ û–¿ ü¿ ük¿ üÉ¿ üØ¿ üﬂ¿ †3¿ †]¿ †¢¿ †‹¿ °¿ °-¿ °I¿ °h¿ °q¿ °w¿ °â¿ °ç¿ °é¿ °ö¿ °—¿ ¢¿ ¢b¿ ¢§¿ ¢™¿ ¢Æ¿ ¢∞¿ ¢±¿ ¢‰¿ £3¿ £g¿ £Ö¿ £Ü¿ £‘¿ §$¿ §n¿ §æ¿ •¿ •H¿ •N¿ •ö¿ •Î¿ •˛¿ •ˇ¿ ¶N¿ ¶ü¿ ¶¡¿ ß¿ ßV¿ ßò¿ ßÔ¿ ß¿ ®5¿ ®Q¿ ®°¿ ®˛¿ © ¿ ©¿ ©(¿ ©¿ ©í¿ ©±¿ ©€¿ ©Ú¿ ™¿ ™8¿ ™_¿ ™~¿ ™§¿ ™∫¿ ™æ¿ ™ø¿ ™À¿ ™Ò¿ ™Ú¿ ™˛¿ ´(¿ ´[¿ ´ä¿ ´ê¿ ´î¿ ´ï¿ ´°¿ ´∆¿ ´ﬂ¿ ¨¿ ¨¿ ¨x¿ ¨»¿ ¨Ê¿ ≠¿ ≠6¿ ≠@¿ ≠H¿ ≠s¿ ≠y¿ ≠}¿ ≠~¿ ≠¿¿ ≠¡¿ ≠Õ¿ ≠ﬂ¿ ≠Û¿ Æ¿ Æ2¿ Æå¿ Æ⁄¿ Ø¿ Ø¿ Ø¿ Ø¿ Ø¿ ØU¿ ØV¿ Øt¿ Øö¿ ØÍ¿ ØÎ¿ ∞
+¿ ∞&¿ ∞=¿ ∞A¿ ∞B¿ ∞w¿ ∞ó¿ ∞¬¿ ∞Â¿ ∞Û¿ ∞˘¿ ±¿ ±0¿ ±4¿ ±5¿ ±X¿ ±j¿ ±á¿ ±¶¿ ±¿¿ ±Ÿ¿ ±ﬂ¿ ±„¿ ±‰¿ ≤¿ ≤ ¿ ≤C¿ ≤m¿ ≤ì¿ ≤¥¿ ≤÷¿ ≤Û¿ ≥¿ ≥-¿ ≥3¿ ≥7¿ ≥8¿ ≥ä¿ ≥⁄¿ ≥Ë¿ ≥Ì¿ ¥;¿ ¥`¿ ¥õ¿ ¥æ¿ ¥ﬂ¿ ¥ˆ¿ µH¿ µô¿ µ’¿ µÎ¿ ∂¿ ∂¿ ∂^¿ ∂∞¿ ∂˛¿ ∑4¿ ∑b¿ ∑f¿ ∑g¿ ∑•¿ ∑»¿ ∑È¿ ∑ˇ¿ ∏O¿ ∏z¿ ∏ê¿ ∏≤¿ ∏∂¿ ∏∑¿ ∏√¿ ∏ﬁ¿ ∏ˇ¿ π¿ π$¿ π(¿ π)¿ πO¿ πx¿ πã¿ πë¿ π∫¿ πÛ¿ ∫H¿ ∫s¿ ∫ê¿ ∫ñ¿ ∫®¿ ∫¨¿ ∫≠¿ ª¿ ª¿ ª¿ ªE¿ ªs¿ ªç¿ ªÃ¿ ª”¿ ª◊¿ ªÿ¿ ª‰¿ º¿ ºE¿ º_¿ ºû¿ º•¿ º©¿ º™¿ º∂¿ ºÈ¿ Ω¿ Ω1¿ Ωp¿ Ωw¿ Ω{¿ Ω|¿ Ωà¿ Ωª¿ ΩÈ¿ æ¿ æB¿ æI¿ æM¿ æN¿ æZ¿ æ¨¿ æﬂ¿ æ˝¿ ø>¿ øì¿ øœ¿ ø–¿ ¿¿ ¿L¿ ¿y¿ ¿ë¿ ¿¡¿ ¿‘¿ ¿Ê¿ ¡¿ ¡(¿ ¡>¿ ¡K¿ ¡V¿ ¡_¿ ¡e¿ ¡á¿ ¡ã¿ ¡å¿ ¡ò¿ ¡Œ¿ ¡ˆ¿ ¬¿ ¬¿ ¬`¿ ¬d¿ ¬e¿ ¬q¿ ¬¬¿ ¬÷¿ √¿ √7¿ √S¿ √f¿ √¿¿ ƒ¿ ƒ8¿ ƒc¿ ƒä¿ ƒî¿ ƒú¿ ƒ«¿ ƒÕ¿ ƒ—¿ ƒ“¿ ƒﬁ¿ ≈ ¿ ≈X¿ ≈Ç¿ ≈Æ¿ ≈ ¿ ∆$¿ ∆{¿ ∆û¿ ∆…¿ ∆¿ ∆˙¿ «¿ «¿ «+¿ «r¿ «x¿ «|¿ «}¿ «â¿ «¨¿ «≠¿ «‹¿ «Ë¿ »¿ »&¿ »N¿ »p¿ »}¿ »∑¿ »‰¿ …¿ …H¿ …p¿ …v¿ …w¿ …ƒ¿  ¿  V¿  Å¿  º¿  ƒ¿   ¿  Œ¿  œ¿  ˘¿ À#¿ À?¿ Àô¿ Àﬁ¿ Ã	¿ Ã¿ Ã'¿ ÃV¿ Ã\¿ Ãê¿ Ã§¿ Ãˇ¿ Õ¿ Õ ¿ Õz¿ Õ÷¿ Œ8¿ ŒÄ¿ Œâ¿ Œö¿ ŒË¿ œ(¿ œ1¿ œ9¿ œ=¿ œ>¿ œê¿ œë¿ œù¿ œ‘¿ œ˘¿ –,¿ –F¿ –V¿ –r¿ –á¿ –´¿ –”¿ –‹¿ –È¿ —¿ —0¿ —6¿ —:¿ —;¿ —G¿ —Z¿ —{¿ —ê¿ —î¿ —ï¿ —°¿ —’¿ —¯¿ “¿ “*¿ “Ñ¿ “Õ¿ “¯¿ “˛¿ ”¿ ”¿ ”¿ ”O¿ ”z¿ ”ñ¿ ”¨¿ ‘¿ ‘1¿ ‘7¿ ‘;¿ ‘<¿ ‘H¿ ‘É¿ ‘ü¿ ‘µ¿ ‘ ¿ ‘‰¿ ‘ˇ¿ ’'¿ ’J¿ ’P¿ ’T¿ ’U¿ ’a¿ ’¶¿ ’—¿ ÷
+¿ ÷[¿ ÷_¿ ÷`¿ ÷l¿ ÷û¿ ÷Ê¿ ◊-¿ ◊.¿ ◊A¿ ◊[¿ ◊~¿ ◊ª¿ ◊◊¿ ÿ1¿ ÿY¿ ÿq¿ ÿÑ¿ ÿå¿ ÿç¿ ÿ¢¿ ÿ¿ ÿˇ¿ Ÿ¿ Ÿ¿ Ÿä¿ Ÿí¿ Ÿì¿ Ÿ´¿ ⁄¿ ⁄C¿ ⁄Z¿ ⁄∂¿ ⁄«¿ ⁄Á¿ €¿ €?¿ €s¿ €Ç¿ €è¿ €ô¿ €∞¿ €∫¿ €ª¿ €Ê¿ €¯¿ €˛¿ €ˇ¿ ‹¿ ‹7¿ ‹^¿ ‹z¿ ‹Ö¿ ‹‰¿ ‹Î¿ ‹Ô¿ ‹Ò¿ ‹Ú¿ ›¿ ›9¿ ›Ä¿ ›É¿ ›†¿ ›Ì¿ ﬁ"¿ ﬁã¿ ﬁé¿ ﬁ⁄¿ ﬂ$¿ ﬂm¿ ﬂÆ¿ ﬂ±¿ ﬂ”¿ ‡ ¿ ‡m¿ ‡∑¿ ‡⁄¿ ‡›¿ ·$¿ ·r¿ ·¿¿ ‚¿ ‚¿ ‚¿ ‚d¿ ‚Å¿ ‚Ö¿ ‚÷¿ „¿ „d¿ „h¿ „µ¿ ‰¿ ‰S¿ ‰s¿ ‰√¿ ‰◊¿ Â#¿ Â$¿ ÂJ¿ ÂK¿ Âú¿ Â„¿ Ê1¿ ÊT¿ Êi¿ ÊÜ¿ Êá¿ Êß¿ Ê ¿ Ê‹¿ Ê›¿ Á*¿ Á4¿ Á9¿ Áx¿ Áá¿ Á´¿ Á‰¿ Ë;¿ ËK¿ ËO¿ ËP¿ Ë†¿ ËŒ¿ Ë‘¿ È¿ Èk¿ È†¿ È¶¿ ÈÛ¿ Í¿ Í¿ Ím¿ Í|¿ Íå¿ Í¬¿ Í€¿ Íı¿ Î¿ Î¿ Î%¿ Î)¿ Î*¿ ÎZ¿ Î`¿ ÎÆ¿ Î¸¿ Ï%¿ Ï+¿ Ï{¿ Ïä¿ Ïö¿ Ï–¿ ÏÈ¿ Ï˝¿ Ì
+¿ Ì.¿ ÌI¿ ÌO¿ ÌS¿ ÌT¿ Ì£¿ Ì—¿ ÌË¿ Ó¿ Ól¿ Óp¿ Óq¿ Ó∑¿ ÓΩ¿ Ô¿ Ô¿ ÔL¿ ÔM¿ ÔY¿ Ôo¿ Ôõ¿ Ôﬂ¿ '¿ |¿ Ä¿ Ç¿ É¿ ¿¿ ƒ¿ Ò¿ ÒZ¿ Ò•¿ Òı¿ ÚF¿ Ú`¿ Úd¿ ÚØ¿ Ú¸¿ ÛK¿ Ûî¿ Ûò¿ Û‚¿ Ù3¿ ÙÉ¿ Ùõ¿ Ùü¿ Ù≥¿ ı¿ ıU¿ ı§¿ ıı¿ ˆ%¿ ˆ)¿ ˆv¿ ˆÜ¿ ˆä¿ ˆû¿ ˆ¢¿ ˆÏ¿ ˜<¿ ˜Ö¿ ˜¡¿ ˜≈¿ ¯¿ ¯S¿ ¯£¿ ¯Ë¿ ¯Ï¿ ¯˛¿ ˘¿ ˘R¿ ˘ü¿ ˘¿ ˙4¿ ˙Ç¿ ˙“¿ ˚$¿ ˚3¿ ˚7¿ ˚s¿ ˚≤¿ ˚∂¿ ¸¿ ¸R¿ ¸†¿ ¸Ú¿ ˝>¿ ˝ä¿ ˝é¿ ˝€¿ ˛)¿ ˛v¿ ˛º¿ ˛ÿ¿ ˛Î¿ ˛Ô¿ ˛˝¿ ˇ¿ ˇI¿ ˇ[¿ ˇ¨¿ ˇ‚¿ 2¿ }¿ ™¿ ˘¿F¿T¿l¿{¿ô¿¿¿–¿Û¿Ù¿C¿ç¿õ¿∆¿’¿Û¿¿*¿L¿M¿ú¿È¿˜¿˝¿K¿ú¿Ì¿>¿ã¿†¿¶¿ˆ¿?¿Ü¿œ¿¿m¿≥¿¿U¿ú¿»¿÷¿	¿	C¿	_¿	l¿	¿	†¿	ˇ¿
+¿
+ ¿
+!¿
+h¿
+î¿
+ï¿
+„¿¿¿g¿∂¿¿H¿N¿ü¿Ë¿¿!¿o¿æ¿¿;¿f¿g¿ï¿¨¿≠¿Œ¿œ¿€¿¿¿¿V¿k¿∫¿Ì¿Ú¿C¿ç¿∞¿µ¿¿V¿ê¿π¿‚¿G¿ë¿√¿«¿»¿¿Z¿†¿Ø¿€¿‚¿ ¿"¿v¿ù¿µ¿Ô¿%¿B¿H¿â¿∫¿ˇ¿¿8¿N¿U¿ä¿≥¿∑¿∏¿ƒ¿Ÿ¿¿¿¿¿\¿h¿í¿¿W¿^¿û¿…¿Ë¿:¿f¿l¿ê¿µ¿π¿∫¿∆¿Á¿
+¿0¿4¿5¿A¿s¿ô¿π¿¿N¿¿™¿∞¿¥¿µ¿¡¿’¿
+¿ ¿$¿%¿1¿D¿p¿°¿º¿—¿’¿÷¿ı¿¿W¿´¿≤¿ƒ¿Ê¿Ó¿¿:¿>¿?¿O¿´¿Ω¿ÿ¿‡¿¿,¿0¿1¿=¿d¿è¿Æ¿ ¿ ¿ ,¿ y¿ ”¿ Ó¿ ı¿ ˘¿ ˚¿ ¸¿!¿! ¿!g¿!µ¿"¿"¿"W¿"û¿"◊¿"⁄¿#¿#j¿#m¿#∏¿$¿$#¿$q¿$¡¿%¿%W¿%{¿%~¿%é¿%ë¿%‡¿&¿&(¿&L¿&^¿&a¿&π¿&¸¿'O¿'ú¿'ù¿'∑¿'Â¿(¿(¿(;¿(u¿(Å¿(ß¿)¿)¿)7¿)S¿)r¿)°¿) ¿)Œ¿)œ¿*¿*;¿*^¿*ß¿*∆¿*Â¿+¿+=¿+A¿+B¿+u¿+ö¿+∑¿+ﬁ¿,¿,¿,	¿,?¿,Ä¿,¢¿,Ã¿,Ó¿,Ú¿,Û¿-K¿-m¿-í¿-–¿.¿.¿.=¿.l¿.ï¿.õ¿.ú¿.Ì¿/¿/=¿/C¿/G¿/H¿/{¿/ø¿/Í¿01¿0X¿0|¿0Ä¿0Å¿0∂¿0˙¿1$¿1G¿1K¿1L¿1õ¿1€¿1‡¿2,¿2{¿2 ¿3¿3G¿3L¿3é¿3Ê¿4¿4>¿4Q¿4W¿4m¿4√¿4 ¿4Œ¿4œ¿5¿5p¿5u¿5¡¿5Ì¿6 ¿61¿6V¿6{¿6ã¿6À¿6ﬁ¿6Ë¿6Ï¿6Ì¿6˘¿7¿7£¿7•¿7¶¿7€¿7˙¿8¿8@¿8Z¿8`¿8a¿8Å¿8ª¿8º¿8»¿9¿9/¿9u¿9y¿9z¿9’¿9˝¿:¿:_¿:∞¿:π¿;¿;$¿;t¿;Ü¿;ì¿;Ê¿;Ï¿<¿<¿<!¿<U¿<Ö¿<ù¿<Û¿==¿=F¿=W¿=ö¿=„¿>,¿>5¿>~¿>Ü¿>ä¿>ã¿>Î¿?L¿?t¿?á¿?ç¿?≠¿?¿@J¿@^¿@f¿@¡¿@≈¿@«¿@»¿@˙¿AH¿An¿At¿A∆¿A“¿B5¿Bt¿B∆¿B«¿BÂ¿BÊ¿C¿C+¿C,¿C\¿C]¿Ci¿CØ¿C∞¿Cº¿D¿D¿D¿DV¿Då¿Dç¿Dô¿DŒ¿E
+¿E¿E%¿E8¿E9¿EE¿Ev¿Eò¿EŸ¿F¿Fl¿Fp¿Fq¿F}¿Fß¿Fƒ¿F˝¿G`¿Gd¿Ge¿Gq¿Gï¿GÊ¿H1¿HW¿Ht¿Há¿H•¿H©¿H™¿H∂¿HÂ¿I¿I9¿IR¿Ih¿In¿Ié¿I´¿I±¿Iµ¿I∂¿I¬¿I÷¿IÏ¿JP¿Jg¿JÑ¿Jº¿K¿KZ¿K®¿KÓ¿KÙ¿K¯¿K˘¿L¿L¿Lg¿L§¿LÌ¿MQ¿Mh¿M∞¿M∂¿MŒ¿M“¿M”¿Mﬂ¿N.¿NÄ¿Nò¿NÂ¿O¿O1¿O>¿O`¿Of¿Oj¿Ok¿Oµ¿P¿P¿P1¿PU¿Px¿Põ¿P°¿PŒ¿Pˆ¿Q#¿Q'¿Q(¿Q4¿QÉ¿Qõ¿Qº¿Q ¿Q–¿R¿RB¿Rp¿Rù¿R°¿R¢¿RÆ¿RÛ¿S¿Su¿S⁄¿SÓ¿TM¿TT¿TX¿TZ¿T[¿Tô¿T≥¿T˚¿U2¿UM¿Ui¿Uj¿U≥¿V	¿V¿V¿V¿V`¿V¨¿W ¿W0¿WI¿WM¿WN¿WZ¿W≥¿W˙¿XE¿XI¿XK¿XL¿Xù¿X„¿Y.¿Yu¿Yx¿Y…¿Z¿Zd¿Z≤¿Zø¿Z¬¿[¿[\¿[¶¿[ı¿\E¿\a¿\d¿\≥¿\‚¿]¿]h¿]õ¿]ú¿]Â¿^¿^¿^+¿^[¿^Ñ¿^ù¿^…¿_¿_
+¿_¿_¿_c¿_d¿_p¿_¢¿_Õ¿`¿`¿`¿`(¿`C¿`l¿`â¿`ç¿`é¿`ö¿`º¿`Ω¿`÷¿a¿a¿a!¿a"¿a>¿aJ¿ae¿a~¿aõ¿aü¿a†¿a¨¿aÂ¿aÊ¿aÚ¿bD¿bm¿bÜ¿bô¿bü¿b–¿b›¿b¯¿c¿c-¿c=¿cD¿cH¿cI¿cU¿cê¿cë¿cﬂ¿d&¿dO¿dß¿d˝¿e$¿eI¿eh¿eé¿e¥¿eŒ¿eÌ¿f¿f^¿f{¿fÑ¿f—¿g¿gk¿gt¿g¿¿h¿h]¿h©¿h ¿h”¿i!¿iq¿iø¿iœ¿j¿j)¿j3¿j9¿j=¿j>¿jJ¿jí¿j‚¿j˛¿k4¿k8¿k9¿kE¿k^¿k~¿kÇ¿kÉ¿k©¿kµ¿kŒ¿kÚ¿l¿l2¿l@¿lF¿lV¿lz¿lç¿ló¿lÊ¿m¿m5¿m^¿mw¿mì¿m°¿mß¿m»¿mÌ¿m˝¿n"¿n5¿n?¿nY¿n]¿n^¿nj¿n´¿n˘¿o+¿oh¿ol¿on¿oo¿oª¿o—¿p¿pA¿pB¿pN¿pi¿pÜ¿p»¿q¿qO¿qz¿qï¿qõ¿qü¿q†¿q¨¿q≈¿q‡¿r*¿rK¿rY¿r_¿r©¿rˆ¿s@¿si¿sp¿sΩ¿t¿tY¿t©¿t∆¿u¿ub¿uØ¿u¯¿vE¿vó¿v¶¿vŸ¿w¿w]¿wÑ¿wû¿wÛ¿w˘¿w˝¿w˛¿x
+¿xJ¿xx¿x¬¿x„¿y¿y¿y¿y¿y¿yg¿y§¿y•¿y±¿y‹¿y›¿yÈ¿zC¿z]¿z|¿z~¿z¿zî¿z„¿{-¿{z¿{ ¿|¿|@¿|C¿|ï¿|÷¿}¿}¿}.¿}[¿}©¿}µ¿}Â¿~¿~'¿~S¿~ê¿~î¿~ï¿~°¿~Ì¿~Ó¿~˙¿,¿i¿º¿¡¿¬¿Œ¿¿Ò¿˝¿Ä3¿Ä4¿Ä@¿ÄÅ¿Äœ¿Å¿Å>¿ÅB¿ÅC¿ÅP¿Å\¿Åï¿Å¿Ç¿ÇJ¿Ç{¿Ç—¿É%¿É5¿ÉA¿Éo¿Éò¿É≥¿ÉΩ¿ÉË¿Ñ"¿Ñ<¿Ñü¿ÑÆ¿Ñ¿Ö¿Öp¿Ö¿Öñ¿Ü"¿Ü1¿Ü?¿ÜI¿Üu¿Ü}¿Üê¿Üö¿Üø¿ÜÛ¿áU¿áw¿á–¿à#¿àT¿àÜ¿à«¿â¿âc¿âg¿âh¿ât¿âå¿â¶¿â—¿âÌ¿âÒ¿âÚ¿ä¿ä¿ä+¿äD¿äq¿äò¿äû¿äø¿ã¿ã¿ã9¿ã@¿ãD¿ãE¿ãî¿ãŸ¿å&¿ås¿å¿¿å˜¿çO¿çP¿ç\¿çè¿ç‡¿ç¿çÙ¿çı¿é¿é4¿éÖ¿éï¿éô¿éö¿é¶¿éŸ¿è*¿è:¿è>¿è?¿èK¿è~¿èœ¿èﬂ¿è„¿è‰¿è¿ê&¿êw¿êç¿êë¿êí¿êû¿ê¿ê¸¿ë¿ë/¿ëÖ¿ë”¿ë‹¿ë„¿ëÙ¿ë¯¿ë˘¿í¿í:¿íR¿íi¿ím¿ín¿íz¿íç¿íæ¿ì¿ì¿ì ¿ì$¿ì&   Åå/// @docImport 'package:flutter/cupertino.dart';
+/// @docImport 'package:flutter/material.dart';
+///
+/// @docImport 'app.dart';
+/// @docImport 'drag_target.dart';
+/// @docImport 'implicit_animations.dart';
+/// @docImport 'media_query.dart';
+/// @docImport 'navigator.dart';
+/// @docImport 'routes.dart';
+/// @docImport 'scroll_view.dart';
+/// @docImport 'sliver.dart';
+/// @docImport 'text.dart';	Ç<   ÇW   ÇÅ   Ç™   Ç‘   ÇÈ   É   É    É?     ÜÀ¶ÕÜÀíã//// A place in an [Overlay] that can contain a widget.
+///
+/// Overlay entries are inserted into an [Overlay] using the
+/// [OverlayState.insert] or [OverlayState.insertAll] functions. To find the
+/// closest enclosing overlay for a given [BuildContext], use the [Overlay.of]
+/// function.
+///
+/// An overlay entry can be in at most one overlay at a time. To remove an entry
+/// from its overlay, call the [remove] function on the overlay entry.
+///
+/// Because an [Overlay] uses a [Stack] layout, overlay entries can use
+/// [Positioned] and [AnimatedPositioned] to position themselves within the
+/// overlay.
+///
+/// For example, [Draggable] uses an [OverlayEntry] to show the drag avatar that
+/// follows the user's finger across the screen after the drag begins. Using the
+/// overlay to display the drag avatar lets the avatar float over the other
+/// widgets in the app. As the user's finger moves, draggable calls
+/// [markNeedsBuild] on the overlay entry to cause it to rebuild. In its build,
+/// the entry includes a [Positioned] with its top and left property set to
+/// position the drag avatar near the user's finger. When the drag is over,
+/// [Draggable] removes the entry from the overlay to remove the drag avatar
+/// from view.
+///
+/// By default, if there is an entirely [opaque] entry over this one, then this
+/// one will not be included in the widget tree (in particular, stateful widgets
+/// within the overlay entry will not be instantiated). To ensure that your
+/// overlay entry is still built even if it is not visible, set [maintainState]
+/// to true. This is more expensive, so should be done with care. In particular,
+/// if widgets in an overlay entry with [maintainState] set to true repeatedly
+/// call [State.setState], the user's battery will be drained unnecessarily.
+///
+/// [OverlayEntry] is a [Listenable] that notifies when the widget built by
+/// [builder] is mounted or unmounted, whose exact state can be queried by
+/// [mounted]. After the owner of the [OverlayEntry] calls [remove] and then
+/// [dispose], the widget may not be immediately removed from the widget tree.
+/// As a result listeners of the [OverlayEntry] can get notified for one last
+/// time after the [dispose] call, when the widget is eventually unmounted.
+///
+/// {@macro flutter.widgets.overlayPortalVsOverlayEntry}
+///
+/// See also:
+///
+///  * [OverlayPortal], an alternative API for inserting widgets into an
+///    [Overlay] using a builder callback.
+///  * [Overlay], a stack of entries that can be managed independently.
+///  * [OverlayState], the current state of an Overlay.
+///  * [WidgetsApp], a convenience widget that wraps a number of widgets that
+///    are commonly required for an application.
+///  * [MaterialApp], a convenience widget that wraps a number of widgets that
+///    are commonly required for Material Design applications. í(Å˛ì ìì" Ä„/// Creates an overlay entry.
+///
+/// To insert the entry into an [Overlay], first find the overlay using
+/// [Overlay.of] and then call [OverlayState.insert]. To remove the entry,
+/// call [remove] on the overlay entry itself.ì)ì8ì7  ìDìJìI  ì]ìcìb  ì}ìÉìÇ  	ìRìrììì©ì°ì´ì…ì∫ìÀî*ÄÒïïÄÀ/// This entry will include the widget built by this builder in the overlay at
+/// the entry's position.
+///
+/// To cause this builder to be called again, call [markNeedsBuild] on this
+/// overlay entry. ñ!ñ&ñ&  ö£ö®ö®  õôÉ‘ü_ü_Éò/// Whether the content of this [OverlayEntry] can be used to size the
+/// [Overlay].
+///
+/// In most situations the overlay sizes itself based on its incoming
+/// constraints to be as large as possible. However, if that would result in
+/// an infinite size, it has to rely on one of its children to size itself. In
+/// this situation, the overlay will consult the topmost non-[Positioned]
+/// overlay entry that has this property set to true, lay it out with the
+/// incoming [BoxConstraints] of the overlay, and force all other
+/// non-[Positioned] overlay entries to have the same size. The [Positioned]
+/// entries are laid out as usual based on the calculated size of the overlay.
+///
+/// Overlay entries that set this to true must be able to handle unconstrained
+/// [BoxConstraints].
+///
+/// Setting this to true has no effect if the overlay entry uses a [Positioned]
+/// widget to position itself in the overlay. †MÄ”†œ†œU/// The currently mounted `_OverlayEntryWidgetState` built using this [OverlayEntry].†Ú†ˇ°° °°°°¢2¢@¢@  ¢LV¢v¢v ¢}¢Ü¢ü¢á¢†¢°®{®Ä®Ä ®ìï Ä˛ññÄÿ/// Whether this entry occludes the entire overlay.
+///
+/// If an entry claims to be opaque, then, for efficiency, the overlay will
+/// skip building entries below that entry unless they have [maintainState]
+/// set.   ñ›É√öÄöÄÉ}/// Whether this entry must be included in the tree even if there is a fully
+/// [opaque] entry above it.
+///
+/// By default, if there is an entirely [opaque] entry over this one, then this
+/// one will not be included in the widget tree (in particular, stateful widgets
+/// within the overlay entry will not be instantiated). To ensure that your
+/// overlay entry is still built even if it is not visible, set [maintainState]
+/// to true. This is more expensive, so should be done with care. In particular,
+/// if widgets in an overlay entry with [maintainState] set to true repeatedly
+/// call [State.setState], the user's battery will be drained unnecessarily.
+///
+/// This is used by the [Navigator] and [Route] objects to ensure that routes
+/// are kept around even when in the background, so that [Future]s promised
+/// from subsequent routes will be handled properly when they complete.   ürÄ◊††Äí/// Whether the [OverlayEntry] is currently mounted in the widget tree.
+///
+/// The [OverlayEntry] notifies its listeners when this value changes.   ñ1Ä®ñ5ñ5  ñ<
+ñBñA   ö∫Ä€öæöæ  öÃ
+ö“ö—   °%Äè°6°6  °B°P°O  °%°&°∏v°…°…  °ÿ°Ê°Â  °∏°π¢ßÑ)§Œ§ŒÇ/// Remove this entry from the overlay.
+///
+/// This should only be called once.
+///
+/// This method removes this overlay entry from the overlay immediately. The
+/// UI will be updated in the same frame if this method is called before the
+/// overlay rebuild in this frame; otherwise, the UI will be updated in the
+/// next frame. This means that it is safe to call during builds, but also
+/// that if you do call this after the overlay rebuild, the UI will not update
+/// until the next frame (i.e. many milliseconds later).   ¶‘Ä˘ßnßnÄé/// Cause this entry to rebuild during the next pipeline flush.
+///
+/// You need to call this function if the output of [builder] has changed.   ß—Ä¶ß÷ß÷    ®ùÑ[™‡™‡Ç%/// Discards any resources used by this [OverlayEntry].
+///
+/// This method must be called after [remove] if the [OverlayEntry] is
+/// inserted into an [Overlay].
+///
+/// After this is called, the object is not in a usable state and should be
+/// discarded (calls to [addListener] will throw after the object is disposed).
+/// However, the listeners registered may not be immediately released until
+/// the widget built using this [OverlayEntry] is unmounted from the widget
+/// tree.
+///
+/// This method should only be called by the object's owner.   ¨¸Äö≠≠   ¨¸¨˝ ≠öÅ}≠ö≠†  ≠œÄï≠’ ≠’≠Ë  ≠ÔÆÆ  ÆÆÆ  Æ$Æ3Æ2  ÆDÆJÆI  ÆYÆhÆ{Æ{  ÆÑÆóÆó  ÆßÆ≤Æ≤    ÆƒQÆÈÆÈ   ÆƒÆ≈ ØìNØØ   Ø_ØsØs  ≤±9≤‘≤‘  ∏’rππ ππ-πFπ;π3π=πŸs∫∫ ∫∫3∫K∫A∫9∫C  ≥”Ço≥ÿ≥ÿ  ≥›≥Ù≥Û   ∂FÄ…∂K∂K  ∂S∂j∂i   ∫◊Ç?∫˙∫˙  ªªª   ΩÄÍΩ+Ω+   ΩΩæÇ ææ  æ)æ>æ=  ææ	¿ @,Ä≥¿ @=¿ @=   ¿ @,¿ @-¿ @„Å¿ @ˆ¿ @ˆ  ¿ @¸¿ A
+¿ A	  ¿ @„¿ @‰¿ A˙k¿ Aˇ¿ Aˇ     ¿ Biûz¿ Bi¿ J>áŒ/// A stack of entries that can be managed independently.
+///
+/// Overlays let independent child widgets "float" visual elements on top of
+/// other widgets by inserting them into the overlay's stack. The overlay lets
+/// each of these widgets manage their participation in the overlay using
+/// [OverlayEntry] objects.
+///
+/// Although you can create an [Overlay] directly, it's most common to use the
+/// overlay created by the [Navigator] in a [WidgetsApp], [CupertinoApp] or a
+/// [MaterialApp]. The navigator uses its overlay to manage the visual
+/// appearance of its routes.
+///
+/// The [Overlay] widget uses a custom stack implementation, which is very
+/// similar to the [Stack] widget. The main use case of [Overlay] is related to
+/// navigation and being able to insert widgets on top of the pages in an app.
+/// For layout purposes unrelated to navigation, consider using [Stack] instead.
+///
+/// An [Overlay] widget requires a [Directionality] widget to be in scope, so
+/// that it can resolve direction-sensitive coordinates of any
+/// [Positioned.directional] children.
+///
+/// For widgets drawn in an [OverlayEntry], do not assume that the size of the
+/// [Overlay] is the size returned by [MediaQuery.sizeOf]. Nested overlays can
+/// have different sizes.
+///
+/// {@tool dartpad}
+/// This example shows how to use the [Overlay] to highlight the [NavigationBar]
+/// destination.
+///
+/// ** See code in examples/api/lib/widgets/overlay/overlay.0.dart **
+/// {@end-tool}
+///
+/// See also:
+///
+///  * [OverlayEntry], the class that is used for describing the overlay entries.
+///  * [OverlayState], which is used to insert the entries into the overlay.
+///  * [WidgetsApp], which inserts an [Overlay] widget indirectly via its [Navigator].
+///  * [MaterialApp], which inserts an [Overlay] widget indirectly via its [Navigator].
+///  * [CupertinoApp], which inserts an [Overlay] widget indirectly via its [Navigator].
+///  * [Stack], which allows directly displaying a stack of widgets. ¿ JaÅ‘¿ Kæ ¿ Kæ¿ K≈ ÅF/// Creates an overlay.
+///
+/// The initial entries will be inserted into the overlay when its associated
+/// [OverlayState] is initialized.
+///
+/// Rather than creating an overlay, consider using the overlay that is
+/// created by the [Navigator] in a [WidgetsApp], [CupertinoApp], or a
+/// [MaterialApp] for the application.¿ KÃ	¿ K”¿ K“  ¿ K€,¿ K·¿ K‡  ¿ L!¿ L¿ L  	¿ KÒ¿ L¿ L¿ K˜¿ L¿ K¯¿ L!¿ L%¿ L&¿ NPÇ¡¿ Q¿ QÇ/// The entries to include in the overlay initially.
+///
+/// These entries are only used when the [OverlayState] is initialized. If you
+/// are providing a new [Overlay] description for an overlay that's already in
+/// the tree, then the new entries are ignored.
+///
+/// To add entries to an [Overlay] that is already in the tree, use
+/// [Overlay.of] to obtain the [OverlayState] (or assign a [GlobalKey] to the
+/// [Overlay] widget and obtain the [OverlayState] via
+/// [GlobalKey.currentState]), and then use [OverlayState.insert] or
+/// [OverlayState.insertAll].
+///
+/// To remove an entry from an [Overlay], use [OverlayEntry.remove]. ¿ Qv¿ QÄ¿ QÄX/// {@macro flutter.material.Material.clipBehavior}
+///
+/// Defaults to [Clip.hardEdge].   ¿ L9Ç¿ M´¿ M´ÅW/// Wrap the provided `child` in an [Overlay] to allow other visual elements
+/// (packed in [OverlayEntry]s) to float on top of the child.
+///
+/// This is a convenience method over the regular [Overlay] constructor: It
+/// creates an [Overlay] and puts the provided `child` in an [OverlayEntry]
+/// at the bottom of that newly created Overlay. ¿ M±¿ M∑¿ M∂  ¿ Mª!¿ M¡¿ M¿  ¿ Mﬁ¿ MÔ¿ MÓ  ¿ Mœ¿ M”¿ M‘¿ QëãG¿ Vf¿ VfÑà/// The [OverlayState] from the closest instance of [Overlay] that encloses
+/// the given context within the closest [LookupBoundary], and, in debug mode,
+/// will throw if one is not found.
+///
+/// In debug mode, if the `debugRequiredFor` argument is provided and an
+/// overlay isn't found, then this function will throw an exception containing
+/// the runtime type of the given widget in the error message. The exception
+/// attempts to explain that the calling [Widget] (the one given by the
+/// `debugRequiredFor` argument) needs an [Overlay] to be present to function.
+/// If `debugRequiredFor` is not supplied, then the error message is more
+/// generic.
+///
+/// Typical usage is as follows:
+///
+/// ```dart
+/// OverlayState overlay = Overlay.of(context);
+/// ```
+///
+/// If `rootOverlay` is set to true, the state from the furthest instance of
+/// this class is given instead. Useful for installing overlay entries above
+/// all subsequent instances of [Overlay].
+///
+/// This method can be expensive (it walks the element tree).
+///
+/// See also:
+///
+/// * [Overlay.maybeOf] for a similar function that returns null if an
+///   [Overlay] is not found. ¿ Vn¿ V|¿ V{  ¿ Vä¿ Vê¿ Vè  ¿ V®¿ V±¿ V∞  ¿ Vù¿ \‹É»¿ _π¿ _πÇ†/// The [OverlayState] from the closest instance of [Overlay] that encloses
+/// the given context within the closest [LookupBoundary], if any.
+///
+/// Typical usage is as follows:
+///
+/// ```dart
+/// OverlayState? overlay = Overlay.maybeOf(context);
+/// ```
+///
+/// If `rootOverlay` is set to true, the state from the furthest instance of
+/// this class is given instead. Useful for installing overlay entries above
+/// all subsequent instances of [Overlay].
+///
+/// This method can be expensive (it walks the element tree).
+///
+/// See also:
+///
+///  * [Overlay.of] for a similar function that returns a non-nullable result
+///    and throws if an [Overlay] is not found. ¿ _¡¿ _œ¿ _Œ  ¿ _ÿ¿ _ﬁ¿ _›  ¿ _Î¿ `®9¿ `¡¿ `¡   ¿ `®¿ `© ¿ `Â•¿ `Â¿ a|Äê/// The current state of an [Overlay].
+///
+/// Used to insert [OverlayEntry]s into the overlay using the [insert] and
+/// [insertAll] functions.  ¿ a¬4¿ a€¿ a€ ¿ aÙ¿ aı¿ aÊ¿ aÛ¿ aÁ  ¿ a˚l¿ b¿ b   ¿ a˚¿ a¸¿ b¿ b	¿ bkÅ¿ bo¿ bo  ¿ b¿ bé¿ bç  ¿ bî¿ b£¿ b¢   ¿ càâ
+¿ cç¿ cç  ¿ c¢¿ c∞¿ cØ   ¿ lñÇV¿ mœ¿ mœÅ%/// Insert the given entry into the overlay.
+///
+/// If `below` is non-null, the entry is inserted just below `below`.
+/// If `above` is non-null, the entry is inserted just above `above`.
+/// Otherwise, the entry is inserted on top.
+///
+/// It is an error to specify both `above` and `below`. ¿ m÷¿ m‰¿ m„  ¿ mÎ¿ m˙¿ m˘  ¿ n ¿ n¿ n   ¿ nÉ¿ p7¿ p7Å3/// Insert all the entries in the given iterable.
+///
+/// If `below` is non-null, the entries are inserted just below `below`.
+/// If `above` is non-null, the entries are inserted just above `above`.
+/// Otherwise, the entries are inserted on top.
+///
+/// It is an error to specify both `above` and `below`. ¿ pA¿ pY¿ pX  ¿ pb¿ pq¿ pp  ¿ pw¿ pÜ¿ pÖ   ¿ rÉg¿ r¿ r  ¿ r&¿ r5¿ r4  ¿ r?¿ rN¿ rM  ¿ rZ"¿ rs¿ rr   ¿ ulà-¿ x≥¿ x≥É/// Remove all the entries listed in the given iterable, then reinsert them
+/// into the overlay in the given order.
+///
+/// Entries mention in `newEntries` but absent from the overlay are inserted
+/// as if with [insertAll].
+///
+/// Entries not mentioned in `newEntries` but present in the overlay are
+/// positioned as a group in the resulting list relative to the entries that
+/// were moved, as specified by one of `below` or `above`, which, if
+/// specified, must be one of the entries in `newEntries`:
+///
+/// If `below` is non-null, the group is positioned just below `below`.
+/// If `above` is non-null, the group is positioned just above `above`.
+/// Otherwise, the group is left on top, with all the rearranged entries
+/// below.
+///
+/// It is an error to specify both `above` and `below`. ¿ xΩ!¿ x’¿ x‘  ¿ x·¿ x¿ xÔ  ¿ xˆ¿ y¿ y   ¿ }ùG¿ }¢¿ }¢    ¿ }ËÇ˚¿ 6¿ 6Å</// (DEBUG ONLY) Check whether a given entry is visible (i.e., not behind an
+/// opaque entry).
+///
+/// This is an O(N) algorithm, and should not be necessary except for debug
+/// asserts. To avoid people depending on it, this function is implemented
+/// only in debug mode, and always returns false in release mode. ¿ E¿ S¿ R   ¿ ÄÁÄ¨¿ ÄÏ¿ ÄÏ    ¿ ÅóÉ÷¿ Å∑¿ Å∑  ¿ ÅΩ¿ ÅÀ¿ Å   ¿ Åó¿ Åò¿ Å§¿ Å•¿ ÖqÅb¿ Öè¿ Öè  ¿ Ö£&¿ Ö¿¿ Öø  ¿ Öq¿ Ör¿ Ö~¿ Ö ¿ Ü◊Å¿ Ü◊¿ Ü›  ¿ á	\¿ á ¿ á¿ á  ¿ á!	¿ á(¿ á'  ¿ á,!¿ á2¿ á1  ¿ áO¿ á^¿ á]  ¿ á@¿ áD¿ áE¿ ái¿ át¿ át  ¿ áÑ¿ áë¿ áë    ¿ áõM¿ áø¿ áø   ¿ áõ¿ áú ¿ áÏÇq¿ áÏ¿ áÚ   ¿ à,Ä¶¿ àD¿ àD ¿ àM¿ àY¿ à—¿ àm¿ à_¿ ào¿ à¿ ày¿ àÅ¿ àí¿ àã¿ àî¿ àÃ  ¿ à◊ÄÖ¿ àË¿ àË  ¿ à¯¿ â
+¿ â	  ¿ à◊¿ àÿ¿ â`d¿ âq¿ âq   ¿ â`¿ âa¿ â»Äì¿ â€¿ â€  ¿ â·¿ âÔ¿ âÓ  ¿ â»¿ â… ¿ ä_ÑØ¿ ä_¿ ãÄ¶/// Special version of a [Stack], that doesn't layout and render the first
+/// [skipCount] children.
+///
+/// The first [skipCount] children are considered "offstage". ¿ ã>Ä“¿ ãD ¿ ãD¿ ãL  ¿ ãS¿ ãY¿ ãX  ¿ ãk!¿ ãq¿ ãp  ¿ ãí1¿ ãº¿ ãª  ¿ ãd¿ ã¿ ãÉ¿ ãÑ¿ ãÃ¿ ã“¿ ã·¿ ã›¿ ã”¿ ã‡¿ ãÎ¿ ãÒ¿ å¿ å¿ ãÚ¿ ã˙¿ ã˚¿ å¿ å¿ å¿ å  ¿ å,¿ å7¿ å7    ¿ åHE¿ åd¿ åd   ¿ åH¿ åI¿ åëÄ⁄¿ å¨¿ å¨  ¿ åø¿ åÕ¿ åÃ  ¿ åë¿ åí¿ çoÄ„¿ çÄ¿ çÄ  ¿ çì¿ ç°¿ ç†  ¿ ç©¿ çπ¿ ç∏  ¿ ço¿ çp¿ éVÄ∂¿ ég¿ ég  ¿ é{&¿ éò¿ éó  ¿ éV¿ éW ¿ èÖ,¿ è¿ è  ¿ èP'¿ èP ¿ èP¿ è_  ¿ è`¿ èp¿ èo    ¿ è{T¿ èö¿ èö   ¿ è{¿ è| ¿ è”Å{¿ è‰¿ è‰  ¿ è¸¿ ê¿ ê  ¿ ê¿ ê$¿ ê#  ¿ è”¿ è‘¿ ëRÇ¿ ëc¿ ëc  ¿ ë~¿ ëâ¿ ëà  ¿ ëì¿ ë™¿ ë©  ¿ ë∂¿ ëÕ¿ ëÃ  ¿ ëR¿ ëS¿ ìXÄ‚¿ ìi¿ ìi  ¿ ìÉ¿ ìì¿ ìí  ¿ ìX¿ ìY ¿ ¢±ÜN¿ ¢±¿ ¢∑   ¿ £i¿ £w¿ £w  ¿ £àÉÕ¿ ¶Î¿ ¶ÎÇc/// A [OverlayPortal] makes its overlay child a render child of an ancestor
+/// [Overlay]. Currently, to make sure the overlay child is painted after its
+/// [OverlayPortal], and before the next [OverlayEntry] (which could be
+/// something that should obstruct the overlay child, such as a [ModalRoute])
+/// in the host [Overlay], the paint order of each overlay child is managed by
+/// the [OverlayEntry] that hosts its [OverlayPortal].
+///
+/// The following methods are exposed to allow easy access to the overlay
+/// children's render objects whose order is managed by [overlayEntry], in the
+/// right order.   ¿ ßXÄñ¿ ßÄ¿ ßÄ     ¿ ®SÄ™¿ ®X¿ ®X  ¿ ®Å¿ ®ñ¿ ®ï    ¿ ©≥Ô¿ ©¿ ©  ¿ ©ÅÅ<¿ ©Å ¿ ©Å¿ ©è  ¿ ©ñ¿ ©®¿ ©ß  ¿ ©µ$¿ ©Õ¿ ©Ã  ¿ ©ﬂ¿ ©‰¿ ©„  ¿ ©ˆ!¿ ©¸¿ ©˚  ¿ ©Ô¿ ™
+¿ ™¿ ™¿ ™ ¿ ™&¿ ™5¿ ™1¿ ™'¿ ™4¿ ™N¿ ™?¿ ™P¿ ™q¿ ™f¿ ™s¿ ™ì¿ ™Ö¿ ™ï¿ ØX¿ Øc¿ Øc  ¿ ∞y¿ ∞á¿ ∞á  ¿ ±Z¿ ±^¿ ±^  ¿ ≤o"¿ ≤t¿ ≤t ¿ ≤Ñ¿ ≤à¿ ≤â¿ ¥=!¿ ¥B¿ ¥B ¿ ¥Y¿ «Ø+¿ «¥¿ «¥ ¿ «’¿ œ@N¿ œa¿ œa ¿ œr¿ œ}¿ œã¿ œ~¿ œå¿ œç¿ ™¡/¿ ™‡¿ ™‡   ¿ ™¡¿ ™¬¿ Øvs¿ ØÑ¿ ØÑ    ¿ ∞D2¿ ∞V¿ ∞V    ¿ ±7 ¿ ±?¿ ±?    ¿ ±ÊÄÜ¿ ≤N¿ ≤NX/// {@macro flutter.material.Material.clipBehavior}
+///
+/// Defaults to [Clip.hardEdge].   ¿ π+ÅÄ¿ π:¿ π:    ¿ ∫ØU¿ ∫æ¿ ∫æ    ¿ «,¿ «î¿ «î   ¿ «¿ «Ä¿ ∞ôÄö¿ ∞ù¿ ∞ù  ¿ ∞´¿ ∞∫¿ ∞π   ¿ ±lv¿ ±p¿ ±p  ¿ ±z	¿ ±¿ ±~   ¿ ≤ïÄ°¿ ≤ô¿ ≤ô  ¿ ≤¶
+¿ ≤¨¿ ≤´   ¿ ™ÙÄü¿ ´¿ ´  ¿ ´¿ ´ ¿ ´  ¿ ™Ù¿ ™ı¿ ´óÅÂ¿ ´®¿ ´®  ¿ ´Ø¿ ´æ¿ ´Ω  ¿ ´ó¿ ´ò¿ ≠Ä?¿ ≠å¿ ≠å  ¿ ≠ô¿ ≠ß¿ ≠¶   ¿ ≠√ÅK¿ ≠‘¿ ≠‘   ¿ ≠√¿ ≠ƒ¿ ØB¿ Ø#¿ Ø#   ¿ Ø¿ Ø¿ ØÌS¿ ØÚ¿ ØÚ    ¿ ¥bÉ¿ ¥g¿ ¥g  ¿ ¥y¿ ¥ì¿ ¥í   ¿ ∑iÅL¿ ∑n¿ ∑n  ¿ ∑É¿ ∑ù¿ ∑ú   ¿ ∏πn¿ ∏ ¿ ∏    ¿ ∏π¿ ∏∫¿ ªÄŒ¿ ª¿ ª  ¿ ª4¿ ª<¿ ª;  ¿ ª¿ ª	¿ ª⁄ÄŒ¿ ªÌ¿ ªÌ  ¿ º¿ º¿ º  ¿ ª⁄¿ ª€¿ º¨ÄŒ¿ ºø¿ ºø  ¿ ºŸ¿ º·¿ º‡  ¿ º¨¿ º≠¿ Ω~ÄŒ¿ Ωë¿ Ωë  ¿ Ω´¿ Ω≥¿ Ω≤  ¿ Ω~¿ Ω¿ æPÉ:¿ æd¿ æd  ¿ æw¿ æá¿ æÜ  ¿ æì¿ æ°¿ æ†  ¿ æP¿ æQ¿ ¡éÄ’¿ ¡ü¿ ¡ü  ¿ ¡∞¿ ¡¿¿ ¡ø  ¿ ¡é¿ ¡è¿ ¬gÇi¿ ¬Ï¿ ¬Ï   ¿ ¬g¿ ¬h¿ ƒ‘Çß¿ ≈6¿ ≈6   ¿ ƒ‘¿ ƒ’¿ «ﬁÇÔ¿ «Ô¿ «Ô   ¿ «ﬁ¿ «ﬂ¿  —Ñk¿  €¿  €    ¿ œìÅ¶¿ œ§¿ œ§  ¿ œ™¿ œª¿ œ∫  ¿ œ√¿ œÀ¿ œ   ¿ œì¿ œî¿ —=V¿ —N¿ —N   ¿ —=¿ —>¿ —óÅj¿ —®¿ —®  ¿ —∂¿ —À¿ —   ¿ —ó¿ —ò¿ ”Å5¿ ”¿ ”  ¿ ”0¿ ”E¿ ”D  ¿ ”¿ ”¿ ‘>Å¿ ‘P¿ ‘P  ¿ ‘m¿ ‘{¿ ‘z  ¿ ‘>¿ ‘?¿ ’WÅ¿ ’h¿ ’h  ¿ ’|&¿ ’ô¿ ’ò  ¿ ’W¿ ’X¿ ÷bÜå¿ ÷Ñ¿ ÷Ñ   ¿ ÷b¿ ÷c ¿ ‚ék¿ ‚¿ ‰YÇ</// A class to show, hide and bring to top an [OverlayPortal]'s overlay child
+/// in the target [Overlay].
+///
+/// A [OverlayPortalController] can only be given to at most one [OverlayPortal]
+/// at a time. When an [OverlayPortalController] is moved from one
+/// [OverlayPortal] to another, its [isShowing] state does not carry over.
+///
+/// [OverlayPortalController.show] and [OverlayPortalController.hide] can be
+/// called even before the controller is assigned to any [OverlayPortal], but
+/// they typically should not be called while the widget tree is being rebuilt. ¿ ‰uÄ≠¿ ‰Ÿ ¿ ‰Ÿ¿ ‰ _/// Creates an [OverlayPortalController], optionally with a String identifier
+/// `debugLabel`.¿ ‰Ú¿ ‰˚¿ ‰˙  ¿ Â¿ Â	¿ Â¿ Â&"¿ Â;¿ Â;  ¿ ÊV¿ Ê[¿ Ê[  ¿ Êk¿ Êy¿ Êy  ¿ ÊâQ¿ Êî¿ Êî 	¿ Ê≠¿ Ê–¿ Ê†¿ ÊØ¿ Ê∞¿ Ê’¿ Ê“¿ Ê”¿ Êÿ¿ ÌVÅ¿ Ì‹¿ Ì‹x/// Whether the associated [OverlayPortal] should build and show its overlay
+/// child, using its `overlayChildBuilder`.    ¿ ÁzÄ‘¿ Á~¿ Á~    ¿ ËRÇ÷¿ ÍÉ¿ ÍÉÇ/// Show the overlay child of the [OverlayPortal] this controller is attached
+/// to, at the top of the target [Overlay].
+///
+/// When there are more than one [OverlayPortal]s that target the same
+/// [Overlay], the overlay child of the last [OverlayPortal] to have called
+/// [show] appears at the top level, unobstructed.
+///
+/// If [isShowing] is already true, calling this method brings the overlay
+/// child it controls to the top.
+///
+/// This method should typically not be called while the widget tree is being
+/// rebuilt.   ¿ Î,Ç&¿ Ïë¿ ÏëÅO/// Hide the [OverlayPortal]'s overlay child.
+///
+/// Once hidden, the overlay child will be removed from the widget tree the
+/// next time the widget tree rebuilds, and stateful widgets in the overlay
+/// child may lose states as a result.
+///
+/// This method should typically not be called while the widget tree is being
+/// rebuilt.   ¿ ÓsÄÿ¿ Ô#¿ Ô#Ä¢/// Convenience method for toggling the current [isShowing] status.
+///
+/// This method should typically not be called while the widget tree is being
+/// rebuilt.   ¿ ÔOÅ0¿ Ôb¿ Ôb   ¿ ÔO¿ ÔP ¿ Éûò¿ É¿ Éè˘/// A widget that renders its overlay child on an [Overlay].
+///
+/// The overlay child is initially hidden until [OverlayPortalController.show]
+/// is called on the associated [controller]. The [OverlayPortal] uses
+/// [overlayChildBuilder] to build its overlay child and renders it on the
+/// specified [Overlay] as if it was inserted using an [OverlayEntry], while it
+/// can depend on the same set of [InheritedWidget]s (such as [Theme]) that this
+/// widget can depend on.
+///
+/// This widget requires an [Overlay] ancestor in the widget tree when its
+/// overlay child is showing. The overlay child is rendered by the [Overlay]
+/// ancestor, not by the widget itself. This allows the overlay child to float
+/// above other widgets, independent of its position in the widget tree.
+///
+/// When [OverlayPortalController.hide] is called, the widget built using
+/// [overlayChildBuilder] will be removed from the widget tree the next time the
+/// widget rebuilds. Stateful descendants in the overlay child subtree may lose
+/// states as a result.
+///
+/// {@tool dartpad}
+/// This example uses an [OverlayPortal] to build a tooltip that becomes visible
+/// when the user taps on the [child] widget. There's a [DefaultTextStyle] above
+/// the [OverlayPortal] controlling the [TextStyle] of both the [child] widget
+/// and the widget [overlayChildBuilder] builds, which isn't otherwise doable if
+/// the tooltip was added as an [OverlayEntry].
+///
+/// ** See code in examples/api/lib/widgets/overlay/overlay_portal.0.dart **
+/// {@end-tool}
+///
+/// ### Paint Order
+///
+/// In an [Overlay], an overlay child is painted after the [OverlayEntry]
+/// associated with its [OverlayPortal] (that is, the [OverlayEntry] closest to
+/// the [OverlayPortal] in the widget tree, which usually represents the
+/// enclosing [Route]), and before the next [OverlayEntry].
+///
+/// When an [OverlayEntry] has multiple associated [OverlayPortal]s, the paint
+/// order between their overlay children is the order in which
+/// [OverlayPortalController.show] was called. The last [OverlayPortal] to have
+/// called `show` gets to paint its overlay child in the foreground.
+///
+/// ### Semantics
+///
+/// The semantics subtree generated by the overlay child is considered attached
+/// to [OverlayPortal] instead of the target [Overlay]. An [OverlayPortal]'s
+/// semantics subtree can be dropped from the semantics tree due to invisibility
+/// while the overlay child is still visible (for example, when the
+/// [OverlayPortal] is completely invisible in a [ListView] but kept alive by
+/// a [KeepAlive] widget). When this happens the semantics subtree generated by
+/// the overlay child is also dropped, even if the overlay child is still visible
+/// on screen.
+///
+/// {@template flutter.widgets.overlayPortalVsOverlayEntry}
+/// ### Differences between [OverlayPortal] and [OverlayEntry]
+///
+/// The main difference between [OverlayEntry] and [OverlayPortal] is that
+/// [OverlayEntry] builds its widget subtree as a child of the target [Overlay],
+/// while [OverlayPortal] uses [OverlayPortal.overlayChildBuilder] to build a
+/// child widget of itself. This allows [OverlayPortal]'s overlay child to depend
+/// on the same set of [InheritedWidget]s as [OverlayPortal], and it's also
+/// guaranteed that the overlay child will not outlive its [OverlayPortal].
+///
+/// On the other hand, [OverlayPortal]'s implementation is more complex. For
+/// instance, it does a bit more work than a regular widget during global key
+/// reparenting. If the content to be shown on the [Overlay] doesn't benefit
+/// from being a part of [OverlayPortal]'s subtree, consider using an
+/// [OverlayEntry] instead.
+/// {@endtemplate}
+///
+/// See also:
+///
+///  * [OverlayEntry], an alternative API for inserting widgets into an
+///    [Overlay].
+///  * [Positioned], which can be used to size and position the overlay child in
+///    relation to the target [Overlay]'s boundaries.
+///  * [CompositedTransformFollower], which can be used to position the overlay
+///    child in relation to the linked [CompositedTransformTarget] widget. ¿ ¨ÅF¿\ ¿\¿i Ä£/// Creates an [OverlayPortal] that renders the widget [overlayChildBuilder]
+/// builds on the closest [Overlay] when [OverlayPortalController.show] is
+/// called.¿p	¿w¿v  ¿¿é¿ç  ¿ù!¿¨¿´  ¿ƒ
+¿ ¿…  ¿Í¿◊¿Ï¿ˆÅU¿£¿∞¿±¿√¿±Ä†/// Creates an [OverlayPortal] that renders the widget [overlayChildBuilder]
+/// builds on the root [Overlay] when [OverlayPortalController.show] is
+/// called.¿ 	¿—¿–  ¿Ÿ¿Ë¿Á  ¿˜!¿¿  ¿
+¿$¿#  ¿D¿1¿F¿OÜ–¿û¿´¿¨¿≈¿¨Ö$/// Creates an [OverlayPortal] that renders the widget `overlayChildBuilder`
+/// builds on the closest [Overlay] when [OverlayPortalController.show] is
+/// called.
+///
+/// Developers can use `overlayChildBuilder` to configure the overlay child
+/// based on the the size and the location of [OverlayPortal.child] within the
+/// target [Overlay], as well as the size of the [Overlay] itself. This allows
+/// the overlay child to, for example, always follow [OverlayPortal.child] and
+/// at the same time resize itself base on how close it is to the edges of
+/// the [Overlay].
+///
+/// The `overlayChildBuilder` callback is called during layout. To ensure the
+/// paint transform of [OverlayPortal.child] in relation to the target
+/// [Overlay] is up-to-date by then, all [RenderObject]s between the
+/// [OverlayPortal] to the target [Overlay] must establish their paint
+/// transform during the layout phase, which most [RenderObject]s do. One
+/// exception is the [CompositedTransformFollower] widget, whose [RenderObject]
+/// only establishes the paint transform when composited. Putting a
+/// [CompositedTransformFollower] between the [OverlayPortal] and the [Overlay]
+/// may resulting in an incorrect child paint transform being provided to the
+/// `overlayChildBuilder` and will cause an assertion in debug mode.¿Ã¿“¿—  ¿⁄+¿¸¿˚  ¿	6¿	/¿	.  ¿	G¿	Y¿	X  ¿	f¿	j¿
+¿	x¿	u¿	z¿	í¿	à¿	î¿	º¿	©¿	æ¿	¸¿
+¿
+¿
+¿
+#o¿
+à¿
+àD/// The controller to show, hide and bring to top the overlay child. ¿
+óÉÕ¿Q¿QÉÖ/// A [WidgetBuilder] used to build a widget below this widget in the tree,
+/// that renders on the closest [Overlay].
+///
+/// The said widget will only be built and shown in the closest [Overlay] once
+/// [OverlayPortalController.show] is called on the associated [controller].
+/// It will be painted in front of the [OverlayEntry] closest to this widget
+/// in the widget tree (which is usually the enclosing [Route]).
+///
+/// The built overlay child widget is inserted below this widget in the widget
+/// tree, allowing it to depend on [InheritedWidget]s above it, and be
+/// notified when the [InheritedWidget]s change.
+///
+/// Unlike [child], the built overlay child can visually extend outside the
+/// bounds of this widget without being clipped, and receive hit-test events
+/// outside of this widget's bounds, as long as it does not extend outside of
+/// the [Overlay] on which it is rendered. ¿iA¿•¿•+/// A widget below this widget in the tree. ¿Ø¿∫¿∫    ¿—H¿Ú¿Ú   ¿—¿“ ¿ë›¿¿#   ¿X¿]¿]  ¿í%¿ó¿ó ¿≥¿ª%¿“¿“    ¿‰Ä‚¿¿  ¿#¿¿  ¿(¿>¿=   ¿ ÉÏ¿‡¿‡  ¿Ì¿Ú¿Ò  ¿˛¿¿   ¿∫b¿À¿À   ¿∫¿ª¿ Çò¿%¿%  ¿6"¿O¿N   ¿ºw¿Õ¿Õ   ¿º¿Ω¿7Å|¿H¿H  ¿X¿g¿f  ¿7¿8¿∑l¿»¿»   ¿∑¿∏¿'Ä≠¿8¿8   ¿'¿(¿ÿÅe¿›¿›  ¿‚¿Á¿Ê   ¿AÄÓ¿F¿F    ¿3Å≈¿F¿F  ¿L¿Z¿Y  ¿3¿4 ¿ ¸ñ®¿ ¸¿'Å/// A location in an [Overlay].
+///
+/// An [_OverlayEntryLocation] determines the [Overlay] the associated
+/// [OverlayPortal] should put its overlay child onto, as well as the overlay
+/// child's paint order in relation to other contents painted on the [Overlay]. ¿'QJ¿'Q ¿'Q¿'f  ¿'g¿'m¿'l  ¿'z¿'Ä¿'  ¿'å¿'í¿'ë   ¿'ü¿'©¿'©  ¿'π*¿'ÿ¿'ÿ  ¿'Á¿'¸¿'¸  ¿(	0¿(#¿(#  ¿5Ô/¿5˚¿5˚    
+¿(=Åê¿(B¿(B  ¿(S¿(m¿(l   ¿)—Åo¿)÷¿)÷  ¿)Ï¿*¿*   ¿+DÄ√¿+I¿+I  ¿+S¿+m¿+l   ¿,ÄÊ¿,¿,  ¿,¿,7¿,6   ¿,ıÇQ¿,˙¿,˙  ¿-¿-¿-  ¿-%"¿-<¿-;   ¿/JÅ5¿/O¿/O  ¿/Y¿/s¿/r   ¿0ÉÄ«¿0à¿0à  ¿0î¿0Æ¿0≠   ¿3ËÄÂ¿3Ì¿3Ì    ¿6"Ä…¿68¿68   ¿6"¿6#¿6ÔÄ≥¿7¿7   ¿6Ô¿6 ¿7¶â ¿7¶¿7¨  ¿7›ÄÇ¿7„ ¿7„¿7˜  ¿7˛¿8¿8  ¿8%¿8(¿8'  ¿8D¿8T¿8S   ¿8c¿8x¿8x  ¿8É6¿8¢¿8¢    ¿8æÄ∫¿8œ¿8œ  ¿8‚¿8¯¿8˜  ¿8æ¿8ø¿9|Ö¿9ò¿9ò  ¿9õ¿9©¿9®  ¿9≤¿9∏¿9∑  ¿9À¿>çÇ7¿>¶¿>¶  ¿>¡&¿>‘¿>”    ¿@»ÉR¿@»¿@Œ  ¿@¸Å…¿A‘ ¿A‘¿A‚ ÄÕ/// Creates a widget that renders the given [overlayChild] in the [Overlay]
+/// specified by `overlayLocation`.
+///
+/// The `overlayLocation` parameter must not be null when [overlayChild] is not
+/// null.¿A‰¿AÛ¿AÚ  ¿B¿B¿B  ¿B¿B.¿B-  ¿B;¿BA¿Bq¿BW¿BO¿BB¿BR¿Bj¿BZ¿Bm¿Bz¿BÄ¿B√¿Bô¿Bë¿BÅ¿Bî¿Bú¿B´¿B¨¿B¡¿B¬¿B…¿B◊¿B◊  ¿BËA¿C$¿C$+/// A widget below this widget in the tree. ¿C.,¿CK¿CK    ¿C_O¿C¿C   ¿C_¿C`¿C≤f¿CÀ¿CÀ  ¿Cﬁ¿CÏ¿CÎ  ¿C≤¿C≥ ¿Dê=¿D¿D"  ¿DX3¿DX ¿DX¿Dm  ¿Dn¿DÑ¿DÉ   ¿E¿E¿E  ¿E'¿E0¿E0  ¿Dèz¿Dæ¿Dæ   ¿Dè¿Dê 
+¿E;Å4¿EL¿EL  ¿ER¿E\¿E[  ¿Ec¿El¿Ek  ¿E;¿E<¿FsÄ¿FÑ¿FÑ  ¿Fã¿Fõ¿Fö  ¿Fs¿Ft¿GgÅA¿Gx¿Gx  ¿GÑ¿Gç¿Gå  ¿Gg¿Gh¿H¨Å¿HΩ¿HΩ  ¿HÀ¿H€¿H⁄  ¿H¨¿H≠¿I∏Ç?¿I…¿I…   ¿I∏¿Iπ¿K˚Å÷¿L¿L   ¿K˚¿K¸¿M’Åî¿MÊ¿MÊ  ¿M˛¿N	¿N  ¿N¿N'¿N&  ¿M’¿M÷¿P	Å¿P¿P  ¿P5¿PO¿PN  ¿PY¿Pp¿Po  ¿P|¿Pì¿Pí  ¿P	¿P
+¿Q*Åv¿Q;¿Q;  ¿QS¿Q^¿Q]  ¿Qd¿Q|¿Q{  ¿Q*¿Q+¿R§Å≥¿Rµ¿Rµ  ¿R…&¿RÊ¿RÂ  ¿R§¿R• ¿T[ÉÔ¿T[¿Ta  ¿TõÄÕ¿T° ¿T°¿T∞  ¿U6¿UG¿UF  ¿UT¿UY¿Uf¿U_¿UZ¿Ua   ¿UlÄ†¿Uã¿Uã  ¿Uõ¿U©¿U®   ¿VÅ<¿V5¿V5  ¿VH¿VV¿VU  ¿V¿V¿WPÄ¯¿Wa¿Wa  ¿Wt¿WÇ¿WÅ  ¿Wä%¿W§¿W£  ¿WP¿WQ ¿\‚íã¿\‚¿\Ó  ¿]j0¿]j ¿]j¿]Ç  ¿]É¿]â¿]à   ¿]Á5¿^¿^  ¿a$¿a)¿a) ¿a8¿cìÄ∫¿d-¿d-Äê/// Whether this RenderBox's layout method is currently being called by the
+/// theater or the layoutSurrogate's [performLayout] implementation.¿dH¿kÖ"¿kä¿kä ¿k¢¿]ûF¿]≤¿]≤    ¿_fÄ¥¿_Ö¿_Ö   ¿_f¿_g¿`ê+¿`•¿`•   ¿`ê¿`ë¿`øa¿`»¿`»    ¿a¢B¿a¿¿a¿   ¿a¢¿a£¿cKD¿ci¿ci   ¿cK¿cL 
+¿^!ÄË¿^A¿^A   ¿^!¿^"¿_U¿_-¿_-   ¿_¿_¿`n¿`/¿`/   ¿`¿`¿a@^¿aQ¿aQ   ¿a@¿aA¿aËÅ_¿a¸¿a¸  ¿b¿b¿b  ¿b+¿b9¿b8  ¿aË¿aÈ¿dQÖÎ¿dV¿dV  ¿dd¿dr¿dq  ¿dÇ ¿dò¿dó   ¿j@Ä˜¿jQ¿jQ  ¿jX¿je¿jd  ¿jr¿jx¿jw  ¿j@¿jA¿jà¿k;F¿kL¿kL   ¿k;¿k<¿k´Ç±¿kº¿kº   ¿k´¿k¨¿n`Å¿nq¿nq  ¿nÖ¿nê¿nè  ¿nñ¿nü¿nû  ¿n`¿na ¿o—â;¿o—¿o◊   ¿p.¿p+¿p+    ¿pDÅZ¿pU¿pU   ¿pD¿pE¿q¢ÜZ¿q≥¿q≥   ¿q¢¿q£¿x Å
+¿x¿x  ¿x+¿x@¿x?  ¿x ¿x ¿yÅo¿y¿y  ¿yi:¿yo ¿yo¿yâ  ¿yã¿yö¿yô   ¿yß3¿y”¿y” ¿yß¿y®  ¿yﬂÄú¿z/¿z/  ¿zG¿zU¿zT  ¿yﬂ¿y‡ ¿|÷ñO¿|÷¿|‹   ¿ÅÚ#¿Ç
+¿Ç
+  ¿âÙ¿â˘¿â˘  ¿å¬Äã¿å÷¿å÷ ¿å˝¿~Ä–¿¿   ¿~¿~Ò¿ƒ+¿Ÿ¿Ÿ   ¿ƒ¿≈¿ÅEO¿Åy¿Åy   ¿ÅE¿ÅF¿ÅR¿ÅS ¿}´ÄË¿}À¿}À   ¿}´¿}¨¿~óU¿~∑¿~∑   ¿~ó¿~ò¿Û?¿Ä¿Ä   ¿Û¿Ù¿Ä6Å¿ÄG¿ÄG  ¿Ä[¿Äf¿Äe  ¿Äl¿Äu¿Ät  ¿Ä6¿Ä7¿ÇáM¿Ç0¿Ç0    ¿âjÄÜ¿âì¿âì   ¿âj¿âk¿âv¿âw¿äÅ;¿ä¿ä   ¿ä¿ä	¿çRÄ°¿çe¿çe  ¿ç~¿çÜ¿çÖ  ¿çR¿çS¿ç˜Ä°¿é
+¿é
+  ¿é#¿é+¿é*  ¿ç˜¿ç¯¿éúÄ°¿éØ¿éØ  ¿é…¿é—¿é–  ¿éú¿éù¿èAÄ°¿èT¿èT  ¿èn¿èv¿èu  ¿èA¿èB¿èÊÄ™¿è˜¿è˜  ¿ê¿ê¿ê  ¿èÊ¿èÁ¿êîÅc¿ê®¿ê®  ¿êª¿êÀ¿ê   ¿ê◊¿êÂ¿ê‰  ¿êî¿êï¿ë˚q¿í ¿í   ¿í
+¿í¿í   ¿ípÄ≥¿íÅ¿íÅ   ¿íp¿íq    Ñ4Ç<Ñ4Ñ≤n/// The additional layout information available to the
+/// [OverlayPortal.overlayChildLayoutBuilder] callback. Ñ»MÑ≤Ñ»Ñ…Ñ Ñ…ÑŒEÑ»Ö   Ö_ÖcÖc=/// The size of [OverlayPortal.child] in its own coordinates.   Ö}ÄçÖÍÖÍ\/// The paint transform of [OverlayPortal.child], in the target [Overlay]'s
+/// coordinates.   Ü`ÜVÜV</// The size of the target [Overlay] in its own coordinates.          É_Ä”É_Éœg/// The signature of the widget builder callback used in
+/// [OverlayPortal.overlayChildLayoutBuilder].  ÉˇÑÑ  ÑÑ-Ñ,   ¿ î—çﬁ¿ î—¿ î◊    ¿ î¸¿ ï¿ ï     ¿ ï,¿ ï/¿ ï/    ¿ ïJ.¿ ï^¿ ï^    ¿ ï|Äô¿ ïç¿ ïç  ¿ ïù¿ ï®¿ ïß  ¿ ï|¿ ï}¿ ñÇ%¿ ñ-¿ ñ-  ¿ ñM¿ ñ[¿ ñZ  ¿ ñ¿ ñ¿ òBÉ◊¿ òQ¿ òQ  ¿ òg¿ òr¿ òq  ¿ ò|¿ òÇ¿ òÅ  ¿ òí,¿ ò¢¿ ò°  ¿ òƒ¿ òœ¿ òŒ  ¿ ò›¿ òÎ¿ òÍ   ¿ úÇ•¿ ú"¿ ú"  ¿ ú.¿ ú9¿ ú8  ¿ ú?,¿ úO¿ úN   ¿ û∆Ç∆¿ û◊¿ û◊  ¿ ûÁ¿ û˘¿ û¯  ¿ ü¿ ü¿ ü  ¿ û∆¿ û«¿ °êÅ¿ °°¿ °°  ¿ °ß¿ °∏¿ °∑  ¿ °¿¿ °»¿ °«  ¿ °ê¿ °ë     ÄÆ  package:flutter/cupertino.dart  Äﬂ  package:flutter/material.dart  Å  app.dart  Å.  drag_target.dart  ÅQ  implicit_animations.dart  Å|  media_query.dart  Åü  navigator.dart  Å¿  routes.dart  Åﬁ  scroll_view.dart  Ç  sliver.dart  Ç  	text.dart äÓ <ÄÜÄ§Ä•Ä÷ÅÅ
+Å%ÅHÅsÅñÅ∑Å’Å¯ÇÇ2Ç;Ç<ÇVÇWÇÅÇ™Ç”Ç‘ÇÈÉÉ É?É^É_ÉòÉ«ÉÎÑ3Ñ4ÑkÑ£ÑÃÖÖÖXÖzÖ{Ö…Ö‹ÜÜÜKÜoÜqÜrÜäÜ®Ü©Ü ÜÀáááCáêáﬂáÌáÒàBàâàçà’â!â.â2âÉâ‘ä ädä¥ã ãLãôã®ã¨ã¸åMåôåÈç:çâç÷ç⁄é&éqéæèè[èßè´è‰èËèˆè˙êCênê∂êÓë<ëmëºë˚í&íFíLíñí„ìì%ì@ìYìyìöì≥ì€î#î'î(îyîïîõîÈî˛ïïïTïZï®ïˆñññ/ñJñiñÖñìñôñÆñ÷ñ⁄ñ€ó*óIóOó°óÙòBòîòÁô8ôáôçô›ö+öuö°ö∏ö⁄ö˘õõ*õ0õLõjõíõñõóõ‡õÒõ˜ú?úéúﬂù+ùwùªû
+û[ûaû≤û û–ü"üRüoüpü∫ü¿†	†J†K†£†Ï°"°#°/°[°z°±°µ°∂°¬°Ò¢+¢/¢0¢J¢§¢•¢œ¢’¢¸££Q£†£Ó§;§å§«§Ÿ§˜••B•W•s•Å•á•à•´¶¶P¶n¶û¶´¶«¶Õ¶—¶“ßßßgßÅß†ß ßŒßœßÊß¸®®E®n®t®x®y®ö®õ®’®€©$©F©L©ö©Ï™:™à™î™ö™Ÿ™Ï´´´/´â´ê´æ´€´Ô¨<¨Ö¨ô¨∆¨Ô¨ı¨˘¨˙≠≠≠ó≠ô≠ö≠Õ≠ÎÆÆ Æ@Æ_ÆeÆfÆÇÆ•Æ¡Æ¬ÆŒØØØØ]Ø}Ø~Øœ∞∞o∞∫∞ﬂ∞‰±9±ä±ÿ≤*≤o≤Ø≤Ï≤Ì≥;≥â≥—≥¸¥¥c¥ê¥∑µµeµïµõµΩµ›µÍ∂∂∂?∂C∂D∂r∂û∂Ô∑∑∑∑a∑§∑©∑Ù∏B∏ã∏”π/πDπIπãπ◊∫5∫I∫N∫O∫û∫’ª1ªÅª±ªøª≈ºº7ºãºÕºÏΩΩΩΩΩΩ$Ω9ΩPΩãΩ’æææææJæpæ¡øø@øyø‹¿ @¿ @¿ @%¿ @)¿ @*¿ @6¿ @I¿ @Ñ¿ @§¿ @«¿ @‹¿ @‡¿ @·¿ @Ì¿ A¿ A+¿ AP¿ As¿ Aé¿ Aµ¿ A„¿ AÏ¿ AÛ¿ A˜¿ A¯¿ B¿ B%¿ BZ¿ Bb¿ Bf¿ Bh¿ Bi¿ B£¿ Bß¿ BÙ¿ CC¿ Cç¿ C©¿ C≠¿ C¸¿ DJ¿ Dë¿ DØ¿ D≥¿ D˛¿ EN¿ Eù¿ EÓ¿ EÚ¿ F@¿ F¿ F¶¿ F™¿ F˘¿ GH¿ Gb¿ Gf¿ Gz¿ GÀ¿ G‹¿ G‡¿ H&¿ H6¿ H:¿ HH¿ HL¿ Hû¿ HÎ¿ IB¿ Iö¿ IÛ¿ J8¿ J_¿ Jy¿ J¿ Jœ¿ JÙ¿ J˙¿ KD¿ Kç¿ K∂¿ K»¿ K◊¿ L	¿ L0¿ L6¿ L7¿ LÜ¿ L∆¿ LÃ¿ M¿ Mh¿ Mõ¿ M¯¿ NI¿ NM¿ NN¿ NÖ¿ Nã¿ N‹¿ O-¿ O_¿ Oe¿ O´¿ O˚¿ P4¿ P{¿ Põ¿ P°¿ PË¿ Q¿ Q¿ QJ¿ QP¿ Qs¿ Qé¿ Qè¿ Q›¿ R.¿ RT¿ RZ¿ R•¿ Rˆ¿ SE¿ Sè¿ S‡¿ T,¿ T;¿ TA¿ Td¿ Tj¿ Tx¿ T™¿ T¥¿ T∫¿ U	¿ UX¿ UÖ¿ Uã¿ UÀ¿ U—¿ U·¿ UÁ¿ V0¿ VP¿ Vj¿ VÜ¿ V§¿ V¬¿ V…¿ W¿ W&¿ WB¿ Wß¿ W∫¿ W≈¿ X
+¿ X"¿ Xâ¿ Xñ¿ X∂¿ X‘¿ Y0¿ Y?¿ Y[¿ Y◊¿ Y‰¿ Y˘¿ Zî¿ Z°¿ Z…¿ ZÚ¿ [:¿ [Z¿ [ì¿ [¢¿ [‘¿ [˘¿ \N¿ \]¿ \h¿ \i¿ \ú¿ \§¿ \∑¿ \¡¿ \’¿ \Ÿ¿ \⁄¿ ](¿ ]m¿ ]s¿ ]ñ¿ ]ú¿ ]™¿ ]‚¿ ]Ï¿ ]Ú¿ ^A¿ ^ê¿ ^Ω¿ ^√¿ _¿ _	¿ _¿ _¿ _o¿ _°¿ _¢¿ _ı¿ `¿ `X¿ `°¿ `•¿ `¶¿ `≤¿ `‚¿ `‰¿ `Â¿ a¿ a¿ a[¿ av¿ a¿¿ a¯¿ a˘¿ b¿ b¿ b'¿ b>¿ bd¿ bh¿ bi¿ b´¿ b◊¿ b¿ c¿ c¿ c5¿ c_¿ ce¿ cÅ¿ cÖ¿ cÜ¿ c∏¿ d¿ d*¿ dJ¿ dY¿ då¿ dï¿ dæ¿ e¿ e¿ eC¿ eL¿ eS¿ eT¿ eh¿ eû¿ e˚¿ f¿ f%¿ f+¿ f,¿ fe¿ f•¿ f¶¿ f∆¿ g¿ gJ¿ g°¿ g¡¿ gÁ¿ h/¿ h<¿ hQ¿ h∏¿ i¿ i#¿ iI¿ iv¿ i¨¿ i»¿ iˇ¿ j¿ j¿ j¿ j¿ j?¿ jR¿ jX¿ jY¿ jç¿ j„¿ k¿ k*¿ k\¿ kt¿ kß¿ k∞¿ k¡¿ l$¿ l~¿ lá¿ lè¿ lì¿ lî¿ l√¿ l…¿ m¿ mY¿ mà¿ mé¿ m»¿ n¿ nN¿ nw¿ ní¿ n§¿ n·¿ nÈ¿ nÌ¿ nÓ¿ o"¿ o(¿ os¿ oæ¿ o¿ oˆ¿ p0¿ pè¿ p≈¿ pˆ¿ q¿ q¿ q%¿ qU¿ q{¿ qò¿ qû¿ q∞¿ qÚ¿ q˙¿ q˛¿ qˇ¿ r"¿ r;¿ rV¿ r~¿ rÖ¿ rÊ¿ rÚ¿ s	¿ s.¿ sX¿ sé¿ t¿ t¿ t)¿ t@¿ te¿ tè¿ t≈¿ uM¿ uT¿ ue¿ ui¿ uj¿ u∏¿ u„¿ uÈ¿ v8¿ vV¿ v\¿ vß¿ vˆ¿ w=¿ wz¿ wÄ¿ w ¿ x¿ x_¿ xl¿ xr¿ x¨¿ y¿ y]¿ yr¿ y†¿ yÚ¿ y˛¿ z¿ zl¿ zu¿ zÀ¿ z“¿ zﬁ¿ z˙¿ {R¿ {[¿ {ß¿ {Æ¿ {–¿ {ﬁ¿ {‰¿ |¿ |"¿ |(¿ |~¿ |µ¿ |‘¿ |⁄¿ |Ï¿ }¿ }+¿ }P¿ }é¿ }ñ¿ }ö¿ }õ¿ }±¿ }ƒ¿ }€¿ }·¿ }Â¿ }Ê¿ ~5¿ ~J¿ ~P¿ ~û¿ ~Î¿ /¿ [¿ t¿ ö¿ ™¿ „¿ Ä¿ Ä9¿ ÄR¿ Äc¿ Äm¿ Äç¿ Äû¿ Ä®¿ Ä∞¿ Ä√¿ ÄÕ¿ Ä‡¿ Ä‰¿ ÄÂ¿ Å¿ Å¿ Åh¿ Åà¿ Åê¿ Åî¿ Åï¿ Å¢¿ ÅÆ¿ Å’¿ Ç¿ Ç9¿ ÇÅ¿ Çö¿ Ç¥¿ ÇÓ¿ É¿ É¿ É|¿ Éò¿ É≥¿ ÉΩ¿ ÉÂ¿ É˚¿ Ñ¿ Ñ7¿ ÑW¿ Ñq¿ Ñì¿ Ñ†¿ Ñ´¿ Ñ≥¿ Ñπ¿ ÑŒ¿ Ñˇ¿ Ö(¿ Öc¿ Öj¿ Ön¿ Öo¿ Ö|¿ Öà¿ ÖÕ¿ Ö¯¿ Ü8¿ Ü~¿ Ü–¿ Ü‘¿ Ü÷¿ Ü◊¿ á¿ áf¿ ág¿ áÇ¿ áò¿ áô¿ á•¿ áÈ¿ áÎ¿ áÏ¿ à*¿ à[¿ àu¿ àá¿ à≠¿ à»¿ àœ¿ à‘¿ à’¿ à·¿ â¿ â<¿ âY¿ â]¿ â^¿ âj¿ â}¿ âà¿ âô¿ â¨¿ â¡¿ â≈¿ â∆¿ â“¿ â˘¿ äX¿ ä\¿ ä^¿ ä_¿ ä™¿ äƒ¿ ä»¿ ã¿ ã<¿ ãO¿ ãg¿ ãé¿ ã≈¿ ã‰¿ å¿ å¿ å)¿ å*¿ åE¿ åF¿ åR¿ åé¿ åè¿ åõ¿ å◊¿ åÚ¿ ç¿ ç?¿ ça¿ çh¿ çl¿ çm¿ çy¿ ç»¿ çŸ¿ ç˜¿ é*¿ éO¿ éS¿ éT¿ é`¿ é•¿ é–¿ è	¿ è¿ è¿ è¿ èN¿ èx¿ èy¿ èÖ¿ è–¿ è—¿ è›¿ ê+¿ ê[¿ êÆ¿ êÃ¿ ë¿ ëK¿ ëO¿ ëP¿ ë\¿ ëz¿ ëè¿ ë≤¿ ë’¿ ë€¿ í¿ í%¿ íz¿ í§¿ í˚¿ ì4¿ ìG¿ ìQ¿ ìU¿ ìV¿ ìb¿ ìù¿ ìŒ¿ î ¿ î7¿ î;¿ î=¿ î>¿ îå¿ î—¿ î˙¿ ï¿ ï¿ ïH¿ ïy¿ ïz¿ ïÜ¿ ï∞¿ ï‡¿ ñ¿ ñ¿ ñ¿ ñ¿ ñ#¿ ñf¿ ñÖ¿ ñƒ¿ ó¿ ó(¿ ó|¿ ó©¿ ò
+¿ ò¿ ò¿ ò;¿ ò?¿ ò@¿ òc¿ òx¿ òé¿ ò¿¿ òŸ¿ òÙ¿ ò˙¿ ôL¿ ôï¿ ô◊¿ ö ¿ öU¿ öw¿ öä¿ öê¿ ö¿¿ öÚ¿ õ"¿ õu¿ õê¿ õ¿ õ˜¿ ú¿ ú¿ ú¿ úo¿ ú¡¿ ú˝¿ ù&¿ ùo¿ ùõ¿ ù®¿ ù∂¿ ù‚¿ û-¿ û6¿ ûà¿ ûé¿ ûø¿ û√¿ ûƒ¿ û–¿ ü¿ ük¿ üÉ¿ üØ¿ üﬂ¿ †3¿ †]¿ †¢¿ †‹¿ °¿ °-¿ °I¿ °h¿ °q¿ °w¿ °â¿ °ç¿ °é¿ °ö¿ °—¿ ¢¿ ¢b¿ ¢§¿ ¢™¿ ¢Æ¿ ¢∞¿ ¢±¿ ¢‰¿ £3¿ £g¿ £Ö¿ £Ü¿ £‘¿ §$¿ §n¿ §æ¿ •¿ •H¿ •N¿ •ö¿ •Î¿ •˛¿ •ˇ¿ ¶N¿ ¶ü¿ ¶¡¿ ß¿ ßV¿ ßò¿ ßÔ¿ ß¿ ®5¿ ®Q¿ ®°¿ ®˛¿ © ¿ ©¿ ©(¿ ©¿ ©í¿ ©±¿ ©€¿ ©Ú¿ ™¿ ™8¿ ™_¿ ™~¿ ™§¿ ™∫¿ ™æ¿ ™ø¿ ™À¿ ™Ò¿ ™Ú¿ ™˛¿ ´(¿ ´[¿ ´ä¿ ´ê¿ ´î¿ ´ï¿ ´°¿ ´∆¿ ´ﬂ¿ ¨¿ ¨¿ ¨x¿ ¨»¿ ¨Ê¿ ≠¿ ≠6¿ ≠@¿ ≠H¿ ≠s¿ ≠y¿ ≠}¿ ≠~¿ ≠¿¿ ≠¡¿ ≠Õ¿ ≠ﬂ¿ ≠Û¿ Æ¿ Æ2¿ Æå¿ Æ⁄¿ Ø¿ Ø¿ Ø¿ Ø¿ Ø¿ ØU¿ ØV¿ Øt¿ Øö¿ ØÍ¿ ØÎ¿ ∞
+¿ ∞&¿ ∞=¿ ∞A¿ ∞B¿ ∞w¿ ∞ó¿ ∞¬¿ ∞Â¿ ∞Û¿ ∞˘¿ ±¿ ±0¿ ±4¿ ±5¿ ±X¿ ±j¿ ±á¿ ±¶¿ ±¿¿ ±Ÿ¿ ±ﬂ¿ ±„¿ ±‰¿ ≤¿ ≤ ¿ ≤C¿ ≤m¿ ≤ì¿ ≤¥¿ ≤÷¿ ≤Û¿ ≥¿ ≥-¿ ≥3¿ ≥7¿ ≥8¿ ≥ä¿ ≥⁄¿ ≥Ë¿ ≥Ì¿ ¥;¿ ¥`¿ ¥õ¿ ¥æ¿ ¥ﬂ¿ ¥ˆ¿ µH¿ µô¿ µ’¿ µÎ¿ ∂¿ ∂¿ ∂^¿ ∂∞¿ ∂˛¿ ∑4¿ ∑b¿ ∑f¿ ∑g¿ ∑•¿ ∑»¿ ∑È¿ ∑ˇ¿ ∏O¿ ∏z¿ ∏ê¿ ∏≤¿ ∏∂¿ ∏∑¿ ∏√¿ ∏ﬁ¿ ∏ˇ¿ π¿ π$¿ π(¿ π)¿ πO¿ πx¿ πã¿ πë¿ π∫¿ πÛ¿ ∫H¿ ∫s¿ ∫ê¿ ∫ñ¿ ∫®¿ ∫¨¿ ∫≠¿ ª¿ ª¿ ª¿ ªE¿ ªs¿ ªç¿ ªÃ¿ ª”¿ ª◊¿ ªÿ¿ ª‰¿ º¿ ºE¿ º_¿ ºû¿ º•¿ º©¿ º™¿ º∂¿ ºÈ¿ Ω¿ Ω1¿ Ωp¿ Ωw¿ Ω{¿ Ω|¿ Ωà¿ Ωª¿ ΩÈ¿ æ¿ æB¿ æI¿ æM¿ æN¿ æZ¿ æ¨¿ æﬂ¿ æ˝¿ ø>¿ øì¿ øœ¿ ø–¿ ¿¿ ¿L¿ ¿y¿ ¿ë¿ ¿¡¿ ¿‘¿ ¿Ê¿ ¡¿ ¡(¿ ¡>¿ ¡K¿ ¡V¿ ¡_¿ ¡e¿ ¡á¿ ¡ã¿ ¡å¿ ¡ò¿ ¡Œ¿ ¡ˆ¿ ¬¿ ¬¿ ¬`¿ ¬d¿ ¬e¿ ¬q¿ ¬¬¿ ¬÷¿ √¿ √7¿ √S¿ √f¿ √¿¿ ƒ¿ ƒ8¿ ƒc¿ ƒä¿ ƒî¿ ƒú¿ ƒ«¿ ƒÕ¿ ƒ—¿ ƒ“¿ ƒﬁ¿ ≈ ¿ ≈X¿ ≈Ç¿ ≈Æ¿ ≈ ¿ ∆$¿ ∆{¿ ∆û¿ ∆…¿ ∆¿ ∆˙¿ «¿ «¿ «+¿ «r¿ «x¿ «|¿ «}¿ «â¿ «¨¿ «≠¿ «‹¿ «Ë¿ »¿ »&¿ »N¿ »p¿ »}¿ »∑¿ »‰¿ …¿ …H¿ …p¿ …v¿ …w¿ …ƒ¿  ¿  V¿  Å¿  º¿  ƒ¿   ¿  Œ¿  œ¿  ˘¿ À#¿ À?¿ Àô¿ Àﬁ¿ Ã	¿ Ã¿ Ã'¿ ÃV¿ Ã\¿ Ãê¿ Ã§¿ Ãˇ¿ Õ¿ Õ ¿ Õz¿ Õ÷¿ Œ8¿ ŒÄ¿ Œâ¿ Œö¿ ŒË¿ œ(¿ œ1¿ œ9¿ œ=¿ œ>¿ œê¿ œë¿ œù¿ œ‘¿ œ˘¿ –,¿ –F¿ –V¿ –r¿ –á¿ –´¿ –”¿ –‹¿ –È¿ —¿ —0¿ —6¿ —:¿ —;¿ —G¿ —Z¿ —{¿ —ê¿ —î¿ —ï¿ —°¿ —’¿ —¯¿ “¿ “*¿ “Ñ¿ “Õ¿ “¯¿ “˛¿ ”¿ ”¿ ”¿ ”O¿ ”z¿ ”ñ¿ ”¨¿ ‘¿ ‘1¿ ‘7¿ ‘;¿ ‘<¿ ‘H¿ ‘É¿ ‘ü¿ ‘µ¿ ‘ ¿ ‘‰¿ ‘ˇ¿ ’'¿ ’J¿ ’P¿ ’T¿ ’U¿ ’a¿ ’¶¿ ’—¿ ÷
+¿ ÷[¿ ÷_¿ ÷`¿ ÷l¿ ÷û¿ ÷Ê¿ ◊-¿ ◊.¿ ◊A¿ ◊[¿ ◊~¿ ◊ª¿ ◊◊¿ ÿ1¿ ÿY¿ ÿq¿ ÿÑ¿ ÿå¿ ÿç¿ ÿ¢¿ ÿ¿ ÿˇ¿ Ÿ¿ Ÿ¿ Ÿä¿ Ÿí¿ Ÿì¿ Ÿ´¿ ⁄¿ ⁄C¿ ⁄Z¿ ⁄∂¿ ⁄«¿ ⁄Á¿ €¿ €?¿ €s¿ €Ç¿ €è¿ €ô¿ €∞¿ €∫¿ €ª¿ €Ê¿ €¯¿ €˛¿ €ˇ¿ ‹¿ ‹7¿ ‹^¿ ‹z¿ ‹Ö¿ ‹‰¿ ‹Î¿ ‹Ô¿ ‹Ò¿ ‹Ú¿ ›¿ ›9¿ ›Ä¿ ›É¿ ›†¿ ›Ì¿ ﬁ"¿ ﬁã¿ ﬁé¿ ﬁ⁄¿ ﬂ$¿ ﬂm¿ ﬂÆ¿ ﬂ±¿ ﬂ”¿ ‡ ¿ ‡m¿ ‡∑¿ ‡⁄¿ ‡›¿ ·$¿ ·r¿ ·¿¿ ‚¿ ‚¿ ‚¿ ‚d¿ ‚Å¿ ‚Ö¿ ‚÷¿ „¿ „d¿ „h¿ „µ¿ ‰¿ ‰S¿ ‰s¿ ‰√¿ ‰◊¿ Â#¿ Â$¿ ÂJ¿ ÂK¿ Âú¿ Â„¿ Ê1¿ ÊT¿ Êi¿ ÊÜ¿ Êá¿ Êß¿ Ê ¿ Ê‹¿ Ê›¿ Á*¿ Á4¿ Á9¿ Áx¿ Áá¿ Á´¿ Á‰¿ Ë;¿ ËK¿ ËO¿ ËP¿ Ë†¿ ËŒ¿ Ë‘¿ È¿ Èk¿ È†¿ È¶¿ ÈÛ¿ Í¿ Í¿ Ím¿ Í|¿ Íå¿ Í¬¿ Í€¿ Íı¿ Î¿ Î¿ Î%¿ Î)¿ Î*¿ ÎZ¿ Î`¿ ÎÆ¿ Î¸¿ Ï%¿ Ï+¿ Ï{¿ Ïä¿ Ïö¿ Ï–¿ ÏÈ¿ Ï˝¿ Ì
+¿ Ì.¿ ÌI¿ ÌO¿ ÌS¿ ÌT¿ Ì£¿ Ì—¿ ÌË¿ Ó¿ Ól¿ Óp¿ Óq¿ Ó∑¿ ÓΩ¿ Ô¿ Ô¿ ÔL¿ ÔM¿ ÔY¿ Ôo¿ Ôõ¿ Ôﬂ¿ '¿ |¿ Ä¿ Ç¿ É¿ ¿¿ ƒ¿ Ò¿ ÒZ¿ Ò•¿ Òı¿ ÚF¿ Ú`¿ Úd¿ ÚØ¿ Ú¸¿ ÛK¿ Ûî¿ Ûò¿ Û‚¿ Ù3¿ ÙÉ¿ Ùõ¿ Ùü¿ Ù≥¿ ı¿ ıU¿ ı§¿ ıı¿ ˆ%¿ ˆ)¿ ˆv¿ ˆÜ¿ ˆä¿ ˆû¿ ˆ¢¿ ˆÏ¿ ˜<¿ ˜Ö¿ ˜¡¿ ˜≈¿ ¯¿ ¯S¿ ¯£¿ ¯Ë¿ ¯Ï¿ ¯˛¿ ˘¿ ˘R¿ ˘ü¿ ˘¿ ˙4¿ ˙Ç¿ ˙“¿ ˚$¿ ˚3¿ ˚7¿ ˚s¿ ˚≤¿ ˚∂¿ ¸¿ ¸R¿ ¸†¿ ¸Ú¿ ˝>¿ ˝ä¿ ˝é¿ ˝€¿ ˛)¿ ˛v¿ ˛º¿ ˛ÿ¿ ˛Î¿ ˛Ô¿ ˛˝¿ ˇ¿ ˇI¿ ˇ[¿ ˇ¨¿ ˇ‚¿ 2¿ }¿ ™¿ ˘¿F¿T¿l¿{¿ô¿¿¿–¿Û¿Ù¿C¿ç¿õ¿∆¿’¿Û¿¿*¿L¿M¿ú¿È¿˜¿˝¿K¿ú¿Ì¿>¿ã¿†¿¶¿ˆ¿?¿Ü¿œ¿¿m¿≥¿¿U¿ú¿»¿÷¿	¿	C¿	_¿	l¿	¿	†¿	ˇ¿
+¿
+ ¿
+!¿
+h¿
+î¿
+ï¿
+„¿¿¿g¿∂¿¿H¿N¿ü¿Ë¿¿!¿o¿æ¿¿;¿f¿g¿ï¿¨¿≠¿Œ¿œ¿€¿¿¿¿V¿k¿∫¿Ì¿Ú¿C¿ç¿∞¿µ¿¿V¿ê¿π¿‚¿G¿ë¿√¿«¿»¿¿Z¿†¿Ø¿€¿‚¿ ¿"¿v¿ù¿µ¿Ô¿%¿B¿H¿â¿∫¿ˇ¿¿8¿N¿U¿ä¿≥¿∑¿∏¿ƒ¿Ÿ¿¿¿¿¿\¿h¿í¿¿W¿^¿û¿…¿Ë¿:¿f¿l¿ê¿µ¿π¿∫¿∆¿Á¿
+¿0¿4¿5¿A¿s¿ô¿π¿¿N¿¿™¿∞¿¥¿µ¿¡¿’¿
+¿ ¿$¿%¿1¿D¿p¿°¿º¿—¿’¿÷¿ı¿¿W¿´¿≤¿ƒ¿Ê¿Ó¿¿:¿>¿?¿O¿´¿Ω¿ÿ¿‡¿¿,¿0¿1¿=¿d¿è¿Æ¿ ¿ ¿ ,¿ y¿ ”¿ Ó¿ ı¿ ˘¿ ˚¿ ¸¿!¿! ¿!g¿!µ¿"¿"¿"W¿"û¿"◊¿"⁄¿#¿#j¿#m¿#∏¿$¿$#¿$q¿$¡¿%¿%W¿%{¿%~¿%é¿%ë¿%‡¿&¿&(¿&L¿&^¿&a¿&π¿&¸¿'O¿'ú¿'ù¿'∑¿'Â¿(¿(¿(;¿(u¿(Å¿(ß¿)¿)¿)7¿)S¿)r¿)°¿) ¿)Œ¿)œ¿*¿*;¿*^¿*ß¿*∆¿*Â¿+¿+=¿+A¿+B¿+u¿+ö¿+∑¿+ﬁ¿,¿,¿,	¿,?¿,Ä¿,¢¿,Ã¿,Ó¿,Ú¿,Û¿-K¿-m¿-í¿-–¿.¿.¿.=¿.l¿.ï¿.õ¿.ú¿.Ì¿/¿/=¿/C¿/G¿/H¿/{¿/ø¿/Í¿01¿0X¿0|¿0Ä¿0Å¿0∂¿0˙¿1$¿1G¿1K¿1L¿1õ¿1€¿1‡¿2,¿2{¿2 ¿3¿3G¿3L¿3é¿3Ê¿4¿4>¿4Q¿4W¿4m¿4√¿4 ¿4Œ¿4œ¿5¿5p¿5u¿5¡¿5Ì¿6 ¿61¿6V¿6{¿6ã¿6À¿6ﬁ¿6Ë¿6Ï¿6Ì¿6˘¿7¿7£¿7•¿7¶¿7€¿7˙¿8¿8@¿8Z¿8`¿8a¿8Å¿8ª¿8º¿8»¿9¿9/¿9u¿9y¿9z¿9’¿9˝¿:¿:_¿:∞¿:π¿;¿;$¿;t¿;Ü¿;ì¿;Ê¿;Ï¿<¿<¿<!¿<U¿<Ö¿<ù¿<Û¿==¿=F¿=W¿=ö¿=„¿>,¿>5¿>~¿>Ü¿>ä¿>ã¿>Î¿?L¿?t¿?á¿?ç¿?≠¿?¿@J¿@^¿@f¿@¡¿@≈¿@«¿@»¿@˙¿AH¿An¿At¿A∆¿A“¿B5¿Bt¿B∆¿B«¿BÂ¿BÊ¿C¿C+¿C,¿C\¿C]¿Ci¿CØ¿C∞¿Cº¿D¿D¿D¿DV¿Då¿Dç¿Dô¿DŒ¿E
+¿E¿E%¿E8¿E9¿EE¿Ev¿Eò¿EŸ¿F¿Fl¿Fp¿Fq¿F}¿Fß¿Fƒ¿F˝¿G`¿Gd¿Ge¿Gq¿Gï¿GÊ¿H1¿HW¿Ht¿Há¿H•¿H©¿H™¿H∂¿HÂ¿I¿I9¿IR¿Ih¿In¿Ié¿I´¿I±¿Iµ¿I∂¿I¬¿I÷¿IÏ¿JP¿Jg¿JÑ¿Jº¿K¿KZ¿K®¿KÓ¿KÙ¿K¯¿K˘¿L¿L¿Lg¿L§¿LÌ¿MQ¿Mh¿M∞¿M∂¿MŒ¿M“¿M”¿Mﬂ¿N.¿NÄ¿Nò¿NÂ¿O¿O1¿O>¿O`¿Of¿Oj¿Ok¿Oµ¿P¿P¿P1¿PU¿Px¿Põ¿P°¿PŒ¿Pˆ¿Q#¿Q'¿Q(¿Q4¿QÉ¿Qõ¿Qº¿Q ¿Q–¿R¿RB¿Rp¿Rù¿R°¿R¢¿RÆ¿RÛ¿S¿Su¿S⁄¿SÓ¿TM¿TT¿TX¿TZ¿T[¿Tô¿T≥¿T˚¿U2¿UM¿Ui¿Uj¿U≥¿V	¿V¿V¿V¿V`¿V¨¿W ¿W0¿WI¿WM¿WN¿WZ¿W≥¿W˙¿XE¿XI¿XK¿XL¿Xù¿X„¿Y.¿Yu¿Yx¿Y…¿Z¿Zd¿Z≤¿Zø¿Z¬¿[¿[\¿[¶¿[ı¿\E¿\a¿\d¿\≥¿\‚¿]¿]h¿]õ¿]ú¿]Â¿^¿^¿^+¿^[¿^Ñ¿^ù¿^…¿_¿_
+¿_¿_¿_c¿_d¿_p¿_¢¿_Õ¿`¿`¿`¿`(¿`C¿`l¿`â¿`ç¿`é¿`ö¿`º¿`Ω¿`÷¿a¿a¿a!¿a"¿a>¿aJ¿ae¿a~¿aõ¿aü¿a†¿a¨¿aÂ¿aÊ¿aÚ¿bD¿bm¿bÜ¿bô¿bü¿b–¿b›¿b¯¿c¿c-¿c=¿cD¿cH¿cI¿cU¿cê¿cë¿cﬂ¿d&¿dO¿dß¿d˝¿e$¿eI¿eh¿eé¿e¥¿eŒ¿eÌ¿f¿f^¿f{¿fÑ¿f—¿g¿gk¿gt¿g¿¿h¿h]¿h©¿h ¿h”¿i!¿iq¿iø¿iœ¿j¿j)¿j3¿j9¿j=¿j>¿jJ¿jí¿j‚¿j˛¿k4¿k8¿k9¿kE¿k^¿k~¿kÇ¿kÉ¿k©¿kµ¿kŒ¿kÚ¿l¿l2¿l@¿lF¿lV¿lz¿lç¿ló¿lÊ¿m¿m5¿m^¿mw¿mì¿m°¿mß¿m»¿mÌ¿m˝¿n"¿n5¿n?¿nY¿n]¿n^¿nj¿n´¿n˘¿o+¿oh¿ol¿on¿oo¿oª¿o—¿p¿pA¿pB¿pN¿pi¿pÜ¿p»¿q¿qO¿qz¿qï¿qõ¿qü¿q†¿q¨¿q≈¿q‡¿r*¿rK¿rY¿r_¿r©¿rˆ¿s@¿si¿sp¿sΩ¿t¿tY¿t©¿t∆¿u¿ub¿uØ¿u¯¿vE¿vó¿v¶¿vŸ¿w¿w]¿wÑ¿wû¿wÛ¿w˘¿w˝¿w˛¿x
+¿xJ¿xx¿x¬¿x„¿y¿y¿y¿y¿y¿yg¿y§¿y•¿y±¿y‹¿y›¿yÈ¿zC¿z]¿z|¿z~¿z¿zî¿z„¿{-¿{z¿{ ¿|¿|@¿|C¿|ï¿|÷¿}¿}¿}.¿}[¿}©¿}µ¿}Â¿~¿~'¿~S¿~ê¿~î¿~ï¿~°¿~Ì¿~Ó¿~˙¿,¿i¿º¿¡¿¬¿Œ¿¿Ò¿˝¿Ä3¿Ä4¿Ä@¿ÄÅ¿Äœ¿Å¿Å>¿ÅB¿ÅC¿ÅP¿Å\¿Åï¿Å¿Ç¿ÇJ¿Ç{¿Ç—¿É%¿É5¿ÉA¿Éo¿Éò¿É≥¿ÉΩ¿ÉË¿Ñ"¿Ñ<¿Ñü¿ÑÆ¿Ñ¿Ö¿Öp¿Ö¿Öñ¿Ü"¿Ü1¿Ü?¿ÜI¿Üu¿Ü}¿Üê¿Üö¿Üø¿ÜÛ¿áU¿áw¿á–¿à#¿àT¿àÜ¿à«¿â¿âc¿âg¿âh¿ât¿âå¿â¶¿â—¿âÌ¿âÒ¿âÚ¿ä¿ä¿ä+¿äD¿äq¿äò¿äû¿äø¿ã¿ã¿ã9¿ã@¿ãD¿ãE¿ãî¿ãŸ¿å&¿ås¿å¿¿å˜¿çO¿çP¿ç\¿çè¿ç‡¿ç¿çÙ¿çı¿é¿é4¿éÖ¿éï¿éô¿éö¿é¶¿éŸ¿è*¿è:¿è>¿è?¿èK¿è~¿èœ¿èﬂ¿è„¿è‰¿è¿ê&¿êw¿êç¿êë¿êí¿êû¿ê¿ê¸¿ë¿ë/¿ëÖ¿ë”¿ë‹¿ë„¿ëÙ¿ë¯¿ë˘¿í¿í:¿íR¿íi¿ím¿ín¿íz¿íç¿íæ¿ì¿ì¿ì ¿ì$¿ì&   OverlayEntry_OverlayEntryWidget_OverlayEntryWidgetStateOverlayOverlayState_WrappingOverlay_WrappingOverlayState_Theater_TheaterElement_RenderTheaterMixin_TheaterParentData_RenderTheaterOverlayPortalControllerOverlayPortal_OverlayPortalState_OverlayEntryLocation_RenderTheaterMarker_OverlayPortal_OverlayPortalElement_DeferredLayout_RenderDeferredLayoutBox_RenderLayoutSurrogateProxyBox_OverlayChildLayoutBuilder_RenderLayoutBuilder+flutter.widgets.overlayPortalVsOverlayEntryÉ.### Differences between [OverlayPortal] and [OverlayEntry]
+
+The main difference between [OverlayEntry] and [OverlayPortal] is that
+[OverlayEntry] builds its widget subtree as a child of the target [Overlay],
+while [OverlayPortal] uses [OverlayPortal.overlayChildBuilder] to build a
+child widget of itself. This allows [OverlayPortal]'s overlay child to depend
+on the same set of [InheritedWidget]s as [OverlayPortal], and it's also
+guaranteed that the overlay child will not outlive its [OverlayPortal].
+
+On the other hand, [OverlayPortal]'s implementation is more complex. For
+instance, it does a bit more work than a regular widget during global key
+reparenting. If the content to be shown on the [Overlay] doesn't benefit
+from being a part of [OverlayPortal]'s subtree, consider using an
+[OverlayEntry] instead. jù

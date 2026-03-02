@@ -14,6 +14,7 @@ import '../../data/services/local_playback_strategy.dart';
 import '../../data/services/remote_playback_strategy.dart';
 import '../../data/services/album_cover_service.dart';
 import '../../data/services/mi_iot_direct_playback_strategy.dart'; // 🎯 直连模式策略
+import '../../data/services/mi_hardware_detector.dart'; // 🎯 设备能力检测
 import '../../data/services/music_api_service.dart'; // 🎯 音乐API服务
 import '../../data/services/direct_mode_favorite_service.dart'; // 🎯 直连模式收藏服务
 import '../../data/services/direct_mode_playlist_service.dart'; // 🎯 直连模式歌单服务
@@ -98,6 +99,7 @@ class PlaybackState {
   final bool isFavorite; // ⭐ 当前歌曲是否已收藏
   final List<String> currentPlaylistSongs; // 🎵 当前播放列表的所有歌曲
   final bool isLocalMode; // 🎵 是否为本地播放模式（用于判断进度条是否可拖动）
+  final bool seekEnabled; // 🎯 当前设备是否支持 seek（OH2P 等设备不支持，UI 应禁用进度条拖动）
 
   const PlaybackState({
     this.currentMusic,
@@ -111,6 +113,7 @@ class PlaybackState {
     this.isFavorite = false, // 默认未收藏
     this.currentPlaylistSongs = const [], // 默认空列表
     this.isLocalMode = false, // 默认非本地播放
+    this.seekEnabled = true, // 默认支持 seek
   });
 
   PlaybackState copyWith({
@@ -125,6 +128,7 @@ class PlaybackState {
     bool? isFavorite,
     List<String>? currentPlaylistSongs,
     bool? isLocalMode,
+    bool? seekEnabled,
   }) {
     return PlaybackState(
       currentMusic:
@@ -144,6 +148,7 @@ class PlaybackState {
       isFavorite: isFavorite ?? this.isFavorite,
       currentPlaylistSongs: currentPlaylistSongs ?? this.currentPlaylistSongs,
       isLocalMode: isLocalMode ?? this.isLocalMode,
+      seekEnabled: seekEnabled ?? this.seekEnabled,
     );
   }
 }
@@ -786,6 +791,14 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
 
         _currentStrategy = directStrategy;
         _currentDeviceId = deviceId;
+
+        // 🎯 Bug3 fix: 根据设备硬件能力设置 seekEnabled
+        final deviceHardware = device.hardware;
+        final seekSupported = deviceHardware.isEmpty || MiHardwareDetector.supportsSeek(deviceHardware);
+        if (!seekSupported) {
+          debugPrint('⚠️ [PlaybackProvider] 设备 $deviceHardware 不支持 seek，禁用进度条拖动');
+        }
+        state = state.copyWith(seekEnabled: seekSupported);
 
         // 🎯 覆盖 audioHandler 回调，让通知栏控制路由到 PlaybackProvider
         final audioHandler = LocalPlaybackStrategy.sharedAudioHandler;

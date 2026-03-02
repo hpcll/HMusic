@@ -43,6 +43,30 @@ class MiHardwareDetector {
     // 'OH2', // XIAOMI 智能音箱：未验证，暂不列入，如发现同样问题再添加
   ];
 
+  /// 不支持 player_play_music 的 startOffset 参数的设备列表
+  ///
+  /// 背景：
+  ///   player_play_music 支持 startOffset 参数（毫秒），理论上可从指定位置开始播放。
+  ///   但 OH2P 等设备会忽略该参数，始终从 0 秒开始播放，导致 APP 端计时器与实际进度脱节。
+  ///
+  /// 影响：
+  ///   resume 时不传 startOffset，APP 端计时器也从 0 开始，保持一致。
+  static const List<String> _NO_START_OFFSET_SUPPORT = [
+    'OH2P',   // 已确认 startOffset 被忽略，实际从头播放
+    // 'OH2', // 未验证，暂不列入
+  ];
+
+  /// 不支持 player_set_positon (seek) 的设备列表
+  ///
+  /// 背景：
+  ///   OH2P 的 player_get_play_status 始终返回 position=null，
+  ///   说明固件未实现精确进度跟踪，seek 命令极大概率同样无效。
+  ///   用户反馈拖动进度条无任何反应，与此一致。
+  static const List<String> _NO_SEEK_SUPPORT = [
+    'OH2P',   // 已通过用户反馈确认 seek 无效；position 永远 null 佐证固件无此能力
+    // 'OH2', // 未验证，暂不列入
+  ];
+
   /// 检查设备硬件是否需要使用 player_play_music API
   static bool needsPlayMusicApi(String hardware) {
     if (hardware.isEmpty) return false;
@@ -63,6 +87,27 @@ class MiHardwareDetector {
     final upperHardware = hardware.toUpperCase();
     return _NEED_FULL_REPLAY_ON_RESUME
         .any((need) => upperHardware.contains(need));
+  }
+
+  /// 检查设备是否支持 player_play_music 的 startOffset 参数
+  ///
+  /// 返回 false 的设备：startOffset 被固件忽略，始终从 0 秒开始播放。
+  /// 这类设备 resume 时不应传入 startOffset，APP 端计时器也应从 0 开始，保持一致。
+  static bool supportsStartOffset(String hardware) {
+    if (hardware.isEmpty) return true; // 未知设备乐观假设支持
+
+    final upperHardware = hardware.toUpperCase();
+    return !_NO_START_OFFSET_SUPPORT.any((h) => upperHardware.contains(h));
+  }
+
+  /// 检查设备是否支持 seek (player_set_positon)
+  ///
+  /// 返回 false 的设备：进度跳转无效，UI 应禁用进度条拖动。
+  static bool supportsSeek(String hardware) {
+    if (hardware.isEmpty) return true; // 未知设备乐观假设支持
+
+    final upperHardware = hardware.toUpperCase();
+    return !_NO_SEEK_SUPPORT.any((h) => upperHardware.contains(h));
   }
 
   /// 获取设备的推荐播放方式

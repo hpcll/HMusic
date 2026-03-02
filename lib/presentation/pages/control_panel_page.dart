@@ -896,8 +896,9 @@ class _ControlPanelPageState extends ConsumerState<ControlPanelPage>
     final progress =
         (totalTime > 0) ? (displayTime / totalTime).clamp(0.0, 1.0) : 0.0;
 
-    // 🎵 所有模式都允许拖动进度条（直连模式通过 player_set_positon API 实现 seek）
-    final canSeek = totalTime > 0;
+    // 🎯 Bug3 fix: 根据设备能力决定是否允许 seek（OH2P 不支持）
+    final seekEnabled = ref.watch(playbackProvider).seekEnabled;
+    final canSeek = totalTime > 0 && seekEnabled;
 
     debugPrint('🎯 [ControlPanel-ProgressBar] canSeek=$canSeek, progress=$progress, currentTime=$currentTime, totalTime=$totalTime, dragging=${_draggingValue != null}');
 

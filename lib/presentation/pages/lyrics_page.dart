@@ -535,7 +535,7 @@ class _LyricsPageState extends ConsumerState<LyricsPage> {
     // 🎵 只有本地播放模式才允许拖动进度条
     final playbackState = ref.watch(playbackProvider);
     final canSeek =
-        playbackState.isLocalMode && (currentMusic?.duration ?? 0) > 0;
+        playbackState.seekEnabled && playbackState.isLocalMode && (currentMusic?.duration ?? 0) > 0;
 
     final displayProgress = _draggingProgress ??
         ((currentMusic?.duration ?? 0) > 0

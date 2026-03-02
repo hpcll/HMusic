@@ -739,7 +739,12 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
 
   /// 🎯 方案C：备用自动下一首定时器触发处理
   ///
-  /// 当 API 检测（position/duration）失败时，使用此定时器作为备用
+  /// 当 API 检测（position/duration）失败时，使用此定时器作为备用。
+  ///
+  /// Bug2 fix: 使用本地计时器的真实播放时长（扣除暂停）判断是否到达歌曲末尾，
+  /// 而非 _currentPlayingMusic.offset（该值到达 duration 后就封顶不更新，
+  /// 如果歌曲已单曲循环重新开始，offset 依旧卡在 duration，无法用于判断）。
+  /// 如果实际播放时长不足（用户暂停了很久导致挂钟超时），则重新调度定时器。
   void _handleBackupAutoNextTimer(String expectedMusicName) {
     debugPrint('⏱️ [MiIoTDirect] 备用定时器触发，检查是否需要自动下一首');
     debugPrint('   - 期望歌曲: $expectedMusicName');
@@ -749,7 +754,6 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
     // 验证条件：
     // 1. 定时器对应的歌曲名与当前播放的歌曲名一致（没有被手动切歌）
     // 2. 尚未通过 API 检测触发过自动下一首
-    // 3. 实际播放进度已接近歌曲末尾（防止暂停后挂钟超时误触发）
     final currentMusic = _currentPlayingMusic?.curMusic ?? '';
     final isSameSong = currentMusic == expectedMusicName ||
         expectedMusicName == _backupTimerMusicName;
@@ -764,20 +768,27 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
       return;
     }
 
-    // 🎯 进度检查：备用定时器基于挂钟时间，暂停时挂钟仍在走
-    // 如果实际进度离歌曲结尾还很远（>30秒），说明用户暂停了很久，不应触发
-    final offset = _currentPlayingMusic?.offset ?? 0;
+    // 🎯 Bug2 fix: 用本地计时器的实际播放时长判断，而非可能封顶的 offset
+    final predictedOffset = _getLocalPredictedOffset();
     final duration = _currentPlayingMusic?.duration ?? 0;
-    if (duration > 0 && offset > 0) {
-      final remaining = duration - offset;
-      if (remaining > 30) {
-        debugPrint('⏭️ [MiIoTDirect] 备用定时器：进度 $offset/$duration 秒，剩余 $remaining 秒，未到结尾，忽略（可能暂停了很久）');
+    if (duration > 0) {
+      final remaining = duration - predictedOffset;
+      if (remaining > 15) {
+        // 实际播放时长还差很远，说明用户暂停了很久导致挂钟超时
+        // 重新调度定时器（剩余播放时长 + 5秒缓冲）
+        final reschedule = Duration(seconds: remaining + 5);
+        debugPrint('⏭️ [MiIoTDirect] 备用定时器：实际播放 $predictedOffset/$duration 秒，'
+            '剩余 $remaining 秒，未到结尾，重新调度 ${reschedule.inSeconds}秒后再检查');
+        _backupAutoNextTimer?.cancel();
+        _backupAutoNextTimer = Timer(reschedule, () {
+          _handleBackupAutoNextTimer(expectedMusicName);
+        });
         return;
       }
     }
 
     // 🎯 触发自动下一首
-    debugPrint('🎵 [MiIoTDirect] 备用定时器：触发自动下一首！');
+    debugPrint('🎵 [MiIoTDirect] 备用定时器：触发自动下一首！(播放进度: $predictedOffset/$duration)');
     _isAutoNextTriggered = true;
 
     if (onSongComplete != null) {
@@ -888,16 +899,21 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
           _currentPlayingMusic != null;
 
       if (needsFullReplay) {
-        final resumeOffset = _currentPlayingMusic!.offset;
+        // 🎯 Bug1 fix: OH2P 不支持 startOffset，resume 必须从头播放
+        // 不传 startOffsetSec，让 playMusic 内部和本地计时器都从 0 开始
+        final supportsOffset = _hardware != null &&
+            MiHardwareDetector.supportsStartOffset(_hardware!);
+        final resumeOffset = supportsOffset ? _currentPlayingMusic!.offset : 0;
         debugPrint(
-            '🔄 [MiIoTDirect] 设备 $_hardware 不支持 resume，重新发送播放命令 (从 ${resumeOffset}s 恢复)...');
+            '🔄 [MiIoTDirect] 设备 $_hardware 不支持 resume，重新发送播放命令'
+            ' (startOffset=${supportsOffset ? "${resumeOffset}s" : "不支持，从头播放"})...');
         await playMusic(
           musicName: _currentPlayingMusic!.curMusic,
           url: _currentMusicUrl,
           duration: _currentPlayingMusic!.duration > 0
               ? _currentPlayingMusic!.duration
               : null,
-          startOffsetSec: resumeOffset > 0 ? resumeOffset : null, // 🎯 从暂停位置恢复
+          startOffsetSec: supportsOffset && resumeOffset > 0 ? resumeOffset : null,
         );
         // playMusic() 内部已完整处理状态更新，直接返回
         return;
@@ -1052,6 +1068,12 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
 
   @override
   Future<void> seekTo(int seconds) async {
+    // 🎯 Bug3 fix: OH2P 等设备不支持 seek，直接忽略
+    if (_hardware != null && !MiHardwareDetector.supportsSeek(_hardware!)) {
+      debugPrint('⚠️ [MiIoTDirect] 设备 $_hardware 不支持 seek，忽略 seekTo(${seconds}s)');
+      return;
+    }
+
     debugPrint('🎯 [MiIoTDirect] 跳转进度: ${seconds}秒 (设备: $_deviceId)');
     try {
       final positionMs = seconds * 1000;
