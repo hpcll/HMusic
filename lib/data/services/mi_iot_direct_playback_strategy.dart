@@ -907,6 +907,26 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
         debugPrint(
             '🔄 [MiIoTDirect] 设备 $_hardware 不支持 resume，重新发送播放命令'
             ' (startOffset=${supportsOffset ? "${resumeOffset}s" : "不支持，从头播放"})...');
+
+        // 🎯 Bug fix: OH2/OH2P 从头播放时，立即预重置本地进度到 0
+        // 原因：playMusic() 的网络请求需要 200–500ms，期间 Provider 仍显示旧 offset
+        // 提前通知让 UI 立刻归 0，无需等待网络往返完成
+        if (!supportsOffset) {
+          _localPlayStartTime = DateTime.now();
+          _localAccumulatedPause = Duration.zero;
+          _localPauseStartTime = null;
+          _currentPlayingMusic = PlayingMusic(
+            ret: _currentPlayingMusic!.ret,
+            curMusic: _currentPlayingMusic!.curMusic,
+            curPlaylist: _currentPlayingMusic!.curPlaylist,
+            isPlaying: true,
+            duration: _currentPlayingMusic!.duration,
+            offset: 0,
+          );
+          onStatusChanged?.call(null); // null 绕过 session 过滤，立即通知 Provider
+          debugPrint('⏱️ [MiIoTDirect] OH2/OH2P 从头播放：已预通知 Provider 进度=0');
+        }
+
         await playMusic(
           musicName: _currentPlayingMusic!.curMusic,
           url: _currentMusicUrl,

@@ -1968,6 +1968,14 @@ class PlaybackNotifier extends StateNotifier<PlaybackState> {
       );
       debugPrint('🛡️ [PlaybackProvider] 设置乐观更新保护期: 2秒');
 
+      // 🎯 直连模式 resume：清除 warmup 保护，允许策略的预通知将进度立即归 0
+      // warmup 是为「新歌切换」设计的，resume 不需要它，否则会拦截 serverOffset=0 的更新
+      if (_currentStrategy is MiIoTDirectPlaybackStrategy) {
+        _directWarmupUntil = null;
+        _directWarmupSong = null;
+        debugPrint('🎯 [PlaybackProvider] 直连模式 resume：已清除 warmup 保护');
+      }
+
       // 🔧 只有 xiaomusic 远程模式需要更新进度定时器
       // - 本地模式：通过statusStream自动更新（不需要）
       // - 直连模式：通过策略轮询更新（不需要）
