@@ -8,6 +8,7 @@ import 'mi_hardware_detector.dart';
 import 'mi_audio_id_generator.dart';
 import 'mi_play_mode.dart';
 import 'audio_proxy_server.dart';
+import 'music_cdn_url_policy.dart';
 import '../../core/utils/network_detector.dart';
 
 /// 小米IoT直连服务
@@ -34,6 +35,9 @@ class MiIoTService {
 
   // 🎯 公共音频代理URL（Cloudflare Workers）
   String? _publicProxyUrl;
+
+  // 🎯 实验开关：QQ 音乐链接是否直连音箱（跳过本地/公共代理）
+  static const bool _enableQqDirectPlayExperiment = false;
 
   // 登录状态
   bool get isLoggedIn => _serviceToken != null && _userId != null;
@@ -834,7 +838,7 @@ class MiIoTService {
 
         // 🔧 获取最终的重定向地址（从响应的 realUri 获取）
         final realUri = response.realUri;
-        if (realUri != null && realUri.toString() != musicUrl) {
+        if (realUri.toString() != musicUrl) {
           playUrl = realUri.toString();
           print('✅ [MiIoT] 解析到真实URL: ${playUrl.substring(0, playUrl.length > 80 ? 80 : playUrl.length)}...');
         } else {
@@ -870,14 +874,35 @@ class MiIoTService {
     final localIp = _proxyServer?.localIp;
     final sameSubnet = _isSameSubnet(deviceIp, localIp);
 
+    // 网易云直连在当前设备上更稳定；QQ 直连仅用于实验
+    final forceDirectForKnownCdn = MusicCdnUrlPolicy.shouldForceDirectForMiIoT(
+      playUrl,
+      enableQqDirect: _enableQqDirectPlayExperiment,
+    );
+    // QQ/酷我默认必须走代理（不回退直连）
+    final requireProxyForKnownCdn =
+        !forceDirectForKnownCdn && MusicCdnUrlPolicy.shouldRequireProxyForMiIoT(playUrl);
+    if (forceDirectForKnownCdn) {
+      final directType = MusicCdnUrlPolicy.isNeteaseCdn(playUrl) ? '网易云CDN' : 'QQ音乐CDN';
+      print('🎯 [MiIoT] 检测到$directType，跳过代理并直连播放');
+      if (directType == 'QQ音乐CDN') {
+        print('🧪 [MiIoT] QQ直连实验已启用：本次将直接下发给小爱音箱');
+      }
+      print('   直连URL: ${playUrl.substring(0, playUrl.length > 80 ? 80 : playUrl.length)}...');
+    } else if (MusicCdnUrlPolicy.isKuwoCdn(playUrl)) {
+      print('🧪 [MiIoT] 酷我代理策略已启用：本次必须走代理');
+    } else if (MusicCdnUrlPolicy.isQqCdn(playUrl)) {
+      print('🧪 [MiIoT] QQ代理策略已启用：本次必须走代理');
+    }
+
     // 方案1：尝试使用本地代理（仅在 WiFi 环境下）
-    if (isWiFi && _proxyServer != null && _proxyServer!.isRunning) {
+    if (!forceDirectForKnownCdn && isWiFi && _proxyServer != null && _proxyServer!.isRunning) {
       if (deviceIp != null && localIp != null && !sameSubnet) {
         print('⚠️ [MiIoT] 设备IP与手机IP不同网段，跳过本地代理');
         print('   设备IP: $deviceIp');
         print('   手机IP: $localIp');
       } else if (deviceIp == null || localIp == null) {
-        print('⚠️ [MiIoT] 无法获取设备或手机IP，仍尝试本地代理');
+        print('⚠️ [MiIoT] 无法获取设备或手机IP，仍使用本地代理');
       } else {
         print('✅ [MiIoT] 设备IP与手机IP同网段，允许本地代理');
         print('   设备IP: $deviceIp');
@@ -886,42 +911,27 @@ class MiIoTService {
 
       final originalUrl = playUrl;
       try {
-        // 🔧 检查本地代理是否真的可达（关键修复！）
-        // WiFi 环境下才检测本地代理，移动网络直接跳过
-        final proxyUrl = _proxyServer!.getProxyUrl('http://www.baidu.com');
-        print('🔍 [MiIoT] WiFi环境，检查本地代理可达性: $proxyUrl');
-
-        final healthCheckResponse = await _dio.head(
-          proxyUrl,
-          options: Options(
-            receiveTimeout: const Duration(milliseconds: 2000), // 2秒超时
-            sendTimeout: const Duration(milliseconds: 2000),
-            validateStatus: (status) => true, // 接受任何状态码
-          ),
-        ).timeout(const Duration(milliseconds: 3000)); // 额外3秒超时保护
-
-        // 如果本地代理可达，使用它
-        if ((deviceIp == null || localIp == null || sameSubnet) &&
-            healthCheckResponse.statusCode != null) {
+        // 🎯 直连模式优先通过本地代理推送 URL（base64 包裹），
+        // 避免音箱直连音乐 CDN 被限制造成 403。
+        // 注意：这里不再请求外部站点做探测，避免误判与额外外网依赖。
+        if (deviceIp == null || localIp == null || sameSubnet) {
           playUrl = _proxyServer!.getProxyUrl(playUrl);
           useProxy = true;
-          print('✅ [MiIoT] 本地代理可达，使用本地代理转发');
+          print('✅ [MiIoT] 使用本地代理转发（URL已base64封装）');
           print('   原始URL: ${originalUrl.substring(0, originalUrl.length > 80 ? 80 : originalUrl.length)}...');
           print('   代理URL: ${playUrl.substring(0, playUrl.length > 80 ? 80 : playUrl.length)}...');
-        } else if (deviceIp != null && localIp != null && !sameSubnet) {
-          print('⚠️ [MiIoT] 已确认不同网段，跳过本地代理');
         } else {
-          print('⚠️ [MiIoT] 本地代理不可达，跳过使用');
+          print('⚠️ [MiIoT] 已确认不同网段，跳过本地代理');
         }
       } catch (e) {
-        print('⚠️ [MiIoT] 检查本地代理失败，跳过使用: $e');
+        print('⚠️ [MiIoT] 本地代理封装失败，跳过使用: $e');
       }
     } else if (!isWiFi && _proxyServer != null && _proxyServer!.isRunning) {
-      print('📱 [MiIoT] 移动网络环境，跳过本地代理检测（节省3秒超时）');
+      print('📱 [MiIoT] 移动网络环境，跳过本地代理（设备通常不可回连手机）');
     }
 
     // 方案2：本地代理不可用时，尝试公共代理
-    if (!useProxy && _publicProxyUrl != null && _publicProxyUrl!.isNotEmpty) {
+    if (!forceDirectForKnownCdn && !useProxy && _publicProxyUrl != null && _publicProxyUrl!.isNotEmpty) {
       final originalUrl = playUrl;
       try {
         // 使用 Cloudflare Workers 代理格式
@@ -935,15 +945,21 @@ class MiIoTService {
       }
     }
 
-    // 方案3：代理都不可用，直接使用真实URL
+    // 对 QQ/酷我：代理不可用则直接失败，不回退直连
+    if (requireProxyForKnownCdn && !useProxy) {
+      print('❌ [MiIoT] QQ/酷我要求走代理，但当前代理不可用，取消播放');
+      return false;
+    }
+
+    // 方案3：代理都不可用，直接使用真实URL（仅用于非QQ/酷我）
     if (!useProxy) {
       print('⚠️ [MiIoT] 代理不可用，直接使用真实URL');
       print('🔗 [MiIoT] 播放URL: ${playUrl.substring(0, playUrl.length > 80 ? 80 : playUrl.length)}...');
     }
 
     // 🔧 调试：记录URL协议
-    final isHttps = musicUrl.startsWith('https://');
-    final isHttp = musicUrl.startsWith('http://');
+    final isHttps = playUrl.startsWith('https://');
+    final isHttp = playUrl.startsWith('http://');
     print('🎵 [MiIoT] 播放音乐: $playUrl');
     print('📱 [MiIoT] 目标设备: $deviceId');
     print('🔧 [MiIoT] URL协议: ${isHttps ? "HTTPS" : (isHttp ? "HTTP" : "未知")}');
