@@ -68,9 +68,10 @@ echo "  3. 仅构建 Android APK - 仅arm64 (现代设备，体积小)"
 echo "  4. 仅构建 iOS IPA"
 echo "  5. 构建 Android 通用版 + iOS"
 echo "  6. 构建 Android 分架构版 + iOS"
+echo "  7. 构建 Android 全量版(通用+分架构) + iOS (发布推荐)"
 echo ""
-read -p "请选择 (1-6, 默认5): " build_choice
-build_choice=${build_choice:-5}
+read -p "请选择 (1-7, 默认7): " build_choice
+build_choice=${build_choice:-7}
 
 echo ""
 echo "======================================"
@@ -88,7 +89,7 @@ mkdir -p build/release
 mkdir -p build/symbols
 
 # 构建 Android 通用版
-if [[ "$build_choice" == "1" || "$build_choice" == "5" ]]; then
+if [[ "$build_choice" == "1" || "$build_choice" == "5" || "$build_choice" == "7" ]]; then
     echo ""
     echo "📱 构建 Android APK (通用版)..."
     echo "  - 包含架构: arm64-v8a, armeabi-v7a, x86_64"
@@ -111,7 +112,7 @@ if [[ "$build_choice" == "1" || "$build_choice" == "5" ]]; then
 fi
 
 # 构建 Android 分架构版
-if [[ "$build_choice" == "2" || "$build_choice" == "6" ]]; then
+if [[ "$build_choice" == "2" || "$build_choice" == "6" || "$build_choice" == "7" ]]; then
     echo ""
     echo "📱 构建 Android APK (分架构版)..."
     echo "  - 为每个架构生成独立APK"
@@ -175,7 +176,7 @@ if [[ "$build_choice" == "3" ]]; then
 fi
 
 # 构建 iOS
-if [[ "$build_choice" == "4" || "$build_choice" == "5" || "$build_choice" == "6" ]]; then
+if [[ "$build_choice" == "4" || "$build_choice" == "5" || "$build_choice" == "6" || "$build_choice" == "7" ]]; then
     echo ""
     echo "🍎 构建 iOS IPA..."
     echo "  - 架构: arm64"
