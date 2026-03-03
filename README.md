@@ -58,14 +58,12 @@
 
 欢迎加入 HMusic 用户交流群，一起讨论使用问题和功能建议～
 
-👉 [点击查看最新群聊二维码（群聊链接）](https://github.com/hpcll/HMusic/blob/main/docs/donate/%E7%BE%A4%E8%81%8A.png)
-
 <p align="center">
   <img src="docs/donate/群聊.png" alt="微信群二维码" width="250" />
 </p>
 
 <p align="center">
-  <sub>⚠️ 群二维码为动态有效期，请优先使用上方“群聊链接”查看最新图片；若失效请提 <a href="https://github.com/hpcll/HMusic/issues">Issue</a></sub>
+  <sub>⚠️ 群二维码为动态有效期，失效请提 <a href="https://github.com/hpcll/HMusic/issues">Issue</a></sub>
 </p>
 
 ---
