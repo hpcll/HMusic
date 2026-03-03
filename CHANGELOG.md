@@ -5,6 +5,30 @@ All notable changes to HMusic will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2026-03-04
+
+### Added ✨
+
+- 新增外部歌单导入与平台归一化流程，支持更稳定的跨平台导入。
+- 新增歌单解析策略与统一歌曲解析器（含熔断机制）及测试覆盖。
+- 新增并增强 xiaomusic API 能力：`pushUrl`、`getPlayerStatus`、`downloadonemusic.playlist_name`。
+- 新增直连模式 warmup 轮询与切歌会话保护，提升切歌成功率。
+
+### Changed 🎨
+
+- 优化直连模式播放链路，与 xiaomusic 行为进一步对齐。
+- 优化登录流、导航与底部弹层组件，统一交互样式。
+- 优化主页面性能，减少不必要的整页重建。
+- 更新音源策略：网易默认直连，QQ/酷我默认走代理（QQ 直连仅保留实验开关）。
+
+### Fixed 🐛
+
+- 修复 iOS 导入 LX 脚本后闪退无法进入的问题。
+- 修复动态 token 脚本在 App 重启后首次播放失败问题。
+- 修复自动下一首、切歌竞态、进度同步、通知栏控制等一系列播放稳定性问题。
+- 修复 OH2P 设备恢复播放、进度卡住、seek 与暂停后进度显示异常问题。
+- 移除不必要的 URL 强制 HTTPS 改写，修复部分源站代理时 TLS 主机名校验失败问题。
+
 ## [2.2.0] - 2026-01-25
 
 ### 🎊 HMusic 正式开源！

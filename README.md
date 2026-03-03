@@ -10,10 +10,10 @@
 
 | 平台 | 文件 | 说明 |
 |------|------|------|
-| 🤖 Android 通用版 | `HMusic-v2.2.1-android-universal.apk` | 推荐，兼容所有设备 |
-| 🤖 Android arm64 | `HMusic-v2.2.1-android-arm64-v8a.apk` | 现代手机，体积更小 |
-| 🤖 Android arm32 | `HMusic-v2.2.1-android-armeabi-v7a.apk` | 老旧设备 |
-| 🍎 iOS | `HMusic-v2.2.1-ios-unsigned.ipa` | 需自签名安装 |
+| 🤖 Android 通用版 | `HMusic-v2.3.0-android-universal.apk` | 推荐，兼容所有设备 |
+| 🤖 Android arm64 | `HMusic-v2.3.0-android-arm64-v8a.apk` | 现代手机，体积更小 |
+| 🤖 Android arm32 | `HMusic-v2.3.0-android-armeabi-v7a.apk` | 老旧设备 |
+| 🍎 iOS | `HMusic-v2.3.0-ios-unsigned.ipa` | 需自签名安装 |
 
 ## 🎯 两种模式
 
@@ -58,12 +58,14 @@
 
 欢迎加入 HMusic 用户交流群，一起讨论使用问题和功能建议～
 
+👉 [点击查看最新群聊二维码（群聊链接）](https://github.com/hpcll/HMusic/blob/main/docs/donate/%E7%BE%A4%E8%81%8A.png)
+
 <p align="center">
   <img src="docs/donate/群聊.png" alt="微信群二维码" width="250" />
 </p>
 
 <p align="center">
-  <sub>⚠️ 二维码过期？请提 <a href="https://github.com/hpcll/HMusic/issues">Issue</a> 留下微信号，作者会邀请你入群</sub>
+  <sub>⚠️ 群二维码为动态有效期，请优先使用上方“群聊链接”查看最新图片；若失效请提 <a href="https://github.com/hpcll/HMusic/issues">Issue</a></sub>
 </p>
 
 ---
