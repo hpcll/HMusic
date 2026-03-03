@@ -59,7 +59,7 @@
 欢迎加入 HMusic 用户交流群，一起讨论使用问题和功能建议～
 
 <p align="center">
-  <img src="docs/donate/群聊.png" alt="微信群二维码" width="250" />
+  <img src="docs/donate/群聊.JPG" alt="微信群二维码" width="250" />
 </p>
 
 <p align="center">
