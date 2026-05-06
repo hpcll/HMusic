@@ -74,7 +74,13 @@ class MiHardwareDetector {
   /// 返回 true 的设备：
   /// - 常见现象是暂停后仍持续返回 status=1
   /// - 需要依赖本地命令状态做保护，避免 UI 被错误覆盖
-  static const List<String> _UNRELIABLE_PLAY_STATUS = ['OH2P', 'OH2'];
+  static const List<String> _UNRELIABLE_PLAY_STATUS = [
+    'OH2P',
+    'OH2',
+    // S12A 日志显示暂停后仍可能返回 status=1，且播放中会返回 status=3/detail=null。
+    // 这类状态不能直接覆盖本地播放命令结果。
+    'S12A',
+  ];
 
   /// 检查设备硬件是否需要使用 player_play_music API
   static bool needsPlayMusicApi(String hardware) {

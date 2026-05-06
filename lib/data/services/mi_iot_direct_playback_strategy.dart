@@ -383,6 +383,25 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
     );
   }
 
+  int? _normalizePlayStatus(dynamic value) {
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    if (value is String) return int.tryParse(value);
+    return null;
+  }
+
+  bool? _parsePlayingFromStatus(dynamic value) {
+    switch (_normalizePlayStatus(value)) {
+      case 1:
+        return true;
+      case 0:
+      case 2:
+        return false;
+      default:
+        return null;
+    }
+  }
+
   /// 是否应将设备 status 视为不可靠（需优先信任本地命令状态）
   bool _hasUnreliablePlayStatus() {
     final hardware = _hardware;
@@ -393,7 +412,7 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
     return MiHardwareDetector.hasUnreliablePlayStatus(hardware);
   }
 
-  /// 轮询确认设备是否已进入非播放态（status != 1）
+  /// 轮询确认设备是否已进入明确的非播放态（status=0/2）
   Future<bool> _confirmDevicePaused({
     required String phase,
     int retries = 2,
@@ -405,8 +424,12 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
       debugPrint(
         '🔍 [MiIoTDirect] 暂停确认[$phase](${i + 1}/$retries): status=$playStatus',
       );
-      if (playStatus != 1) {
+      final parsedPlaying = _parsePlayingFromStatus(playStatus);
+      if (parsedPlaying == false) {
         return true;
+      }
+      if (parsedPlaying == null) {
+        debugPrint('⚠️ [MiIoTDirect] 暂停确认[$phase]遇到未知 status=$playStatus，继续确认');
       }
     }
     return false;
@@ -449,7 +472,15 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
 
       if (status != null) {
         // 解析状态
-        var isPlaying = status['status'] == 1;
+        final rawPlayStatus = status['status'];
+        final parsedPlaying = _parsePlayingFromStatus(rawPlayStatus);
+        var isPlaying =
+            parsedPlaying ?? (_currentPlayingMusic?.isPlaying ?? false);
+        if (parsedPlaying == null) {
+          debugPrint(
+            '⚠️ [MiIoTDirect] 未知播放状态 status=$rawPlayStatus，保持本地状态: $isPlaying',
+          );
+        }
         final detail = status['play_song_detail'] as Map<String, dynamic>?;
 
         // 🎯 检查命令状态保护窗口
@@ -678,20 +709,18 @@ class MiIoTDirectPlaybackStrategy implements PlaybackStrategy {
             }
           }
 
-          // 🎯 非对称信任策略（针对 detail=null 设备如 OH2P）：
-          // - 设备报告 status=0（停止）→ 信任（设备没有理由谎报停止）
-          // - 设备报告 status=1（播放）但本地为"暂停"→ 不信任
-          //   原因：OH2P 暂停后仍然返回 status=1，保护窗口过期后会错误恢复播放
-          //   只有 play()/playMusic() 才能将 isPlaying 从 false 变为 true
-          if (isPlaying && !_currentPlayingMusic!.isPlaying) {
-            if (_hasUnreliablePlayStatus()) {
-              debugPrint(
-                '🛡️ [MiIoTDirect] detail=null 非对称信任：设备报告播放但本地为暂停，保持暂停',
-              );
-              isPlaying = false;
-            } else {
-              debugPrint('ℹ️ [MiIoTDirect] detail=null 设备状态可信：设备报告播放，覆盖本地暂停状态');
-            }
+          // 🎯 状态不可靠设备（如 OH2/OH2P/S12A）在 detail=null 时优先信任本地命令。
+          // S12A 日志显示：暂停后仍返回 status=1，播放中也可能返回 status=3。
+          // 如果继续信任远端 status，会导致 UI 播放/暂停来回跳，并可能误发 toggle 把暂停抵消。
+          if (_hasUnreliablePlayStatus() &&
+              isPlaying != _currentPlayingMusic!.isPlaying) {
+            debugPrint(
+              '🛡️ [MiIoTDirect] detail=null 状态不可靠：设备报告播放=$isPlaying，'
+              '保持本地播放=${_currentPlayingMusic!.isPlaying}',
+            );
+            isPlaying = _currentPlayingMusic!.isPlaying;
+          } else if (isPlaying && !_currentPlayingMusic!.isPlaying) {
+            debugPrint('ℹ️ [MiIoTDirect] detail=null 设备状态可信：设备报告播放，覆盖本地暂停状态');
           }
 
           // 🎯 边界情况：APP重启后检测到设备正在播放，但本地计时器未初始化
