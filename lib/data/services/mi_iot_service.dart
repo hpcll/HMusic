@@ -44,6 +44,15 @@ class MiIoTService {
 
   // 🎯 持久化的 deviceId key
   static const String _keyDeviceId = 'mi_iot_device_id';
+  static const String _keyMicoInstanceId = 'mi_iot_mico_instance_id';
+
+  static const String _officialMicoAndroidUserAgent =
+      'MICO/AndroidApp/@SHIP.TO.2A2FE0D7@/2.8.1 MIBAppVersion/1.13.0';
+
+  static const String _officialMicoTvbGroupIds =
+      'de1tB,de1uA,de13C,dfohB,dfonB,dehkC,dejmE,demxA,de7eA,dezbG,deqlA,'
+      'deqnA,defwB,ed7h,ed92,eeby,eeqi,eeqk,ed8c,ed8h,eedj,eedl,eedn,'
+      'eeei,eesm,ee6i,efk7,efp3,efqb,de7hC,dfx5B,dfyyA,dfy6C,dernC';
 
   // 🎯 防止竞态条件：确保 deviceId 只加载一次
   Completer<void>? _deviceIdLoadCompleter;
@@ -142,6 +151,69 @@ class MiIoTService {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     final random = Random();
     return List.generate(16, (_) => chars[random.nextInt(chars.length)]).join();
+  }
+
+  String _generateUuidV4() {
+    final random = Random();
+
+    String randomHex(int length) {
+      return List.generate(
+        length,
+        (_) => random.nextInt(16).toRadixString(16),
+      ).join();
+    }
+
+    return '${randomHex(8)}-'
+        '${randomHex(4)}-'
+        '4${randomHex(3)}-'
+        '${(8 + random.nextInt(4)).toRadixString(16)}${randomHex(3)}-'
+        '${randomHex(12)}';
+  }
+
+  Future<String> _getMicoInstanceId() async {
+    final prefs = await SharedPreferences.getInstance();
+    final existing = prefs.getString(_keyMicoInstanceId);
+    if (existing != null && existing.isNotEmpty) {
+      return existing;
+    }
+
+    final generated = _generateUuidV4();
+    await prefs.setString(_keyMicoInstanceId, generated);
+    return generated;
+  }
+
+  String _generateMicoRequestId() {
+    const chars =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    final random = Random();
+    return List.generate(20, (_) => chars[random.nextInt(chars.length)]).join();
+  }
+
+  MiDevice? _findCachedDevice(String deviceId) {
+    return _devices.cast<MiDevice?>().firstWhere(
+      (d) => d?.deviceId == deviceId || d?.did == deviceId,
+      orElse: () => null,
+    );
+  }
+
+  bool _isS12ADevice(String deviceId) {
+    final hardware = _findCachedDevice(deviceId)?.hardware.toUpperCase() ?? '';
+    return hardware.contains('S12A');
+  }
+
+  String _buildOfficialMicoCookie({
+    required String deviceId,
+    required String hardware,
+    required String instanceId,
+  }) {
+    return [
+      'serviceToken=$_serviceToken',
+      'hardware=$hardware',
+      'deviceId=$deviceId',
+      'userId=$_userId',
+      'phoneModel=Android',
+      'instanceId=$instanceId',
+    ].join('; ');
   }
 
   /// 登录小米账号
@@ -1631,6 +1703,16 @@ class MiIoTService {
       print(
         '🎛️ [MiIoT] player_play_operation尝试(${i + 1}/${attempts.length}): action=$action, message=$message',
       );
+      if (_isS12ADevice(deviceId)) {
+        final officialOk = await _sendOfficialS12APlayerOperation(
+          deviceId: deviceId,
+          message: message,
+        );
+        if (officialOk) {
+          return true;
+        }
+      }
+
       final ok = await _sendUbusRequest(
         deviceId: deviceId,
         method: 'player_play_operation',
@@ -1641,6 +1723,77 @@ class MiIoTService {
       }
     }
     return false;
+  }
+
+  /// S12A 控制命令对请求外壳敏感；仅对该硬件的播放控制使用官方 Android MICO 模板。
+  Future<bool> _sendOfficialS12APlayerOperation({
+    required String deviceId,
+    required Map<String, dynamic> message,
+  }) async {
+    if (!isLoggedIn) {
+      return false;
+    }
+
+    final device = _findCachedDevice(deviceId);
+    final hardware = device?.hardware ?? '';
+    if (!hardware.toUpperCase().contains('S12A')) {
+      return false;
+    }
+
+    try {
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final requestId = _generateMicoRequestId();
+      final instanceId = await _getMicoInstanceId();
+      final requestBody = {
+        'deviceId': deviceId,
+        'path': 'mediaplayer',
+        'method': 'player_play_operation',
+        'message': jsonEncode(message),
+      };
+
+      print('🧩 [MiIoT] S12A 使用官方 Android MICO 控制模板');
+      print('📦 [MiIoT] S12A official message: $message');
+
+      final response = await _dio.post(
+        'https://api2.mina.xiaoaisound.com/remote/ubus',
+        queryParameters: {
+          'timestamp': timestamp.toString(),
+          'requestId': requestId,
+        },
+        data: requestBody,
+        options: Options(
+          headers: {
+            'Cookie': _buildOfficialMicoCookie(
+              deviceId: deviceId,
+              hardware: hardware,
+              instanceId: instanceId,
+            ),
+            'User-Agent': _officialMicoAndroidUserAgent,
+            'clientexpids': 'sdg',
+            'tvbgroupids': _officialMicoTvbGroupIds,
+            'x-user-level': '1',
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          contentType: Headers.formUrlEncodedContentType,
+        ),
+      );
+
+      print(
+        '📡 [MiIoT] S12A official 响应: ${response.statusCode} - ${response.data}',
+      );
+
+      final data = _parseJsonResponse(response.data);
+      if (response.statusCode == 200 && data != null && data['code'] == 0) {
+        print('✅ [MiIoT] S12A official 控制成功');
+        return true;
+      }
+
+      print('⚠️ [MiIoT] S12A official 控制失败，回退通用模板');
+      return false;
+    } catch (e) {
+      print('⚠️ [MiIoT] S12A official 控制异常，回退通用模板: $e');
+      return false;
+    }
   }
 
   /// 通用 ubus 请求方法
