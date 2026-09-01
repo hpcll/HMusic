@@ -4,19 +4,65 @@
 
 [![Release](https://img.shields.io/github/v/release/hpcll/HMusic?label=版本)](https://github.com/hpcll/HMusic/releases)
 
+> [!IMPORTANT]
+> **本项目已停止更新，新项目是 [HMusic-Server](https://github.com/hpcll/HMusic-Server) + [HMusic-App](https://github.com/hpcll/HMusic-App)。**
+> v3.0.0 是这个仓库的最后一个版本，已经装上的可以继续用，但不再新增功能，也不再修问题、不再发新包。
+> 小米接口变动或 xiaomusic 升级导致的失效，都只会在新项目里处理。
+
+## 🚚 请迁移到新项目
+
+新版把「服务端」和「客户端」拆成两个仓库，都在持续更新：
+
+| 仓库 | 角色 | 说明 |
+| --- | --- | --- |
+| [HMusic-Server](https://github.com/hpcll/HMusic-Server) | 自建服务端 | 曲库、搜索解析、播放队列、下载和小爱音箱控制都由它负责，一行命令装在 NAS、Linux 服务器或长期开机的电脑上 |
+| [HMusic-App](https://github.com/hpcll/HMusic-App) | 跨平台客户端 | Android、iOS、macOS、Windows、Linux，首次启动自动发现同一局域网内的 Server，移动端支持后台播放和锁屏控制 |
+
+### 和老版本比，变化在哪
+
+- **不再依赖 xiaomusic**：搜索解析、曲库、队列和下载改由 HMusic-Server 自己实现，原来的 xiaomusic 服务端不用再装；小米 IoT 直连模式暂时没有对应功能，见下方说明。
+- **小米账号只配一次**：在 Server 的「设置 → 小米账号」登录并选择默认播放设备，家里所有客户端共用同一份队列和播放状态。
+- **平台从 2 个扩到 5 个**：Android、iOS 之外还有 macOS、Windows、Linux 客户端（桌面端目前主要用来管理内容和遥控小爱音箱）。
+- **数据都在你自己手上**：账号、歌单、播放历史和下载的文件都存在你自己的 Server 上，不经过任何开发者的云服务。
+
+需要注意的是：老版本的配置和数据不能直接搬过去，Server 部署好后要重新登录一次小米账号，歌单也要重新建。
+
+> [!NOTE]
+> **原来用直连模式的用户**（只登录小米账号、不装服务端）：新版现在必须先有一台长期开机的机器跑 HMusic-Server。
+> 如果暂时不方便，可以先 Star / Watch [HMusic-App](https://github.com/hpcll/HMusic-App) 关注进展 ——
+> 直连模式后期有可能加回来，但目前还没有排期，也不做时间承诺。
+
+### 怎么开始
+
+1. 在 NAS 或长期开机的电脑上部署 Server（Windows 请在 Git Bash 里执行）：
+
+   ```bash
+   curl -fsSL https://raw.githubusercontent.com/hpcll/HMusic-Server/main/bootstrap.sh | bash
+   ```
+
+2. 用浏览器打开安装器打印的地址，后面加上 `/app/`，创建管理员账号，再到「设置 → 小米账号」登录并选择默认播放设备。
+3. 从 [HMusic-App Releases](https://github.com/hpcll/HMusic-App/releases) 下载对应平台的客户端，打开后点自动发现到的 Server，用管理员账号登录即可。
+
+详细步骤见 [Server 部署指南](https://github.com/hpcll/HMusic-Server/blob/main/docs/DEPLOYMENT.md) 和
+[App 安装与故障排查](https://github.com/hpcll/HMusic-App/blob/main/docs/DEPLOYMENT.md)。
+
+---
+
+以下是 HMusic v3.0.0 的原始说明，留给仍在使用老版本的用户参考。
+
 ## 💬 交流群
 
 欢迎加入 HMusic 用户交流群，一起讨论使用问题和功能建议～
 
 <p align="center">
-  <img src="docs/hmusic.jpg" alt="HMusic 微信群二维码" width="360" />
+  <img src="docs/hmusic.JPG" alt="HMusic 微信群二维码" width="360" />
 </p>
 
 <p align="center">
   <sub>⚠️ 群二维码为动态有效期，失效请提 <a href="https://github.com/hpcll/HMusic/issues">Issue</a></sub>
 </p>
 
-## 🚀 v3.0.0 大版本更新
+## 🚀 v3.0.0 大版本更新（最终版本）
 
 - 全新极简青绿色视觉风格，统一首页、播放页、登录页、设置页等核心界面。
 - 新增外观模式设置，支持跟随系统、浅色模式和深色模式。
